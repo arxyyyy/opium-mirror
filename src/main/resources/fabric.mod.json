@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "opium",
+  "version": "${version}",
+  "name": "Opium",
+  "description": "",
+  "authors": [
+    "heedi"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/"
+  },
+  "license": "None",
+  "icon": "assets/neverdies/icon/client_icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.nrnr.opium.OpiumMod"
+    ]
+  },
+  "accessWidener": "opium.accesswidener",
+  "mixins": [
+    "mixins.opium.json"
+  ],
+  "depends": {
+    "java": ">=17",
+    "fabricloader": ">=0.14.17",
+    "minecraft": "1.20.4"
+  }
+}
