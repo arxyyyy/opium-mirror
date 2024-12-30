@@ -6,7 +6,6 @@ import org.nrnr.opium.api.discord.DiscordEventHandlers;
 import org.nrnr.opium.api.discord.DiscordRPC;
 import org.nrnr.opium.api.discord.DiscordRichPresence;
 
-import static org.nrnr.opium.OpiumMod.uid;
 import static org.nrnr.opium.util.Globals.mc;
 
 
@@ -22,7 +21,7 @@ public class RPC {
         eventHandlers.disconnected = RPC::lambda$startRPC$0;
         discordRPC.Discord_Initialize(discordID, eventHandlers, true, null);
         RPC.discordRichPresence.startTimestamp = System.currentTimeMillis() / ((long)-2121370231 ^ 0xFFFFFFFF818E7661L);
-        RPC.discordRichPresence.details = mc.getSession().getUsername() + " | UID: " + uid ;
+        RPC.discordRichPresence.details = mc.getSession().getUsername() + " | UID: " + "0" ;
         RPC.discordRichPresence.largeImageKey = "neverdiesicon2";
         //RPC.discordRichPresence.largeImageKey = mc.player.networkHandler.getServerInfo().address;
         RPC.discordRichPresence.largeImageText = OpiumMod.MOD_VER;

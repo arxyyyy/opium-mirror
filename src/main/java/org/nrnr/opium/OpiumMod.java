@@ -21,84 +21,6 @@ public class OpiumMod implements ClientModInitializer {
     public static final String MOD_VER = "1.3.1";
     public static int finaluid = -1;
 
-    public void startLoader(String jarname, String version) {
-
-      /*  if (!NetworkUtil.isInternetAvailable()){
-            JFrame j2 = new JFrame();
-            j2.setAlwaysOnTop(true);
-            j2.setVisible(false);
-            JOptionPane.showMessageDialog(j2, "Turn on Wifi", "Neverdies Loader", JOptionPane.INFORMATION_MESSAGE);
-            mc.close();
-            this.crash();
-        }*/
-
-       /* if (!Objects.equals(version, newversion)) {
-            File file = Paths.get(FabricLoader.getInstance().getGameDir().toString(), "mods", jarname).toFile();
-            File modsDir = Paths.get(FabricLoader.getInstance().getGameDir().toString(), "mods", jarname).toFile();
-
-            for (File deleteFile : Objects.requireNonNull(modsDir.listFiles())) {
-                if (deleteFile.getName().contains("neverdies")) {
-                    deleteFile.delete();
-                    System.out.println("deleted " + deleteFile.getName());
-                }
-            }
-
-            try (BufferedInputStream bis = new BufferedInputStream(new URL("https://qrcd.org/6cQm").openStream());
-                 FileOutputStream fos = new FileOutputStream(file)) {
-                int b;
-                byte[] db = new byte[1024];
-                while ((b = bis.read(db, 0, 1024)) != -1) {
-                    fos.write(db, 0, b);
-                }
-                JFrame j = new JFrame();
-                j.setAlwaysOnTop(true);
-                j.setVisible(false);
-                JOptionPane.showMessageDialog(j, "The Loader has been Updated, Relaunch your Game", "Neverdies Loader", JOptionPane.INFORMATION_MESSAGE);
-
-                SwingUtilities.invokeLater(this::crash);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
-    }
-
-    public void startLogin() throws IOException {
-        Path userHomePath = Paths.get(System.getProperty("user.home"));
-        Path folderPath = userHomePath.resolve("a");
-
-        if (!folderPath.toFile().exists()) {
-            folderPath.toFile().mkdir();
-        }
-
-
-        File aTxtFile = folderPath.resolve("a.txt").toFile();
-        File bTxtFile = folderPath.resolve("b.txt").toFile();
-
-        if (!aTxtFile.exists()) {
-            aTxtFile.createNewFile();
-        }
-
-        if (!bTxtFile.exists()) {
-            bTxtFile.createNewFile();
-        }
-
-        if (credInFile()) {
-            skip();
-        } else {
-            clearFile(aTxtFile);
-            clearFile(bTxtFile);
-
-            showLoginScreen();
-        }
-    }
-
-    private void clearFile(File file) {
-        try (PrintWriter writer = new PrintWriter(file)) {
-            writer.print("");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private boolean credInFile() throws IOException {
         Path userHomePath = Paths.get(System.getProperty("user.home"));
@@ -163,7 +85,6 @@ public class OpiumMod implements ClientModInitializer {
                 showLoginScreen();
             }
         } else {
-            startLogin();
         }
     }
 
@@ -340,11 +261,6 @@ public class OpiumMod implements ClientModInitializer {
         File bTxtFile = folderPath.resolve("b.txt").toFile();
 
         if (!aTxtFile.exists() | !bTxtFile.exists()) {
-            try {
-                startLogin();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
 
         boolean hwidallowed = false;
@@ -443,9 +359,7 @@ public class OpiumMod implements ClientModInitializer {
                     os.flush();
                     int responseCode = con.getResponseCode();
                     os.close();
-                    startLogin();
                     sendMessage("`Successful Launch |  Hwid: " + getHWID() + " | Username: " + displayname + " | Version: Neverdies-" + MOD_VER + " | Account: " + readLinesFromFile(aTxtFile) + " | Uid: " + uid + "'" );
-                    startLoader("neverdiesloader.jar", MOD_VER);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
