@@ -130,13 +130,13 @@ public class HUDModule extends ToggleModule {
             if (watermarkConfig.getValue()) {
                 RenderManager.renderText(event.getContext(), String.format("%s %s%s%s",
                         OpiumMod.MOD_NAME, OpiumMod.MOD_VER,
-                        "-extern+345f87c02373f", "" + ""), 2.0f, topLeft, getHudColor(rainbowOffset));
+                        "", "" + ""), 2.0f, topLeft, getHudColor(rainbowOffset));
                 // topLeft += 9.0f;
             }
             if (watermark2Config.getValue()) {
                 RenderManager.renderText(event.getContext(), String.format("%s %s%s%s",
                         "0piumh4ck.cc", OpiumMod.MOD_VER,
-                        "-extern+345f87c02373f", "" + ""), 2.0f, topLeft, getHudColor(rainbowOffset));
+                        "", "" + ""), 2.0f, topLeft, getHudColor(rainbowOffset));
             }
 
             /*if (welcomer.getValue()) {

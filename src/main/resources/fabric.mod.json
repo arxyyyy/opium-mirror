@@ -11,7 +11,7 @@
     "homepage": "https://fabricmc.net/"
   },
   "license": "None",
-  "icon": "assets/neverdies/icon/client_icon.png",
+  "icon": "assets/neverdies/icon/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
