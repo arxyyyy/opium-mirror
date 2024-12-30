@@ -10,7 +10,6 @@ import org.nrnr.opium.init.Modules;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static org.nrnr.opium.RPC.startRPC;
 
 public class Opium {
     // Client logger.
@@ -39,7 +38,6 @@ public class Opium {
         Managers.postInit();
         SHUTDOWN = new ShutdownHook();
         Runtime.getRuntime().addShutdownHook(SHUTDOWN);
-        startRPC();
         CONFIG.loadClient();
     }
 

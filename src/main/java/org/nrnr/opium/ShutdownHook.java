@@ -2,7 +2,6 @@ package org.nrnr.opium;
 
 import org.nrnr.opium.api.file.ClientConfiguration;
 
-import static org.nrnr.opium.RPC.stopRPC;
 
 /**
  * @author chronos
@@ -24,7 +23,6 @@ public class ShutdownHook extends Thread {
      */
     @Override
     public void run() {
-        stopRPC();
         Opium.info("Saving configurations and shutting down!");
         Opium.CONFIG.saveClient();
     }
