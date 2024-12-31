@@ -95,8 +95,8 @@ public class Module extends Feature implements Jsonable {
         switch (Debug.INSTANCE.notification.getValue()) {
             case Mio -> Command.sendMessage("§2[+] §f" + getName());
             case Miolegacy -> Command.sendMessage(Formatting.DARK_AQUA + getName() +Formatting.WHITE + ".enable = " + Formatting.GREEN +"true.");
-            case Meow -> Command.sendMessage("§2[:3] §f" + getName());
-            case Meowlegacy -> Command.sendMessage(Formatting.GREEN+getName()+" toggled on");
+            case Opium -> Command.sendMessage("§2[:3] §f" + getName());
+            case Opiumlegacy -> Command.sendMessage(Formatting.GREEN+getName()+" toggled on");
             case Future -> Command.sendMessage("§7" + getName() + " toggled §aon");
             case SetStantium -> Command.sendMessage(Formatting.BLUE + getName() +Formatting.WHITE +" == "+Formatting.GREEN +"on"+ Formatting.WHITE +";");
         }
@@ -112,8 +112,8 @@ public class Module extends Feature implements Jsonable {
         switch (Debug.INSTANCE.notification.getValue()) {
             case Mio -> Command.sendMessage(Formatting.RED +"[-] "+ Formatting.WHITE+getName());
             case Miolegacy -> Command.sendMessage(Formatting.DARK_AQUA + getName() +Formatting.WHITE + ".enable = " + Formatting.RED +"false.");
-            case Meow -> Command.sendMessage(Formatting.RED +"[:3] "+ Formatting.WHITE+getName());
-            case Meowlegacy -> Command.sendMessage(Formatting.RED+getName()+" toggled on");
+            case Opium -> Command.sendMessage(Formatting.RED +"[:3] "+ Formatting.WHITE+getName());
+            case Opiumlegacy -> Command.sendMessage(Formatting.RED+getName()+" toggled on");
             case Future -> Command.sendMessage("§7" + getName() + " toggled §coff");
             case SetStantium -> Command.sendMessage(Formatting.BLUE + getName() +Formatting.WHITE +" == "+Formatting.RED+"off"+ Formatting.WHITE +";");
         }
