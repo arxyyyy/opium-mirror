@@ -2,29 +2,31 @@
   "schemaVersion": 1,
   "id": "opium",
   "version": "${version}",
-  "name": "Opium",
-  "description": "",
+  "name": "meow",
+  "description": "meow",
   "authors": [
-    "heedi"
+    "F3i4ik"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/"
+    "repo": "https://github.com/cattyngmd/oyvey-portedvey-ported"
   },
-  "license": "None",
-  "icon": "assets/neverdies/icon/icon.png",
-  "environment": "*",
+  "license": "MIT",
+  "environment": "client",
+  "accessWidener": "opium.accesswidener",
   "entrypoints": {
     "client": [
-      "org.nrnr.opium.OpiumMod"
+      "me.opium.Opium"
+    ],
+    "main": [
+      "me.opium.Opium"
     ]
   },
-  "accessWidener": "opium.accesswidener",
   "mixins": [
-    "mixins.opium.json"
+    "opium.mixins.json"
   ],
   "depends": {
-    "java": ">=17",
-    "fabricloader": ">=0.14.17",
-    "minecraft": "1.20.4"
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
   }
 }
