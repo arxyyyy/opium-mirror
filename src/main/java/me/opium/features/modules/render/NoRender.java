@@ -23,7 +23,7 @@ public class NoRender extends Module {
     private int itemsCounter;
     public Setting<Boolean> antiTitle = this.register(new Setting<>("AntiTitle", false));
     public Setting<Boolean> potions = this.register(new Setting<>("Potions", false));
-    public Setting<Boolean> xp = this.register(new Setting<>("Xp", false));
+    public Setting<Boolean> xp = this.register(new Setting<>("EXP", false));
     public Setting<Boolean> arrows = this.register(new Setting<>("Arrows", false));
     public Setting<Boolean> eggs = this.register(new Setting<>("Egg", false));
     public Setting<Boolean> noArmorStand = this.register(new Setting<>("noArmorStands", false));
