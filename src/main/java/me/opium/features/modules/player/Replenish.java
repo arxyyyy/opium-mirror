@@ -12,7 +12,7 @@ import net.minecraft.screen.slot.SlotActionType;
 
 public class Replenish extends Module {
     public Setting<Float> delay = this.register(new Setting<>("Delay", 0f, 0.1f, 2f));
-    public Setting<Integer> min = this.register(new Setting<>("Min", 1, 50, 64));
+    public Setting<Integer> min = this.register(new Setting<>("Min", 1, 16, 64));
     public Setting<Float> forceDelay = this.register(new Setting<>("ForceDelay", 0.2f, 0.1f, 0.4f));
     public Setting<Integer> forceMin = this.register(new Setting<>("ForceMin", 1, 16, 64));
     private final Timer timer = new Timer();
