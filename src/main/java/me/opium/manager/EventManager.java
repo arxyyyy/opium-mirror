@@ -26,7 +26,7 @@ public class EventManager extends Feature {
 
     @Subscribe
     public void onUpdate(UpdateEvent event) {
-        Util.mc.getWindow().setTitle("meowclient.me");
+        Util.mc.getWindow().setTitle("0piumh4ck.cc");
         if (!fullNullCheck()) {
 //            OyVey.inventoryManager.update();
             Opium.moduleManager.onUpdate();

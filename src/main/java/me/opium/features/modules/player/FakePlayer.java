@@ -11,7 +11,7 @@ import java.util.UUID;
 public class FakePlayer extends Module {
     private int id = -1;
 
-    public Setting<String> name = this.register(new Setting<>("Name", "Meowclient.me"));
+    public Setting<String> name = this.register(new Setting<>("Name", "Opium Client"));
     public Setting<Boolean> copyInventory = this.register(new Setting<>("CopyInventory", false));
     public FakePlayer(){
         super("FakePlayer","",Category.PLAYER,true,false,false);

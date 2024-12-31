@@ -24,7 +24,7 @@ public class OyVeyGui extends Screen {
     private final ArrayList<Component> components = new ArrayList();
 
     public OyVeyGui() {
-        super(Text.literal("Meow"));
+        super(Text.literal("Opium"));
         setInstance();
         load();
     }

@@ -15,7 +15,7 @@ import java.util.List;
 public class CommandManager
         extends Feature implements Jsonable {
     private final List<Command> commands = new ArrayList<>();
-    private String clientMessage = "[Meow]";
+    private String clientMessage = "[Opium]";
     private String prefix = ";";
 
     public CommandManager() {
@@ -79,7 +79,7 @@ public class CommandManager
     public void getClient() {
         switch (Debug.INSTANCE.client.getValue()) {
             case Meow -> clientMessage = "[Meow]";
-            case Meowlegacy -> clientMessage = "[Meowclient.me]";
+            case Opiumlegacy -> clientMessage = "[0piumh4ck.cc]";
             case Gondal -> clientMessage = "[Gondal.Club]";
             case Setstantium -> clientMessage = Formatting.BLUE + "[SetStantium.cc]";
             case Burger -> clientMessage = Formatting.DARK_GREEN + "burger.cc";

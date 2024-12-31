@@ -8,10 +8,10 @@ import java.util.Random;
 
 public class Spammer extends Module {
     public static enum Mode{
-        Hack, Meow, Ru, Arab, One
+        Hack, Opium, Ru, Arab, One
     }
     private final Timer delayTimer = new Timer();
-    public Setting<Mode> mode = this.register(new Setting<>("Mode", Mode.Meow));
+    public Setting<Mode> mode = this.register(new Setting<>("Mode", Mode.Opium));
     public Setting<Double> delay = this.register(new Setting<>("Delay", 10d, 1d, 30d));
     public Spammer(){
         super("Spammer","",Category.MISC,true,false,false);
@@ -22,7 +22,7 @@ public class Spammer extends Module {
             mc.player.networkHandler.sendChatMessage(getHackMessage());
             delayTimer.reset();
         }
-        if (mode.getValue() == Mode.Meow && delayTimer.passedS(delay.getValue())) {
+        if (mode.getValue() == Mode.Opium && delayTimer.passedS(delay.getValue())) {
             mc.player.networkHandler.sendChatMessage(getMeowMessage());
             delayTimer.reset();
         }
@@ -41,11 +41,11 @@ public class Spammer extends Module {
     }
     private String getHackMessage(){
         String[] walkMessage = {
-                "Meowclient on top",
-                "Meowclient zapen",
-                "Meowclient very good",
-                "I will fuck you with my meowclient!",
-                "Your mother is buying my meowclient!",
+                "Opium on top",
+                "Opium zapen",
+                "Opium very good",
+                "I will fuck you with my Opium!",
+                "Your mother is buying my Opium!",
                 ">:3"
         };
 

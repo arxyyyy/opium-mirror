@@ -115,19 +115,19 @@ public class Announcer extends Module {
 
         private String getWalkMessage(){
         String[] walkMessage = {
-                "I just flew over {blocks} blocks thanks to meowclient.me!",
-                "Я только что пролетел над {blocks} блоками с помощью meowclient.me!",
-                "meowclient.me sayesinde {blocks} blok u\u00E7tum!",
-                "\u6211\u521A\u521A\u7528 meowclient.me \u8D70\u4E86 {blocks} \u7C73!",
-                "Dank meowclient.me bin ich gerade über {blocks} Blöcke geflogen!",
-                "Jag hoppade precis över {blocks} blocks tack vare meowclient.me!",
-                "Właśnie przeleciałem ponad {blocks} bloki dzięki meowclient.me!",
-                "Es tikko nolidoju {blocks} blokus, paldies meowclient.me!",
-                "Я щойно пролетів як моль над {blocks} блоками завдяки meowclient.me!",
-                "I just fwew ovew {blocks} bwoccs thanks to meowclient.me",
-                "Ho appena camminato per {blocks} blocchi grazie a meowclient.me!",
-                "עכשיו עפתי {blocks} הודות ל meowclient.me!",
-                "Právě jsem proletěl {blocks} bloků díky meowclient.me!"
+                "I just flew over {blocks} blocks thanks to Opium!",
+                "Я только что пролетел над {blocks} блоками с помощью Opium!",
+                "Opium sayesinde {blocks} blok u\u00E7tum!",
+                "\u6211\u521A\u521A\u7528 Opium \u8D70\u4E86 {blocks} \u7C73!",
+                "Dank Opium bin ich gerade über {blocks} Blöcke geflogen!",
+                "Jag hoppade precis över {blocks} blocks tack vare Opium!",
+                "Właśnie przeleciałem ponad {blocks} bloki dzięki Opium!",
+                "Es tikko nolidoju {blocks} blokus, paldies Opium!",
+                "Я щойно пролетів як моль над {blocks} блоками завдяки Opium!",
+                "I just fwew ovew {blocks} bwoccs thanks to Opium",
+                "Ho appena camminato per {blocks} blocchi grazie a Opium!",
+                "עכשיו עפתי {blocks} הודות ל Opium!",
+                "Právě jsem proletěl {blocks} bloků díky Opium!"
         };
 
         return walkMessage[new Random().nextInt(walkMessage.length)];
@@ -136,19 +136,19 @@ public class Announcer extends Module {
     private String getBreakMessage() {
 
         String[] breakMessage = {
-                "I just destroyed {amount} {name} with the power of meowclient.me!",
-                "Я только что разрушил {amount} {name} с помощью meowclient.me!",
-                "Az \u00F6nce {amount} tane {name} k\u0131rd\u0131m. Te\u015Eekk\u00FCrler meowclient.me!",
-                "\u6211\u521A\u521A\u7528 meowclient.me \u7834\u574F\u4E86 {amount} {name}!",
-                "Ich habe gerade {amount} {name} mit der Kraft von meowclient.me zerstört!",
-                "Jag förstörde precis {amount} {name} tack vare meowclient.me!",
-                "Właśnie zniszczyłem {amount} {name} za pomocą meowclient.me",
-                "Es tikko salauzu {amount} {name} ar spēku meowclient.me!",
-                "Я щойно знищив {amount} {name} за допомогою meowclient.me!",
-                "I just destwoyed {amount} {name} with the powew of meowclient.me!",
-                "Ho appena distrutto {amount} {name} grazie al potere di meowclient.me!",
-                "בדיוק חצבתי {amount} {name} בעזרת הכוח של meowclient.me!",
-                "Právě jsem zničil {amount} {name} s mocí meowclient.me!"
+                "I just destroyed {amount} {name} with the power of Opium!",
+                "Я только что разрушил {amount} {name} с помощью Opium!",
+                "Az \u00F6nce {amount} tane {name} k\u0131rd\u0131m. Te\u015Eekk\u00FCrler Opium!",
+                "\u6211\u521A\u521A\u7528 Opium \u7834\u574F\u4E86 {amount} {name}!",
+                "Ich habe gerade {amount} {name} mit der Kraft von Opium zerstört!",
+                "Jag förstörde precis {amount} {name} tack vare Opium!",
+                "Właśnie zniszczyłem {amount} {name} za pomocą Opium",
+                "Es tikko salauzu {amount} {name} ar spēku Opium!",
+                "Я щойно знищив {amount} {name} за допомогою Opium!",
+                "I just destwoyed {amount} {name} with the powew of Opium!",
+                "Ho appena distrutto {amount} {name} grazie al potere di Opium!",
+                "בדיוק חצבתי {amount} {name} בעזרת הכוח של Opium!",
+                "Právě jsem zničil {amount} {name} s mocí Opium!"
         };
 
         return breakMessage[new Random().nextInt(breakMessage.length)];
@@ -157,19 +157,19 @@ public class Announcer extends Module {
     private String getEatMessage() {
 
         String[] eatMessage = {
-                "I just ate {amount} {name} thanks to meowclient.me!",
-                "Я только что съел {amount} {name} с помощью meowclient.me!",
-                "Tam olarak {amount} tane {name} yedim. Te\u015Eekk\u00FCrler meowclient.me",
-                "\u6211\u521A\u7528 meowclient.me \u5403\u4E86 {amount} \u4E2A {name}!",
-                "Ich habe gerade {amount} {name} dank meowclient.me gegessen!",
-                "Jag åt precis {amount} {name} tack vare meowclient.me",
-                "Właśnie zjadłem {amount} {name} dzięki meowclient.me",
-                "Es tikko apēdu {amount} {name} paldies meowclient.me",
-                "Я щойно з’їв {amount} {name} завдяки meowclient.me!",
-                "I just ate {amount} {name} thanks to meowclient.me! ^-^",
-                "Ho appena mangiato {amount} {name} grazie a meowclient.me!",
-                "כרגע אכלתי {amount} {name} הודות לmeowclient.me!" ,
-                "Právě jsem snědl {amount} {name} díky meowclient.me"
+                "I just ate {amount} {name} thanks to Opium!",
+                "Я только что съел {amount} {name} с помощью Opium!",
+                "Tam olarak {amount} tane {name} yedim. Te\u015Eekk\u00FCrler Opium",
+                "\u6211\u521A\u7528 Opium \u5403\u4E86 {amount} \u4E2A {name}!",
+                "Ich habe gerade {amount} {name} dank Opium gegessen!",
+                "Jag åt precis {amount} {name} tack vare Opium",
+                "Właśnie zjadłem {amount} {name} dzięki Opium",
+                "Es tikko apēdu {amount} {name} paldies Opium",
+                "Я щойно з’їв {amount} {name} завдяки Opium!",
+                "I just ate {amount} {name} thanks to Opium! ^-^",
+                "Ho appena mangiato {amount} {name} grazie a Opium!",
+                "כרגע אכלתי {amount} {name} הודות לOpium!" ,
+                "Právě jsem snědl {amount} {name} díky Opium"
         };
 
         return eatMessage[new Random().nextInt(eatMessage.length)];
