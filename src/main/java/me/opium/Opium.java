@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Opium implements ModInitializer, ClientModInitializer {
     public static final String NAME = "Opium";
-    public static final String VERSION = " 1.3.2";
+    public static final String VERSION = " 1.3.2-Beta";
     public static final EventBus EVENT_BUS = new EventBus();
     public static EventHandler EVENT_HANDLER;
 
