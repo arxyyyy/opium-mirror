@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 public class HUD extends Module {
     public DrawContext context = null;
-    public Setting<Boolean> watermark = this.register(new Setting<>("Watermark", true));
     public Setting<Boolean> welcomer = this.register(new Setting<>("Welcomer", false));
     public Setting<Boolean> biome = this.register(new Setting<>("Biome", false));
     public HUD() {
@@ -24,14 +23,6 @@ public class HUD extends Module {
     }
 
     @Override public void onRender2D(Render2DEvent event) {
-        if(watermark.getValue() == true) {
-            event.getContext().drawTextWithShadow(
-                    Util.mc.textRenderer,
-                    Opium.NAME + Opium.VERSION,
-                    1, 1,
-                    -1
-            );
-        }
         if(biome.getValue() == true) {
             event.getContext().drawTextWithShadow(
                     Util.mc.textRenderer,

@@ -9,6 +9,7 @@ import me.opium.features.modules.Module;
 import me.opium.features.modules.client.Debug;
 import me.opium.features.modules.client.UI;
 import me.opium.features.modules.client.HUD;
+import me.opium.features.modules.client.Watermarks;
 import me.opium.features.modules.combat.AutoTotem;
 import me.opium.features.modules.combat.Criticals;
 import me.opium.features.modules.combat.PacketExp;
@@ -73,6 +74,7 @@ public class ModuleManager implements Jsonable, Util {
         modules.add(new HUD());
         modules.add(new Debug());
         modules.add(new UI());
+        modules.add(new Watermarks());
 
     }
 
