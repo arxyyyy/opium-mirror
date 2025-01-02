@@ -1,3 +1,10 @@
-Meow Meow Meow :3
-![image](https://github.com/user-attachments/assets/963525fb-7099-42c9-bd3c-436528eda76c)
-![image](https://github.com/user-attachments/assets/2434cf3f-76cc-4873-ba20-37295babf625)
+## License
+GNU General Public License v3
+## Credits
+- https://github.com/coltonk9043/Aoba-MC-Hacked-Client
+- https://github.com/qualterz/lookaround
+- https://github.com/Pan4ur/ThunderHack-Recode
+- https://github.com/Ladysnake/Satin
+- https://github.com/MeteorDevelopment/meteor-client
+- https://github.com/cabaletta/baritone
+- https://github.com/The-Fireplace-Minecraft-Mods/In-Game-Account-Switcher
