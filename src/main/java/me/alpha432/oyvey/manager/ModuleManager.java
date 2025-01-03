@@ -76,6 +76,7 @@ public class ModuleManager implements Jsonable, Util {
         modules.add(new AutoMine());
         modules.add(new BoatExcute());
         modules.add(new BoatFly());
+        modules.add(new AutoRespawn());
     }
 
     public Module getModuleByName(String name) {
