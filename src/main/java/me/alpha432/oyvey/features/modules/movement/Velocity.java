@@ -1,4 +1,4 @@
-package me.alpha432.oyvey.features.modules.player;
+package me.alpha432.oyvey.features.modules.movement;
 
 import me.alpha432.oyvey.event.EventHandler;
 import me.alpha432.oyvey.event.impl.PacketEvent;
@@ -16,7 +16,7 @@ public class Velocity extends Module {
 
 
     public Velocity() {
-        super("Velocity", "", Category.PLAYER, true, false, false);
+        super("Velocity", "", Category.MOVEMENT, true, false, false);
     }
     @EventHandler
     public void onTick() {
