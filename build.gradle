@@ -1,55 +1,77 @@
 plugins {
-    id 'fabric-loom' version '1.6.3'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-loom {
-    accessWidenerPath = file("src/main/resources/opium.accesswidener")
+repositories {
+    // Add repositories to retrieve artifacts from in here.
+    mavenCentral()  // This is commonly used for dependencies
+    maven { url 'https://maven.fabricmc.net/' }  // Fabric's Maven repository
 }
 
-repositories {
-    flatDir {
-        dirs 'lib'
-    }
+loom {
+    accessWidenerPath = file("src/main/resources/oyvey.accesswidener")
 }
 
 dependencies {
+    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation name: 'baritone-fabric-1.10.2'
-    modImplementation name: 'nether-pathfinder-1.4.1'
-    modImplementation name: 'IAS-Fabric-1.20.4-9.0.2-SNAPSHOT'
-    modImplementation name: 'satin-1.15.0'
-    include name: 'satin-1.15.0'
-    include name: 'IAS-Fabric-1.20.4-9.0.2-SNAPSHOT'
-    include name: 'baritone-fabric-1.10.2'
-    include "org.ladysnake:satin:1.15.0"
+    // Remove the problematic net.minecraft:text dependency.
+    // Text rendering is part of Minecraft itself, no need to add it manually.
+
+    // Fabric API (required for most mods that use Fabric)
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Optionally, add other dependencies you need for your mod here.
 }
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "loader_version", project.loader_version
+    filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version,
+                "minecraft_version": project.minecraft_version,
+                "loader_version": project.loader_version
     }
 }
 
+def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    // Ensure that the encoding is set to UTF-8, no matter what the system default is
+    // This fixes some edge cases with special characters not displaying correctly.
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release = targetJavaVersion
+    }
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+    archivesBaseName = project.archives_base_name
+    withSourcesJar()  // Generate sources jar (optional)
 }
 
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+// Configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -57,6 +79,11 @@ publishing {
         }
     }
 
+    // Add repositories for publishing (optional)
     repositories {
+        // Add repositories to publish to here (e.g., Maven Central, etc.)
     }
+}
+kotlin {
+    jvmToolchain(21)
 }
