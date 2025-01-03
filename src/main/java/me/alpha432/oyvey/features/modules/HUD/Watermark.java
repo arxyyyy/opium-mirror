@@ -42,6 +42,9 @@ public class Watermark extends Module {
         if (playerName.equals("FinalMemory")) {
             uid = "2";
         }
+        if (playerName.equals("crystal0p1umm")) {
+            uid = "1";
+        }
 
         TextRenderer textRenderer = mc.textRenderer;
         int watermarkX = 2;
