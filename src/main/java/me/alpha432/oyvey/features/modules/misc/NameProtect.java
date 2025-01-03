@@ -11,7 +11,7 @@ public class NameProtect extends Module {
     }
 
     public static NameProtect INSTANCE;
-    public final Setting<String> newName = this.register(new Setting("cool ass mfer", "Fe!n"));
+    public final Setting<String> newName = this.register(new Setting("cool ass mfer", "Client"));
 
     public String getFakeName() {
         return newName.getValue();

@@ -24,7 +24,7 @@ public class Speed extends Module {
     }
 
     public enum mode {
-        GrimCollide,
+        Grim,
         Strafe,
         LowHop,
         Vanilla
@@ -35,7 +35,7 @@ public class Speed extends Module {
         double dz = mc.player.getZ() - mc.player.prevZ;
         double distance = Math.sqrt(dx * dx + dz * dz);
 
-        if (Mode.getValue() == mode.GrimCollide) {
+        if (Mode.getValue() == mode.Grim) {
             int collisions = 0;
             for (Entity entity : mc.world.getEntities()) {
                 if (checkIsCollidingEntity(entity) && MathHelper.sqrt((float) mc.player.squaredDistanceTo(entity)) <= 1.5) {

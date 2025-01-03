@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 public class OyVey implements ModInitializer, ClientModInitializer {
     public static final String NAME = "0piumh4ck.cc-beta";
-    public static final String VERSION = "1.3.4";
+    public static final String VERSION = "1.3.5";
 
     public static float TIMER = 1f;
     public static final EventBus EVENT_BUS = new EventBus();
