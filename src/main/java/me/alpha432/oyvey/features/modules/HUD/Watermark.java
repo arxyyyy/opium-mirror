@@ -74,7 +74,7 @@ public class Watermark extends Module {
         int alpha = 255;
         int argbColor = (alpha << 24) | (red << 16) | (green << 8) | blue;
 
-        String watermarkText = version.getValue() ? mode.getValue() + " beta (" + OyVey.VERSION +")" : mode.getValue().toString();
+        String watermarkText = version.getValue() ? mode.getValue() + " " + OyVey.VERSION +"-Beta" : mode.getValue().toString();
         event.getContext().drawTextWithShadow(textRenderer, watermarkText, watermarkX, watermarkY, argbColor);
 
         if (showUID.getValue()) {
