@@ -34,7 +34,7 @@ public class AutoCrystal extends Module {
     private final Set<BlockPos> blacklistedPositions = new HashSet<>();
 
     public AutoCrystal() {
-        super("JaxuiCrystal", "Places and breaks crystals on bedrock/obsidian near the target", Category.COMBAT, true, false, false);
+        super("AutoCrystal", "Places and breaks crystals on bedrock/obsidian near the target", Category.COMBAT, true, false, false);
     }
 
     @Override
