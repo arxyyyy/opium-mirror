@@ -45,6 +45,9 @@ public class Watermark extends Module {
         if (playerName.equals("crystal0p1umm")) {
             uid = "1";
         }
+        if (playerName.equals("ItsBookxYT")) {
+            uid = "3";
+        }
 
         TextRenderer textRenderer = mc.textRenderer;
         int watermarkX = 2;
