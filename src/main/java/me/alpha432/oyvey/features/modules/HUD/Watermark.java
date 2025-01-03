@@ -33,38 +33,15 @@ public class Watermark extends Module {
         if (mc.player == null || !showWatermark.getValue()) return;
         String uid = "0";
 
-        if (playerName.equals("clientpvp")) {
-            uid = "❄";
+        if (playerName.equals("Op1umClientLLC")) {
+            uid = "0";
         }
-        if (playerName.equals("jaxui")) {
-            uid = "☆ 1";
+        if (playerName.equals("heedii")) {
+            uid = "1";
         }
-        if (playerName.equals("_Onyx")) {
-            uid = "5";
-        }
-        if (playerName.equals("Yaga419")) {
-            uid = "420";
-        }
-        if (playerName.equals("rxxyv")) {
-            uid = "☆ 2";
-        }
-        if (playerName.equals("Steffie678")) {
-            uid = "☆ 3";
-        }
-        if (playerName.equals("vP0G")) {
+        if (playerName.equals("FinalMemory")) {
             uid = "2";
         }
-        if (playerName.equals("LonelyLodge")) {
-            uid = "2";
-        }
-        if (playerName.equals("Lord_Vic")) {
-            uid = "4";
-        }
-        if (playerName.equals("DigitalMiscreant")) {
-            uid = "Δ";
-        }
-
-
 
         TextRenderer textRenderer = mc.textRenderer;
         int watermarkX = 2;
