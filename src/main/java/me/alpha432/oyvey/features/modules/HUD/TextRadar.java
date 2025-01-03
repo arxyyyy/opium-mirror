@@ -38,7 +38,7 @@ public class TextRadar extends Module {
         int yOffset = 0;
 
         // Draw the "TextRadar" label
-        String radarLabel = "TextRadar:";
+        String radarLabel = "Visual Range:";
         event.getContext().drawTextWithShadow(textRenderer, Text.literal(radarLabel), Math.round(radarX), Math.round(radarY), argbColor);
 
         // Increase the Y offset to position player names below the label
