@@ -8,6 +8,7 @@ import we.devs.opium.api.manager.element.RegisterElement;
 import we.devs.opium.api.utilities.RenderUtils;
 import we.devs.opium.client.events.EventRender2D;
 import we.devs.opium.client.modules.client.ModuleColor;
+import we.devs.opium.client.modules.client.ModuleFont;
 
 import java.text.DecimalFormat;
 
@@ -16,8 +17,13 @@ public class ElementServerBrand extends Element {
     @Override
     public void onRender2D(EventRender2D event) {
         super.onRender2D(event);
-        this.frame.setWidth(mc.textRenderer.getWidth(this.getServerBrand()));
-        this.frame.setHeight(mc.textRenderer.fontHeight);
+        if(ModuleFont.INSTANCE.customFonts.getValue()) {
+            this.frame.setWidth(RenderUtils.getFontRenderer().getStringWidth(getServerBrand()));
+            this.frame.setHeight(RenderUtils.getFontRenderer().getStringHeight(getServerBrand()));
+        } else {
+            this.frame.setWidth(mc.textRenderer.getWidth(this.getServerBrand()));
+            this.frame.setHeight(mc.textRenderer.fontHeight);
+        }
         RenderUtils.drawString(new MatrixStack(),this.getServerBrand(), (int) this.frame.getX(), (int) this.frame.getY(), ModuleColor.getColor().getRGB());
     }
 
