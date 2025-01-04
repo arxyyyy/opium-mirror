@@ -2,6 +2,8 @@ package we.devs.opium.api.utilities;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.x150.renderer.font.FontRenderer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
@@ -10,12 +12,18 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import we.devs.opium.api.utilities.font.FontRenderers;
 import we.devs.opium.api.utilities.font.fxFontRenderer;
+import we.devs.opium.client.modules.client.ModuleFont;
 
 import java.awt.*;
 import java.util.Objects;
 
 public class RenderUtils implements IMinecraft {
     public static Frustum camera = new Frustum(new Matrix4f(), new Matrix4f());
+    public static DrawContext drawContext;
+
+    public static void setDrawContext(DrawContext drawContext) {
+        RenderUtils.drawContext = drawContext;
+    }
 
     public static void prepare() {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -193,7 +201,10 @@ public class RenderUtils implements IMinecraft {
     }
 
     public static void drawString(MatrixStack matrixStack, String text, float x, float y, int color) {
-        if (getFontRenderer() != null) {
+        if (!ModuleFont.INSTANCE.customFonts.getValue()) {
+            color = fixColorValue(color);
+            drawContext.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, color, false);
+        } else if (getFontRenderer() != null) {
             try {
                 getFontRenderer().drawString(matrixStack, text, x, y, 256 - ColorUtils.getRed(color), 256 - ColorUtils.getGreen(color), 256 - ColorUtils.getBlue(color), 256 - ColorUtils.getAlpha(color));
             } catch (NullPointerException ignored) {
@@ -201,34 +212,7 @@ public class RenderUtils implements IMinecraft {
             }
         }
     }
-
-    public static void drawCenteredString(MatrixStack matrixStack, String text, float x, float y, int color) {
-        if (getFontRenderer() != null) {
-            getFontRenderer().drawCenteredString(matrixStack, text, x, y, 256 - ColorUtils.getRed(color), 256 - ColorUtils.getGreen(color), 256 - ColorUtils.getBlue(color), 256 - ColorUtils.getAlpha(color));
-        }
-    }
-
-    public static void drawFixedString(MatrixStack matrixStack, String text, float x, float y, int color) {
-            if (getFxFontRenderer() != null) {
-                try {
-                    getFxFontRenderer().drawString(matrixStack, text, x, y, color);
-                } catch (NullPointerException ignored) {
-            }
-        }
-    }
-
-    public static void drawFixedCenteredString(MatrixStack matrixStack, String text, float x, float y, int color) {
-        if (getFxFontRenderer() != null) {
-            getFxFontRenderer().drawCenteredString(matrixStack, text, x, y, color);
-        }
-    }
-
-    public static void drawCustomString(fxFontRenderer fontRenderer, MatrixStack matrixStack, String text, float x, float y, int color) {
-        if (fontRenderer != null) {
-            try {
-                fontRenderer.drawString(matrixStack, text, x, y, color);
-            } catch (NullPointerException ignored) {
-            }
-        }
+    private static int fixColorValue(int color) {
+        return ColorUtils.setAlpha(color, 5f, 5).getRGB();
     }
 }

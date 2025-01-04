@@ -47,7 +47,7 @@ public class ValueColor extends Value {
 
     public Color getValue() {
         if (this.sync && this != ModuleColor.INSTANCE.color) {
-            return new Color(ModuleColor.getColor().getRed(), ModuleColor.getColor().getGreen(), ModuleColor.getColor().getBlue(), this.value.getAlpha());
+            return new Color(ModuleColor.getColor().getRed(), ModuleColor.getColor().getGreen(), ModuleColor.getColor().getBlue(), ModuleColor.getColor().getAlpha());
         }
         this.doRainbow();
         return this.value;

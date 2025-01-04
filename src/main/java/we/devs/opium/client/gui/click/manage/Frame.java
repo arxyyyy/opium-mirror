@@ -86,14 +86,14 @@ public class Frame implements IMinecraft {
             if(ModuleGUI.INSTANCE.roundedCorners.getValue()) {
                 Renderer2d.renderRoundedQuad(
                         context.getMatrices(),
-                        new Color(29,29,29, 255),
+                        Opium.CLICK_GUI.getCategoryColor(),
                         this.getX() - 2, this.getY() + 13,
                         this.getX() + this.getWidth() + 2, this.getY() + this.getHeight(),
                         0, 0, radius, radius,
                         samples
                 );
             } else {
-                RenderUtils.drawRect(context.getMatrices(), this.getX() - 2, this.getY() + 13, this.getX() + this.getWidth() + 2, this.getY() + this.getHeight(), new Color(29,29,29, 255));
+                RenderUtils.drawRect(context.getMatrices(), this.getX() - 2, this.getY() + 13, this.getX() + this.getWidth() + 2, this.getY() + this.getHeight(), Opium.CLICK_GUI.getCategoryColor());
             }
         }
         RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3, this.y + 1, -1);

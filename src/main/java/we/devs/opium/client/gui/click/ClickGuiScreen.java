@@ -12,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import we.devs.opium.client.modules.client.ModuleGUI;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class ClickGuiScreen extends Screen implements EventListener {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        RenderUtils.setDrawContext(context);
         for (Frame frame : this.frames) {
             frame.render(context, mouseX, mouseY, delta);
         }
@@ -79,6 +81,9 @@ public class ClickGuiScreen extends Screen implements EventListener {
     }
 
     public Color getColor() {
-        return new Color(ModuleColor.getColor().getRed(), ModuleColor.getColor().getGreen(), ModuleColor.getColor().getBlue(), 160);
+        return new Color(ModuleColor.getColor().getRed(), ModuleColor.getColor().getGreen(), ModuleColor.getColor().getBlue(), ModuleColor.getColor().getAlpha());
+    }
+    public Color getCategoryColor() {
+        return new Color(ModuleGUI.INSTANCE.categoryColor.getValue().getRed(), ModuleGUI.INSTANCE.categoryColor.getValue().getGreen(),ModuleGUI.INSTANCE.categoryColor.getValue().getBlue(), ModuleGUI.INSTANCE.categoryColor.getValue().getAlpha());
     }
 }

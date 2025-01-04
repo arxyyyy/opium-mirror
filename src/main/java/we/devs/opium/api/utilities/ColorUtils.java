@@ -3,6 +3,7 @@ package we.devs.opium.api.utilities;
 import we.devs.opium.client.modules.client.ModuleColor;
 
 import java.awt.Color;
+import java.util.Objects;
 
 public class ColorUtils implements IMinecraft {
     public static Color wave(Color color, int index, int count) {
@@ -31,6 +32,13 @@ public class ColorUtils implements IMinecraft {
         int greenPart = (int)((double)color1.getGreen() * inverse_percent + (double)color2.getGreen() * offset);
         int bluePart = (int)((double)color1.getBlue() * inverse_percent + (double)color2.getBlue() * offset);
         return new Color(redPart, greenPart, bluePart);
+    }
+
+    public static Color setAlpha(Integer color, float lessThanValue,int changeToAlpha) {
+        if (color != null && getAlpha(color) < lessThanValue)
+            return new Color(ColorUtils.getRed(color), ColorUtils.getGreen(color), ColorUtils.getBlue(color), changeToAlpha);
+        else
+            return new Color(Objects.requireNonNullElse(color, -1));
     }
 
     public static Color setAlpha(Color color, int alpha) {

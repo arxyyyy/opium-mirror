@@ -13,6 +13,7 @@ import we.devs.opium.client.modules.miscellaneous.ModuleMiddleClick;
 import we.devs.opium.client.modules.miscellaneous.ModuleWelcomer;
 import we.devs.opium.client.modules.movement.ModuleSprint;
 import we.devs.opium.client.modules.movement.ModuleVelocity;
+import we.devs.opium.client.modules.player.ModuleElytraSwap;
 import we.devs.opium.client.modules.player.ModuleMultiTask;
 import we.devs.opium.client.modules.visuals.ModuleCrosshair;
 import we.devs.opium.client.values.Value;
@@ -34,6 +35,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         //Client
         this.register(new ModuleColor());
         this.register(new ModuleCommands());
+        this.register(new ModuleFont());
         this.register(new ModuleGUI());
         this.register(new ModuleHUD());
         this.register(new ModuleHUDEditor());
@@ -58,6 +60,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleVelocity());
 
         //Player
+        this.register(new ModuleElytraSwap());
         this.register(new ModuleMultiTask());
 
         //Visuals
