@@ -57,7 +57,7 @@ public class ElementArraylist extends Element {
                     String string = m.getTag() + (m.getHudInfo().isEmpty() ? "" : this.gray + " [" + Formatting.WHITE + m.getHudInfo() + this.gray + "]");
                     float x = sWidth - 2.0f - getWidth(string);
                     float y = this.rendering.getValue().equals(renderings.Up) ? (float) (2 + addY * 10) : sHeight - 12.0f - (float) (addY * 10);
-                    RenderUtils.drawString(event.getContext().getMatrices(), string, x, y, (int) (this.modulesColor.getValue().equals(modulesColors.Normal) ? ModuleColor.getColor() : (this.modulesColor.getValue().equals(modulesColors.Random) ? m.getRandomColor() : ColorUtils.rainbow(addY).getRGB())));
+                    RenderUtils.drawString(event.getContext().getMatrices(), string, x, y, (int) (this.modulesColor.getValue().equals(modulesColors.Normal) ? ModuleColor.getColor().getRGB() : (this.modulesColor.getValue().equals(modulesColors.Random) ? m.getRandomColor() : ColorUtils.rainbow(addY)).getRGB()));
                     ++addY;
                 }
             }
