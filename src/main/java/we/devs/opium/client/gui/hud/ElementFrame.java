@@ -21,6 +21,8 @@ public class ElementFrame implements IMinecraft {
     private boolean visible;
     private HudEditorScreen parent;
 
+    public Color color = Color.BLACK;
+
     public ElementFrame(Element element, float x, float y, float width, float height, HudEditorScreen parent) {
         this.element = element;
         this.x = x;
@@ -53,7 +55,7 @@ public class ElementFrame implements IMinecraft {
             if (this.dragging) {
                 RenderUtils.drawRect(context.getMatrices(), this.x, this.y, this.x + this.width, this.y + this.height, new Color(Color.DARK_GRAY.getRed(), Color.DARK_GRAY.getGreen(), Color.DARK_GRAY.getBlue(), 100));
             } else {
-                RenderUtils.drawRect(context.getMatrices(), this.x, this.y, this.x + this.width, this.y + this.height, new Color(Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue(), 100));
+                RenderUtils.drawRect(context.getMatrices(), this.x, this.y, this.x + this.width, this.y + this.height, new Color(color.getRed(), color.getGreen(), color.getBlue(), 100));
             }
             this.element.onRender2D(new EventRender2D(partialTicks, context));
         }

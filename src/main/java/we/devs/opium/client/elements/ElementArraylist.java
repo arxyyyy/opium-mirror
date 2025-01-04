@@ -11,9 +11,11 @@ import we.devs.opium.api.utilities.ColorUtils;
 import we.devs.opium.api.utilities.RenderUtils;
 import we.devs.opium.client.events.EventRender2D;
 import we.devs.opium.client.modules.client.ModuleColor;
+import we.devs.opium.client.modules.client.ModuleFont;
 import we.devs.opium.client.modules.client.ModuleHUD;
 import we.devs.opium.client.values.impl.ValueEnum;
 
+import java.awt.*;
 import java.awt.image.renderable.RenderContext;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,7 +33,7 @@ public class ElementArraylist extends Element {
 
     @Override
     public void onRender2D(EventRender2D event) {
-        DrawContext context = event.getContext();
+        frame.color = new Color(0, 0, 0, 0);
         float sWidth = mc.getWindow().getScaledWidth();
         float sHeight = mc.getWindow().getScaledHeight();
         modules.clear();
@@ -45,21 +47,26 @@ public class ElementArraylist extends Element {
             if (this.ordering.getValue().equals(orderings.Length)) {
                 for (we.devs.opium.api.manager.module.Module m : modules.stream().sorted(Comparator.comparing(s -> mc.textRenderer.getWidth(s.getTag() + (s.getHudInfo().isEmpty() ? "" : this.gray + " [" + Formatting.WHITE + s.getHudInfo() + this.gray + "]")) * -1.0f)).toList()) {
                     String string = m.getTag() + (m.getHudInfo().isEmpty() ? "" : this.gray + " [" + Formatting.WHITE + m.getHudInfo() + this.gray + "]");
-                    float x = sWidth - 2.0f - mc.textRenderer.getWidth(string);
-                    float y = this.rendering.getValue().equals(renderings.Up) ? (float) (2 + addY * 10 + (ModuleHUD.INSTANCE.effectHud.getValue().equals(ModuleHUD.effectHuds.Shift) && !mc.player.getActiveStatusEffects().isEmpty() ? 25 : 0)) : sHeight - 12.0f - (float) (addY * 10);
-                    context.drawTextWithShadow(mc.textRenderer, string, (int) x, (int) y, this.modulesColor.getValue().equals(modulesColors.Normal) ? ModuleColor.getColor().getRGB() : (this.modulesColor.getValue().equals(modulesColors.Random) ? m.getRandomColor().getRGB() : ColorUtils.rainbow(addY).getRGB()));
+                    float x = frame.getX() + frame.getWidth() - 2 - getWidth(string);
+                    float y = this.rendering.getValue().equals(renderings.Up) ? (this.frame.getY() + addY * 10) : (this.frame.getY() - addY * 10);
+                    RenderUtils.drawString(event.getContext().getMatrices(), string, x, y, this.modulesColor.getValue().equals(modulesColors.Normal) ? ModuleColor.getColor().getRGB() : (this.modulesColor.getValue().equals(modulesColors.Random) ? m.getRandomColor().getRGB() : ColorUtils.rainbow(addY).getRGB()));
                     ++addY;
                 }
             } else {
                 for (we.devs.opium.api.manager.module.Module m : modules.stream().sorted(Comparator.comparing(Module::getName)).toList()) {
                     String string = m.getTag() + (m.getHudInfo().isEmpty() ? "" : this.gray + " [" + Formatting.WHITE + m.getHudInfo() + this.gray + "]");
-                    float x = sWidth - 2.0f - mc.textRenderer.getWidth(string);
-                    float y = this.rendering.getValue().equals(renderings.Up) ? (float) (2 + addY * 10 + (ModuleHUD.INSTANCE.effectHud.getValue().equals(ModuleHUD.effectHuds.Shift) && !mc.player.getActiveStatusEffects().isEmpty() ? 25 : 0)) : sHeight - 12.0f - (float) (addY * 10);
-                    context.drawTextWithShadow(mc.textRenderer, string, (int) x, (int) y, (Integer) (this.modulesColor.getValue().equals(modulesColors.Normal) ? ModuleColor.getColor() : (this.modulesColor.getValue().equals(modulesColors.Random) ? m.getRandomColor() : ColorUtils.rainbow(addY).getRGB())));
+                    float x = sWidth - 2.0f - getWidth(string);
+                    float y = this.rendering.getValue().equals(renderings.Up) ? (float) (2 + addY * 10) : sHeight - 12.0f - (float) (addY * 10);
+                    RenderUtils.drawString(event.getContext().getMatrices(), string, x, y, (int) (this.modulesColor.getValue().equals(modulesColors.Normal) ? ModuleColor.getColor() : (this.modulesColor.getValue().equals(modulesColors.Random) ? m.getRandomColor() : ColorUtils.rainbow(addY).getRGB())));
                     ++addY;
                 }
             }
         }
+    }
+
+    float getWidth(String string) {
+        if(ModuleFont.INSTANCE.customFonts.getValue()) return RenderUtils.getFontRenderer().getStringWidth(string);
+        else return mc.textRenderer.getWidth(string);
     }
 
     public enum orderings {
