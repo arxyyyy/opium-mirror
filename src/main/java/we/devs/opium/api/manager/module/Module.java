@@ -189,7 +189,7 @@ public abstract class Module implements IMinecraft, EventListener {
                 number += character;
                 number *= 10;
             }
-            ChatUtils.sendMessage(ModuleCommands.getSecondColor() + "" + Formatting.BOLD + this.getTag() + " " + ModuleCommands.getFirstColor() + "has been toggled " + (this.isToggled() ? Formatting.GREEN + "on" : Formatting.RED + "off") + ModuleCommands.getFirstColor() + "!", number);
+            ChatUtils.sendMessage(ModuleCommands.getSecondColor() + "" + Formatting.BOLD + this.getTag() + " " + ModuleCommands.getFirstColor() + (this.isToggled() ? Formatting.GREEN + "ON" : Formatting.RED + "OFF") + ModuleCommands.getFirstColor(), number);
         }
     }
 
