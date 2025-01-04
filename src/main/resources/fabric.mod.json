@@ -1,32 +1,30 @@
 {
-  "schemaVersion": 1,
-  "id": "oyvey",
-  "version": "${version}",
-  "name": "opium",
-  "description": "free and opensource client base",
-  "authors": [
-    "heedi"
-  ],
-  "contact": {
-    "repo": "lol no"
-  },
-  "license": "MIT",
-  "environment": "client",
-  "accessWidener": "oyvey.accesswidener",
-  "entrypoints": {
-    "client": [
-      "me.alpha432.oyvey.OyVey"
-    ],
-    "main": [
-      "me.alpha432.oyvey.OyVey"
-    ]
-  },
-  "mixins": [
-    "oyvey.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=${loader_version}",
-    "fabric": "*",
-    "minecraft": "${minecraft_version}"
-  }
+	"schemaVersion": 1,
+	"id": "opium",
+	"version": "${version}",
+	"name": "opium",
+	"description": "",
+	"authors": [
+		"heedi"
+	],
+	"license": "CC0-1.0",
+	"accessWidener": "opium.accesswidener",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"we.devs.opium.Opium"
+		]
+	},
+	"mixins": [
+		"opium.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
 }
