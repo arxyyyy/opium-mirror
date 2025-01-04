@@ -2,9 +2,7 @@ package we.devs.opium.api.manager.element;
 
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.event.EventListener;
-import we.devs.opium.client.elements.ElementFriends;
-import we.devs.opium.client.elements.ElementPlayerList;
-import we.devs.opium.client.elements.ElementWatermark;
+import we.devs.opium.client.elements.*;
 import we.devs.opium.client.values.Value;
 import net.minecraft.client.MinecraftClient;
 
@@ -22,6 +20,14 @@ public class ElementManager implements EventListener {
         this.register(new ElementFriends());
         this.register(new ElementPlayerList());
         this.register(new ElementWatermark());
+        this.register(new ElementDirection());
+        this.register(new ElementServerBrand());
+        this.register(new ElementArraylist());
+        this.register(new ElementCoords());
+        this.register(new ElementSpeed());
+        this.register(new ElementTPS());
+        this.register(new ElementPing());
+        this.register(new ElementFPS());
     }
 
     public void register(Element element) {

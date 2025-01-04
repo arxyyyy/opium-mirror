@@ -32,19 +32,19 @@ public class ModuleHUD extends Module {
     ValueBoolean direction = new ValueBoolean("Direction", "Direction", "", true);
     ValueBoolean potionEffects = new ValueBoolean("PotionEffects", "Potion Effects", "", true);
     public ValueEnum effectHud = new ValueEnum("EffectHUD", "Effect HUD", "", effectHuds.Hide);
-    ValueBoolean serverBrand = new ValueBoolean("ServerBrand", "Server Brand", "", true);
-    ValueBoolean tps = new ValueBoolean("TPS", "TPS", "", true);
-    ValueBoolean fps = new ValueBoolean("FPS", "FPS", "", true);
-    ValueBoolean speed = new ValueBoolean("Speed", "Speed", "", true);
-    ValueBoolean ping = new ValueBoolean("Ping", "Ping", "", true);
+    ValueBoolean serverBrand = new ValueBoolean("ServerBrand", "Server Brand", "", true); //
+    ValueBoolean tps = new ValueBoolean("TPS", "TPS", "", true); //
+    ValueBoolean fps = new ValueBoolean("FPS", "FPS", "", true); //
+    ValueBoolean speed = new ValueBoolean("Speed", "Speed", "", true); //
+    ValueBoolean ping = new ValueBoolean("Ping", "Ping", "", true); //
     ValueBoolean packetPS = new ValueBoolean("PacketsPS", "Packets/s", "", false);
-    ValueEnum ordering = new ValueEnum("Ordering", "Ordering", "", orderings.Length);
-    ValueBoolean coords = new ValueBoolean("Coords", "Coords", "", true);
-    ValueBoolean netherCoords = new ValueBoolean("NetherCoords", "Nether Coords", "", true);
+    ValueEnum ordering = new ValueEnum("Ordering", "Ordering", "", orderings.Length); //
+    ValueBoolean coords = new ValueBoolean("Coords", "Coords", "", true); //
+    ValueBoolean netherCoords = new ValueBoolean("NetherCoords", "Nether Coords", "", true); //
     ValueBoolean durability = new ValueBoolean("Durability", "Durability", "", true);
-    ValueBoolean arrayList = new ValueBoolean("ArrayList", "Array List", "", true);
-    ValueEnum modulesColor = new ValueEnum("ModulesColor", "Modules Color", "Color mode for array list.", modulesColors.Normal);
-    ValueEnum rendering = new ValueEnum("Rendering", "Rendering", "", renderings.Up);
+    ValueBoolean arrayList = new ValueBoolean("ArrayList", "Array List", "", true); //
+    ValueEnum modulesColor = new ValueEnum("ModulesColor", "Modules Color", "Color mode for array list.", modulesColors.Normal); //
+    ValueEnum rendering = new ValueEnum("Rendering", "Rendering", "", renderings.Up); //
     DecimalFormat format = new DecimalFormat("#.#");
     ArrayList<Module> modules;
     private int packets;
