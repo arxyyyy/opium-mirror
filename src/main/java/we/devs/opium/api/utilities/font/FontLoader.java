@@ -14,8 +14,8 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 public class FontLoader {
-    private static final String FONTS_FOLDER = "Opium/fonts";
-    private static final String ICON_FONTS_FOLDER = "Opium/fonts/icons";
+    private static final String FONTS_FOLDER = "opium/fonts";
+    private static final String ICON_FONTS_FOLDER = "opium/fonts/icons";
     private static final String[] DEFAULT_FONT = {"Comfortaa.ttf"};
 
     public static Font[] loadFonts() {

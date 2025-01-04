@@ -11,6 +11,7 @@ public class ModuleFont extends Module {
     public static ModuleFont INSTANCE;
 
     public ValueBoolean customFonts = new ValueBoolean("CustomFont", "Custom Font", "Render a custom font.", true);
+    public ValueBoolean customChatFont = new ValueBoolean("CustomChatFont", "Custom Chat Font", "Use a custom font to render chat messages", false);
 
     public ModuleFont() {
         INSTANCE = this;

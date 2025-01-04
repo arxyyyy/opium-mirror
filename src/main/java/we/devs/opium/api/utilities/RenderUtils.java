@@ -207,9 +207,7 @@ public class RenderUtils implements IMinecraft {
         } else if (getFontRenderer() != null) {
             try {
                 getFontRenderer().drawString(matrixStack, text, x, y, 256 - ColorUtils.getRed(color), 256 - ColorUtils.getGreen(color), 256 - ColorUtils.getBlue(color), 256 - ColorUtils.getAlpha(color));
-            } catch (NullPointerException ignored) {
-
-            }
+            } catch (NullPointerException ignored) {}
         }
     }
     private static int fixColorValue(int color) {

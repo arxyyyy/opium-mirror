@@ -31,5 +31,6 @@ public class ModuleGUI extends Module {
             return;
         }
         mc.setScreen(Opium.CLICK_GUI);
+        this.disable(false);
     }
 }

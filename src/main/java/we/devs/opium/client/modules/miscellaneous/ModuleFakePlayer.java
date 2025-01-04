@@ -20,7 +20,6 @@ public class ModuleFakePlayer extends Module {
             this.fakePlayer = new FakePlayerEntity(mc.player, "OpiumHack");
             this.fakePlayer.spawn();
         }
-
     }
 
     public void onDisable() {
@@ -28,7 +27,6 @@ public class ModuleFakePlayer extends Module {
             this.fakePlayer.despawn();
             this.fakePlayer = null;
         }
-
     }
 
     @Subscribe
@@ -40,8 +38,8 @@ public class ModuleFakePlayer extends Module {
     @Subscribe
     public void onPushEntity(PushEntityEvent event) {
         if (event.getPushed().equals(mc.player) && event.getPusher().equals(this.fakePlayer)) {
+            event.cancel();
         }
-
     }
 
 }

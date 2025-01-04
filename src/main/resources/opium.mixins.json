@@ -1,19 +1,20 @@
 {
-	"required": true,
-	"package": "we.devs.opium.asm.mixins",
-	"compatibilityLevel": "JAVA_21",
-	"client": [
-      "ClientConnectionMixin",
-      "ClientPlayerEntityMixin",
-      "ClientPlayNetworkHandlerMixin",
-      "IEntityVelocityUpdateS2CPacket",
-      "IExplosionS2CPacket",
-      "InGameHudMixin",
-      "KeyboardMixin",
-      "MinecraftClientMixin",
-      "WorldRendererMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "we.devs.opium.asm.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ChatHudMixin",
+    "ClientConnectionMixin",
+    "ClientPlayerEntityMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "IEntityVelocityUpdateS2CPacket",
+    "IExplosionS2CPacket",
+    "InGameHudMixin",
+    "KeyboardMixin",
+    "MinecraftClientMixin",
+    "WorldRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

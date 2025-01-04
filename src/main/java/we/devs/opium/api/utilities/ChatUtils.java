@@ -17,11 +17,10 @@ public class ChatUtils implements IMinecraft {
         mc.inGameHud.getChatHud().addMessage(component);
     }
 
-    public static void sendMessage(String message, int id, Object... args) {
+    public static void sendMessage(String message, int id) {
         if (mc.player == null || mc.world == null || mc.inGameHud == null) {
             return;
         }
-        message = fastFormat(message, args);
         Text component = Text.literal(getWatermark() + (!ModuleCommands.INSTANCE.watermarkMode.getValue().equals(ModuleCommands.WatermarkModes.None) ? " " : "") + ModuleCommands.getFirstColor() + message);
         mc.inGameHud.getChatHud().addMessage(component);
         //((IChatHud) mc.inGameHud.getChatHud()).clientMessage(component, id);
@@ -36,11 +35,10 @@ public class ChatUtils implements IMinecraft {
         mc.inGameHud.getChatHud().addMessage(component);
     }
 
-    public static void sendMessage(String message, String name, int id, Object... args) {
+    public static void sendMessage(String message, String name, int id) {
         if (mc.player == null || mc.world == null || mc.inGameHud == null) {
             return;
         }
-        message = fastFormat(message, args);
         Text component = Text.literal(getWatermark() + (!ModuleCommands.INSTANCE.watermarkMode.getValue().equals(ModuleCommands.WatermarkModes.None) ? " " : "") + Formatting.AQUA + "[" + name + "]: " + ModuleCommands.getFirstColor() + message);
         mc.inGameHud.getChatHud().addMessage(component);//((IChatHud) mc.inGameHud.getChatHud()).clientMessage(component, id);
     }

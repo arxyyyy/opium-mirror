@@ -21,6 +21,7 @@ public class ModuleHUDEditor extends Module {
             return;
         }
         mc.setScreen(Opium.HUD_EDITOR);
+        this.disable(false);
     }
 
     public Formatting getSecondColor() {
