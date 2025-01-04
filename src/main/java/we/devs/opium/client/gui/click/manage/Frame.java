@@ -88,7 +88,7 @@ public class Frame implements IMinecraft {
                         context.getMatrices(),
                         Opium.CLICK_GUI.getCategoryColor(),
                         this.getX() - 2, this.getY() + 13,
-                        this.getX() + this.getWidth() + 2, this.getY() + this.getHeight(),
+                        this.getX() + this.getWidth() + 2, this.getY() + this.getHeight() + 1.5f,
                         0, 0, radius, radius,
                         samples
                 );
