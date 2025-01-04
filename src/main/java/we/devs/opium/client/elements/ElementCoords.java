@@ -35,7 +35,7 @@ public class ElementCoords extends Element {
     String getText() {String coordsText = "XYZ" + " " + this.format.format(mc.player.getX()) + ", " + this.format.format(mc.player.getY()) + ", " + this.format.format(mc.player.getZ()) +
             (this.netherCoords.getValue() ? " [" + this.format.format(mc.player.getWorld().getRegistryKey().getValue().equals("minecraft:the_nether") ? mc.player.getX() * 8.0 : mc.player.getX() / 8.0) + ", " + this.format.format(mc.player.getWorld().getRegistryKey().getValue().equals("minecraft:the_nether") ? mc.player.getZ() * 8.0 : mc.player.getZ() / 8.0) + "]" : "");
 
-        return "Ping: " + coordsText;
+        return "" + coordsText;
     }
 
 }
