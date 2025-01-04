@@ -1,10 +1,11 @@
-package we.devs.opium.client.modules.client;
+package we.devs.opium.client.modules.miscellaneous;
 
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.ChatUtils;
 import we.devs.opium.api.utilities.InventoryUtils;
+import we.devs.opium.client.modules.client.ModuleCommands;
 import we.devs.opium.client.values.impl.ValueEnum;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -17,7 +18,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
-@RegisterModule(name="MiddleClick", tag="Middle Click", description="Add actions to middle click.", category=Module.Category.CLIENT)
+@RegisterModule(name="MiddleClick", tag="Middle Click", description="Add actions to middle click.", category=Module.Category.MISCELLANEOUS)
 public class ModuleMiddleClick extends Module {
     public static ModuleMiddleClick INSTANCE;
     ValueEnum mode = new ValueEnum("Mode", "Mode", "", modes.XP);

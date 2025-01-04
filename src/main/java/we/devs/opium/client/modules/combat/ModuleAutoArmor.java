@@ -5,7 +5,7 @@ import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.DamageUtils;
 import we.devs.opium.api.utilities.TargetUtils;
 import we.devs.opium.api.utilities.TimerUtils;
-import we.devs.opium.client.modules.client.ModuleMiddleClick;
+import we.devs.opium.client.modules.miscellaneous.ModuleMiddleClick;
 import we.devs.opium.client.values.impl.ValueBoolean;
 import we.devs.opium.client.values.impl.ValueNumber;
 import net.minecraft.client.gui.screen.Screen;
