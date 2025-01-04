@@ -10,7 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
+import we.devs.opium.api.utilities.ColorUtils;
 import we.devs.opium.api.utilities.font.FontRenderers;
+import we.devs.opium.api.utilities.font.ShadowFontRenderer;
 import we.devs.opium.api.utilities.font.fxFontRenderer;
 import we.devs.opium.client.modules.client.ModuleFont;
 
@@ -203,14 +205,23 @@ public class RenderUtils implements IMinecraft {
     public static void drawString(MatrixStack matrixStack, String text, float x, float y, int color) {
         if (!ModuleFont.INSTANCE.customFonts.getValue()) {
             color = fixColorValue(color);
-            drawContext.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, color, false);
-        } else if (getFontRenderer() != null) {
-            try {
+            if(!ModuleFont.INSTANCE.textShadows.getValue()) {
+                drawContext.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, color, false);
+            } else if(ModuleFont.INSTANCE.textShadows.getValue()) {
+                drawContext.drawText(MinecraftClient.getInstance().textRenderer, text, (int) x, (int) y, color, true);
+            }
+        } else if (ModuleFont.INSTANCE.customFonts.getValue()) {
+            if(getFontRenderer() == null) return;
+            if(!ModuleFont.INSTANCE.textShadows.getValue()) {
                 getFontRenderer().drawString(matrixStack, text, x, y, 256 - ColorUtils.getRed(color), 256 - ColorUtils.getGreen(color), 256 - ColorUtils.getBlue(color), 256 - ColorUtils.getAlpha(color));
-            } catch (NullPointerException ignored) {}
+            } else if(ModuleFont.INSTANCE.textShadows.getValue()) {
+                ShadowFontRenderer shadowFont = new ShadowFontRenderer(getFontRenderer());
+                shadowFont.drawStringWithShadow(matrixStack, text, x, y, 256 - ColorUtils.getRed(color), 256 - ColorUtils.getGreen(color), 256 - ColorUtils.getBlue(color), 256 - ColorUtils.getAlpha(color));
+            }
         }
     }
-    private static int fixColorValue(int color) {
-        return ColorUtils.setAlpha(color, 5f, 5).getRGB();
+
+    private static int fixColorValue(int color){
+        return ColorUtils.setAlpha(color,5f,5).getRGB();
     }
 }
