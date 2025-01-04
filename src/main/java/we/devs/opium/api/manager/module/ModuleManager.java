@@ -8,7 +8,7 @@ import we.devs.opium.client.events.*;
 import we.devs.opium.client.modules.client.*;
 import we.devs.opium.client.modules.combat.*;
 import we.devs.opium.client.modules.miscellaneous.ModuleFakePlayer;
-import we.devs.opium.client.modules.miscellaneous.ModuleHitboxDesync;
+import we.devs.opium.client.modules.exploit.ModuleHitboxDesync;
 import we.devs.opium.client.modules.miscellaneous.ModuleMiddleClick;
 import we.devs.opium.client.modules.miscellaneous.ModuleWelcomer;
 import we.devs.opium.client.modules.movement.ModuleSprint;
