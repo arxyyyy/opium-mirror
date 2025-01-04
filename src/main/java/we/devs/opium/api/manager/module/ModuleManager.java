@@ -13,6 +13,7 @@ import we.devs.opium.client.modules.miscellaneous.ModuleMiddleClick;
 import we.devs.opium.client.modules.miscellaneous.ModuleWelcomer;
 import we.devs.opium.client.modules.movement.ModuleSprint;
 import we.devs.opium.client.modules.movement.ModuleVelocity;
+import we.devs.opium.client.modules.player.ModuleElytraSwap;
 import we.devs.opium.client.modules.player.ModuleMultiTask;
 import we.devs.opium.client.modules.visuals.ModuleCrosshair;
 import we.devs.opium.client.values.Value;
@@ -60,6 +61,7 @@ public class ModuleManager implements IMinecraft, EventListener {
 
         //Player
         this.register(new ModuleMultiTask());
+        this.register(new ModuleElytraSwap());
 
         //Visuals
         this.register(new ModuleCrosshair());
