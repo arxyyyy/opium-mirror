@@ -55,7 +55,7 @@ public abstract class ChatHudMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     void render(DrawContext context, int currentTick, int mouseX, int mouseY, boolean focused, CallbackInfo ci) {
-        if (!this.isChatHidden() /*&& ModuleFont.INSTANCE.customChatFont.getValue()*/ && RenderUtils.getFontRenderer() != null) {
+        if (!this.isChatHidden() && ModuleFont.INSTANCE.customChatFont.getValue() && RenderUtils.getFontRenderer() != null) {
             Opium.LOGGER.info("Drawing text");
             int i = this.getVisibleLineCount();
             int j = this.visibleMessages.size();
