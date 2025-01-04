@@ -1,7 +1,20 @@
+buildscript {
+	repositories {
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath 'com.gradleup.shadow:shadow-gradle-plugin:9.0.0-beta4'
+	}
+}
+
 plugins {
 	id 'fabric-loom' version '1.9-SNAPSHOT'
+	id 'com.gradleup.shadow' version '9.0.0-beta4'
 	id 'maven-publish'
 }
+
+apply plugin: 'com.gradleup.shadow'
+apply plugin: 'java'
 
 version = project.mod_version
 group = project.maven_group
@@ -32,7 +45,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "org.ladysnake:satin:2.0.0"
+	include modImplementation("org.ladysnake:satin:2.0.0")
 	include modImplementation('io.github.0x3c50.renderer:renderer-fabric:1.2')
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
