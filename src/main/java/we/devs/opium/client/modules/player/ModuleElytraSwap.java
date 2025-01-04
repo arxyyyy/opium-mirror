@@ -24,7 +24,6 @@ public class ModuleElytraSwap extends Module {
         int armorSlot = -1;
         for (int i = 0; i <= 39; i++) {
             Item item = mc.player.getInventory().getStack(i).getItem();
-            ChatUtils.sendMessage("Item in slot {}: {}", i, item.getName());
             int itemLvl = getLevel(item);
             if(itemLvl > lvl) {
                 armorSlot = i;
