@@ -30,7 +30,20 @@ public class ModuleGUI extends Module {
             this.disable(false);
             return;
         }
-        mc.setScreen(Opium.CLICK_GUI);
-        this.disable(false);
+        if (mc.currentScreen != Opium.CLICK_GUI) {
+            mc.setScreen(Opium.CLICK_GUI);
+        }
+    }
+    @Override
+    public void onDisable() {
+        if (mc.currentScreen == Opium.CLICK_GUI) {
+            mc.setScreen(null);
+        }
+    }
+    @Override
+    public void onTick() {
+        if (mc.currentScreen != Opium.CLICK_GUI) {
+            this.disable(true);
+        }
     }
 }
