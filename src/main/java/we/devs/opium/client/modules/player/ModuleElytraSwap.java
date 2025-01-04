@@ -42,6 +42,7 @@ public class ModuleElytraSwap extends Module {
         } else if(elytraSlot == -1 && armorSlot != -1 && armorSlot != 38) {
             moveItem(armorSlot < 9 ? armorSlot + 36 : armorSlot, 6);
         }
+        disable(true);
     }
 
     int getLevel(Item item) {
@@ -59,13 +60,5 @@ public class ModuleElytraSwap extends Module {
         mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, newSlot, 0, SlotActionType.PICKUP, mc.player);
         mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
         mc.interactionManager.tick();
-    }
-
-    @Override
-    public void onPacketSend(EventPacketSend event) {
-        ChatUtils.sendMessage("Packet sent: " + event.getPacket());
-        if(event.getPacket() instanceof ClickSlotC2SPacket p) {
-            ChatUtils.sendMessage("Slot: {}, action: {}, button: {}", p.getSlot(), p.getActionType().name(), p.getButton());
-        }
     }
 }
