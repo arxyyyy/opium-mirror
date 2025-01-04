@@ -7,13 +7,14 @@ import we.devs.opium.api.utilities.IMinecraft;
 import we.devs.opium.client.events.*;
 import we.devs.opium.client.modules.client.*;
 import we.devs.opium.client.modules.combat.*;
+import we.devs.opium.client.modules.miscellaneous.ModuleFakePlayer;
+import we.devs.opium.client.modules.miscellaneous.ModuleHitboxDesync;
 import we.devs.opium.client.modules.miscellaneous.ModuleMiddleClick;
 import we.devs.opium.client.modules.miscellaneous.ModuleWelcomer;
 import we.devs.opium.client.modules.movement.ModuleSprint;
 import we.devs.opium.client.modules.movement.ModuleVelocity;
 import we.devs.opium.client.modules.player.ModuleMultiTask;
 import we.devs.opium.client.modules.visuals.ModuleCrosshair;
-//import dev.twerklife.client.modules.visuals.ModuleNameTags;
 import we.devs.opium.client.values.Value;
 import org.lwjgl.opengl.GL11;
 
@@ -36,7 +37,6 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleGUI());
         this.register(new ModuleHUD());
         this.register(new ModuleHUDEditor());
-        this.register(new ModuleMiddleClick());
         this.register(new ModuleParticles());
         this.register(new ModuleRotations());
 
@@ -48,6 +48,9 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleSurround());
 
         //Miscellaneous
+        this.register(new ModuleFakePlayer());
+        this.register(new ModuleHitboxDesync());
+        this.register(new ModuleMiddleClick());
         this.register(new ModuleWelcomer());
 
         //Movement
