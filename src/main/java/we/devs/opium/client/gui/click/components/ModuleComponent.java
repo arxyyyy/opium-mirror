@@ -1,16 +1,20 @@
 package we.devs.opium.client.gui.click.components;
 
 import me.x150.renderer.render.Renderer2d;
+import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import we.devs.opium.Opium;
 import we.devs.opium.api.utilities.ColorUtils;
+import we.devs.opium.api.utilities.Keys;
 import we.devs.opium.api.utilities.RenderUtils;
+import we.devs.opium.api.utilities.font.FontRenderers;
 import we.devs.opium.client.gui.click.manage.Component;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.client.gui.click.manage.Frame;
 import we.devs.opium.client.modules.client.ModuleColor;
+import we.devs.opium.client.modules.client.ModuleFont;
 import we.devs.opium.client.modules.client.ModuleGUI;
 import we.devs.opium.client.modules.client.ModuleOutline;
 import we.devs.opium.client.values.Value;
@@ -73,28 +77,99 @@ public class ModuleComponent extends Component {
         for (int i = 0; i <= height; ++i) {
             this.colorMap.put(i, ColorUtils.wave(Color.WHITE, ModuleGUI.INSTANCE.fadeOffset.getValue().intValue(), i * 2 + 10));
         }
+        int radius = (int) ModuleGUI.INSTANCE.moduleRadius.getValue();
+        int samples = 20;
+
+        // Check if hovering over the module title area
+        boolean isHoveringTitle = this.isHovering(mouseX, mouseY);
+
+        if (isHoveringTitle) {
+            Color highlightColor = new Color(255,255,255, (Integer) ModuleGUI.INSTANCE.hoverAlpha.getValue());
+
+            if(ModuleGUI.INSTANCE.roundedModules.getValue()) {
+                Renderer2d.renderRoundedQuad(
+                        context.getMatrices(),
+                        highlightColor,
+                        (float)this.getX() - 0.25f, (float)this.getY() - 0.2f,
+                        (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f,
+                        radius, radius, radius, radius,
+                        samples
+                );
+            } else {
+                RenderUtils.drawRect(context.getMatrices(),(float)this.getX() - 0.25f, (float)this.getY() - 0.2f,
+                        (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f,
+                        highlightColor);
+            }
+        }
+
         if (this.module.isToggled() && ModuleGUI.INSTANCE.rectEnabled.getValue()) {
-            int radius = (int) ModuleGUI.INSTANCE.moduleRadius.getValue();
-            int samples = 20;
+
+            // Render background quad
             if(ModuleGUI.INSTANCE.roundedModules.getValue()) {
                 Renderer2d.renderRoundedQuad(
                         context.getMatrices(),
                         Opium.CLICK_GUI.getColor(),
-                        (float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f,
+                        (float)this.getX() - 0.25f, (float)this.getY() - 0.2f,
+                        (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f,
                         radius, radius, radius, radius,
                         samples
                 );
-                if(ModuleOutline.INSTANCE.moduleOutline.getValue()) {
-                    Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.moduleOutlineColor.getValue(), (float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f, radius, radius, radius, radius, 0.5f, samples * 4);
-                }
             } else {
-                RenderUtils.drawRect(context.getMatrices(),(float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f, Opium.CLICK_GUI.getColor());
-                if(ModuleOutline.INSTANCE.moduleOutline.getValue()) {
-                    Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.moduleOutlineColor.getValue(), (float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f, 0,0,0,0, 0.5f, 20 * 4);
+                RenderUtils.drawRect(context.getMatrices(),(float)this.getX() - 0.25f, (float)this.getY() - 0.2f,
+                        (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f,
+                        Opium.CLICK_GUI.getColor());
+            }
+
+            // Render outline
+            if(ModuleOutline.INSTANCE.moduleOutline.getValue()) {
+                Color outlineColor = ModuleOutline.INSTANCE.moduleOutlineColor.getValue();
+                float outlineWidth = 0.5f;
+
+                if(ModuleGUI.INSTANCE.roundedModules.getValue()) {
+                    Renderer2d.renderRoundedOutline(context.getMatrices(), outlineColor,
+                            (float)this.getX() - 0.25f, (float)this.getY() - 0.2f,
+                            (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f,
+                            radius, radius, radius, radius, outlineWidth, samples * 4);
+                } else {
+                    Renderer2d.renderRoundedOutline(context.getMatrices(), outlineColor,
+                            (float)this.getX() - 0.25f, (float)this.getY() - 0.2f,
+                            (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f,
+                            0, 0, 0, 0, outlineWidth, 20 * 4);
                 }
             }
         }
+
+        //Render module name
         RenderUtils.drawString(context.getMatrices(), (!this.module.isToggled() ? Formatting.GRAY : "") + this.module.getTag(), this.getX() + 3, this.getY() + 3, ModuleGUI.INSTANCE.fadeText.getValue() ? this.colorMap.get(MathHelper.clamp(this.getY() + 3, 0, height)).getRGB() : -1);
+        //Render keybind if it exists and if we should
+        if (this.module.getBind() != 0 && ModuleGUI.INSTANCE.displayKeybinds.getValue()) {
+            String keyName = GLFW.glfwGetKeyName(this.module.getBind(), 0);
+            String bindKey;
+
+            if (keyName != null) {
+                bindKey = (!this.module.isToggled() ? Formatting.GRAY : "") + "[" + keyName.toUpperCase() + "]";
+            } else {
+                bindKey = (!this.module.isToggled() ? Formatting.GRAY : "") + "[" + Keys.getFallbackKeyName(this.module.getBind()) + "]";
+            }
+
+            int paddingRight = 4;
+            int bindKeyWidth = ModuleFont.INSTANCE.customFonts.getValue()
+                    ? (int) FontRenderers.fontRenderer.getStringWidth(bindKey)
+                    : mc.textRenderer.getWidth(bindKey);
+
+            int bindKeyX = this.getX() + this.getWidth() - bindKeyWidth - paddingRight;
+
+            RenderUtils.drawString(
+                    context.getMatrices(),
+                    bindKey,
+                    bindKeyX,
+                    this.getY() + 3,
+                    ModuleGUI.INSTANCE.fadeText.getValue()
+                            ? this.colorMap.get(MathHelper.clamp(this.getY() + 3, 0, height)).getRGB()
+                            : -1
+            );
+        }
+
         for (Component component : this.components) {
             component.update(mouseX, mouseY, delta);
         }
