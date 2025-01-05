@@ -3,10 +3,7 @@ package we.devs.opium.client.modules.combat;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
-import we.devs.opium.api.utilities.BlockUtils;
-import we.devs.opium.api.utilities.ChatUtils;
-import we.devs.opium.api.utilities.InventoryUtils;
-import we.devs.opium.api.utilities.MathUtils;
+import we.devs.opium.api.utilities.*;
 import we.devs.opium.client.events.EventMotion;
 import we.devs.opium.client.values.impl.ValueBoolean;
 import we.devs.opium.client.values.impl.ValueEnum;
@@ -32,6 +29,7 @@ public class ModuleSurround extends Module {
     private final ValueBoolean ignoreCrystals = new ValueBoolean("IgnoreCrystals", "Ignore Crystals", "Ignores crystals when checking if there are any entities in the block that needs to be placed.", false);
     private final ValueBoolean stepDisable = new ValueBoolean("StepDisable", "Step Disable", "Disable if step enabled.", true);
     private final ValueBoolean jumpDisable = new ValueBoolean("JumpDisable", "Jump Disable", "Disable if player jumps.", true);
+    private final ValueBoolean rotate = new ValueBoolean("Rotate", "Packet Rotate", "Rotates to the block after placement.", false);
     private int placements;
     private BlockPos startPosition;
 
@@ -84,6 +82,10 @@ public class ModuleSurround extends Module {
     public void placeBlock(EventMotion event, BlockPos position) {
         if (BlockUtils.isPositionPlaceable(position, true, true, this.ignoreCrystals.getValue()) && this.placements < this.blocks.getValue().intValue()) {
             BlockUtils.placeBlock(event, position, Hand.MAIN_HAND);
+            if (rotate.getValue()){
+                RotationUtils.rotate(event, RotationUtils.getRotationsTo(position.toCenterPos()));
+            }
+
             ++this.placements;
         }
     }
