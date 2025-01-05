@@ -20,7 +20,7 @@ import we.devs.opium.client.values.impl.ValueNumber;
 @RegisterModule(name="Velocity", description="Remove the knockback of the player.", category = Module.Category.MOVEMENT )
 public class ModuleVelocity extends Module {
     public static ValueBoolean noPush = new ValueBoolean("NoPush", "NoPush", "", false);
-    public static ValueBoolean grim = new ValueBoolean("GrimAC", "GrimAC", "Bypass for GrimAC v2", false);
+    public static ValueBoolean grim = new ValueBoolean("Grim", "Grim", "Bypass for GrimAC v2", false);
     public static ValueNumber horizontal = new ValueNumber("Horizontal", "Horizontal", "", 0.0f, 0.0f, 100.0f);
     public static ValueNumber vertical = new ValueNumber("Vertical", "Vertical", "", 0.0f, 0.0f, 100.0f);
 
@@ -32,6 +32,8 @@ public class ModuleVelocity extends Module {
         }
 
         if (grim.getValue() && event.getPacket() instanceof EntityVelocityUpdateS2CPacket) {
+            if (mc.player != null && (mc.player.isTouchingWater() || mc.player.isSubmergedInWater()))
+                return;
             mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.Full(mc.player.getX(), mc.player.getY(), mc.player.getZ(), ((IClientPlayerEntity) mc.player).getLastYaw(), ((IClientPlayerEntity) mc.player).getLastPitch(), mc.player.isOnGround()));
             mc.getNetworkHandler().sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK, BlockPos.ofFloored(mc.player.getPos()), Direction.DOWN));
             return;
