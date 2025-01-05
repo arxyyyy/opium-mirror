@@ -12,7 +12,8 @@
     "InGameHudMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
-    "WorldRendererMixin"
+    "WorldRendererMixin",
+    "IClientPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1
