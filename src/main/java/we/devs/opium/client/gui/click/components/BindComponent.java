@@ -1,5 +1,8 @@
 package we.devs.opium.client.gui.click.components;
 
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Formatting;
+import org.lwjgl.glfw.GLFW;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.event.EventListener;
 import we.devs.opium.api.utilities.RenderUtils;
@@ -7,9 +10,6 @@ import we.devs.opium.client.events.EventKey;
 import we.devs.opium.client.gui.click.manage.Component;
 import we.devs.opium.client.gui.click.manage.Frame;
 import we.devs.opium.client.values.impl.ValueBind;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Formatting;
-import org.lwjgl.glfw.GLFW;
 
 public class BindComponent extends Component implements EventListener {
     private final ValueBind value;

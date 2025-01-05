@@ -1,23 +1,23 @@
 package we.devs.opium.client.commands;
 
+import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.command.Command;
 import we.devs.opium.api.manager.command.RegisterCommand;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.utilities.ChatUtils;
 import we.devs.opium.client.modules.client.ModuleCommands;
-import net.minecraft.client.util.InputUtil;
-import org.lwjgl.glfw.GLFW;
 
 @RegisterCommand(name="bind", description="Let's you bind a module with commands.", syntax="bind <name> <key> | clear", aliases={"key", "keybind", "b"})
-public class    CommandBind extends Command {
+public class CommandBind extends Command {
     @Override
     public void onCommand(String[] args) {
         if (args.length == 2) {
             String name = args[0];
             String key = args[1];
             boolean found = false;
-            for (Module module : Opium.MODULE_MANAGER.getModules()) {
+            for (we.devs.opium.api.manager.module.Module module : Opium.MODULE_MANAGER.getModules()) {
                 if (!module.getName().equalsIgnoreCase(name)) continue;
                 int keyCode = InputUtil.fromTranslationKey("key.keyboard." + key.toLowerCase()).getCode();
                 module.setBind(keyCode);
