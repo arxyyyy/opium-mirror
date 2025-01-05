@@ -23,6 +23,7 @@ public class ModuleGUI extends Module {
     public ValueNumber hoverAlpha = new ValueNumber("hoverAlpha", "Hover Alpha", "The alpha of the module hover.", 25, 0, 255);
 
     public ValueBoolean displayKeybinds = new ValueBoolean("DisplayKeybinds", "Display Keybinds", "Display keybinds on the module", true);
+    public ValueBoolean categoryIcons = new ValueBoolean("CategoryIcons", "Category Icons", "Display category icons", false);
 
     public ValueBoolean rectEnabled = new ValueBoolean("RectEnabled", "Rect Enabled", "Render a rectangle behind enabled modules.", true);
     public ValueNumber scrollSpeed = new ValueNumber("ScrollSpeed", "Scroll Speed", "The speed for scrolling through the GUI.", 10, 1, 50);

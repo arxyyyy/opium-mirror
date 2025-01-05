@@ -1,6 +1,7 @@
 package we.devs.opium.client.gui.click.manage;
 
 import me.x150.renderer.render.Renderer2d;
+import net.minecraft.util.Identifier;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.element.Element;
 import we.devs.opium.api.manager.module.Module;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class Frame implements IMinecraft {
     private final ArrayList<Component> components;
     private final String tab;
+    private Identifier categoryIcon;
     private int x;
     private int y;
     private int height;
@@ -29,6 +31,7 @@ public class Frame implements IMinecraft {
 
     public Frame(Module.Category category, int x, int y) {
         this.tab = category.getName();
+        this.categoryIcon = Identifier.of("opium", "icons/" + tab.toLowerCase() + ".png");
         this.x = x;
         this.y = y;
         this.width = 100;
@@ -47,6 +50,7 @@ public class Frame implements IMinecraft {
 
     public Frame(int x, int y) {
         this.tab = "HUD";
+        this.categoryIcon = Identifier.of("opium", "icons/" + tab.toLowerCase() + ".png");
         this.x = x;
         this.y = y;
         this.width = 100;
@@ -110,7 +114,13 @@ public class Frame implements IMinecraft {
                 }
             }
         }
-        RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3, this.y + 1, -1);
+        if(ModuleGUI.INSTANCE.categoryIcons.getValue()) {
+            float iconSize = 10.6666667f;
+            Renderer2d.renderTexture(context.getMatrices(), categoryIcon, this.x + 3, this.y + 1 - 0.35f, iconSize, iconSize);
+            RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3 + iconSize + 1.5f, this.y + 1, -1);
+        } else {
+            RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3 ,this.y + 1, -1);
+        }
         if (this.isOpen()) {
             for (Component component : this.components) {
                 if (!component.isVisible()) continue;

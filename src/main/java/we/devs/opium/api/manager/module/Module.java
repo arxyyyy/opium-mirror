@@ -204,8 +204,7 @@ public abstract class Module implements IMinecraft, EventListener {
         MOVEMENT("Movement"),
         VISUALS("Visuals"),
         CLIENT("Client"),
-        EXPLOIT("Exploit"),
-        HUD("HUD");
+        EXPLOIT("Exploit");
 
         private final String name;
 

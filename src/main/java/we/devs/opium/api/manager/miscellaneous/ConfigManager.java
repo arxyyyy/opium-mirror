@@ -41,11 +41,6 @@ public class ConfigManager {
             if (!Files.exists(Paths.get("Opium/Client/"))) {
                 Files.createDirectories(Paths.get("Opium/Client/"));
             }
-            for (Module.Category category : Module.Category.values()) {
-                if (category == Module.Category.HUD || Files.exists(Paths.get("Opium/Modules/" + category.getName() + "/")))
-                    continue;
-                Files.createDirectories(Paths.get("Opium/Modules/" + category.getName() + "/"));
-            }
             this.saveModules();
             this.saveElements();
             this.savePrefix();
