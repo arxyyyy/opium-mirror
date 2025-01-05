@@ -20,6 +20,7 @@ public class ModuleGUI extends Module {
     public ValueNumber moduleRadius = new ValueNumber("moduleRadius", "Module Radius", "The radius of the rounded module corners", 2, 1, 20);
     public ValueNumber scrollSpeed = new ValueNumber("ScrollSpeed", "Scroll Speed", "The speed for scrolling through the GUI.", 10, 1, 50);
     public ValueBoolean rectEnabled = new ValueBoolean("RectEnabled", "Rect Enabled", "Render a rectangle behind enabled modules.", true);
+    public ValueBoolean displayKeybinds = new ValueBoolean("DisplayKeybinds", "Display Keybinds", "Display keybinds on the module.", true);
     public ValueBoolean fadeText = new ValueBoolean("FadeText", "Fade Text", "Add cool animation to the text of the GUI.", false);
     public ValueNumber fadeOffset = new ValueNumber("FadeOffset", "Fade Offset", "Offset for the text animation of the GUI.", 100, 0, 255);
 

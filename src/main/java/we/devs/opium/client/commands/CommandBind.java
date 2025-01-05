@@ -10,7 +10,7 @@ import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 @RegisterCommand(name="bind", description="Let's you bind a module with commands.", syntax="bind <name> <key> | clear", aliases={"key", "keybind", "b"})
-public class CommandBind extends Command {
+public class    CommandBind extends Command {
     @Override
     public void onCommand(String[] args) {
         if (args.length == 2) {

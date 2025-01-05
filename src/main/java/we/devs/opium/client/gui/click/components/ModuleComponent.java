@@ -1,13 +1,16 @@
 package we.devs.opium.client.gui.click.components;
 
 import me.x150.renderer.render.Renderer2d;
+import org.lwjgl.glfw.GLFW;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.utilities.ColorUtils;
 import we.devs.opium.api.utilities.RenderUtils;
+import we.devs.opium.api.utilities.font.FontRenderers;
 import we.devs.opium.client.gui.click.manage.Component;
 import we.devs.opium.client.gui.click.manage.Frame;
 import we.devs.opium.client.modules.client.ModuleColor;
+import we.devs.opium.client.modules.client.ModuleFont;
 import we.devs.opium.client.modules.client.ModuleGUI;
 import we.devs.opium.client.modules.client.ModuleOutline;
 import we.devs.opium.client.values.Value;
@@ -94,10 +97,42 @@ public class ModuleComponent extends Component {
                 Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.moduleOutlineColor.getValue(), (float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f, 0,0,0,0, 0.5f, 20 * 4);
             }
         }
-        RenderUtils.drawString(context.getMatrices(), (!this.module.isToggled() ? Formatting.GRAY : "") + this.module.getTag(), this.getX() + 3, this.getY() + 3, ModuleGUI.INSTANCE.fadeText.getValue() ? this.colorMap.get(MathHelper.clamp(this.getY() + 3, 0, height)).getRGB() : -1);
-        for (Component component : this.components) {
-            component.update(mouseX, mouseY, delta);
-        }
+        // Render the module name
+        String moduleName = (!this.module.isToggled() ? Formatting.GRAY : "") + this.module.getTag();
+        int moduleNameWidth = mc.textRenderer.getWidth(moduleName);
+        RenderUtils.drawString(
+                context.getMatrices(),
+                moduleName,
+                this.getX() + 3,
+                this.getY() + 3,
+                ModuleGUI.INSTANCE.fadeText.getValue()
+                        ? this.colorMap.get(MathHelper.clamp(this.getY() + 3, 0, height)).getRGB()
+                        : -1
+        );
+        // Render the bind key to the right of the module name
+        if (ModuleGUI.INSTANCE.displayKeybinds.getValue())
+            if (this.module.getBind() != 0) {
+                String bindKey = (!this.module.isToggled() ? Formatting.GRAY : "") + "[" + GLFW.glfwGetKeyName(this.module.getBind(), 0).toUpperCase() + "]";
+                int bindKeyWidth;
+                float offSet;
+                if (ModuleFont.INSTANCE.customFonts.getValue()) {
+                    bindKeyWidth = (int) FontRenderers.fontRenderer.getStringWidth(bindKey);
+                    offSet = 0.5f;
+                } else {
+                    bindKeyWidth = mc.textRenderer.getWidth(bindKey);
+                    offSet = 3f;
+                }
+                bindKeyWidth = mc.textRenderer.getWidth(bindKey);
+                RenderUtils.drawString(
+                        context.getMatrices(),
+                        bindKey,
+                        this.getX() + this.getWidth() - bindKeyWidth - offSet, // Align to the right with padding
+                        this.getY() + 3,
+                        ModuleGUI.INSTANCE.fadeText.getValue()
+                                ? this.colorMap.get(MathHelper.clamp(this.getY() + 3, 0, height)).getRGB()
+                                : -1
+                );
+            }
         if (this.isOpen()) {
             for (Component component : this.components) {
                 Component c;

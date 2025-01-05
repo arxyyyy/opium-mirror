@@ -13,7 +13,8 @@
     "KeyboardMixin",
     "MinecraftClientMixin",
     "WorldRendererMixin",
-    "IClientPlayerEntity"
+    "IClientPlayerEntity",
+    "MixinSplashScreen"
   ],
   "injectors": {
     "defaultRequire": 1
