@@ -11,6 +11,7 @@ import we.devs.opium.client.modules.miscellaneous.ModuleFakePlayer;
 import we.devs.opium.client.modules.exploit.ModuleHitboxDesync;
 import we.devs.opium.client.modules.miscellaneous.ModuleMiddleClick;
 import we.devs.opium.client.modules.miscellaneous.ModuleWelcomer;
+import we.devs.opium.client.modules.movement.ModuleSpeed;
 import we.devs.opium.client.modules.movement.ModuleSprint;
 import we.devs.opium.client.modules.movement.ModuleVelocity;
 import we.devs.opium.client.modules.player.ModuleElytraSwap;
@@ -58,6 +59,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleWelcomer());
 
         //Movement
+        this.register(new ModuleSpeed());
         this.register(new ModuleSprint());
         this.register(new ModuleVelocity());
 
