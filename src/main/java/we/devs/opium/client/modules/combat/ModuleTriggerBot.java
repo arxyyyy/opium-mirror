@@ -34,7 +34,7 @@ public class ModuleTriggerBot extends Module {
             this.disable(false);
             return;
         }
-        ChatUtils.sendMessage("Triggerbot Enabled. Press " + GLFW.glfwGetKeyName(GLFW.GLFW_KEY_F, 1).toUpperCase() + " to trigger.", "Triggerbot");
+        ChatUtils.sendMessage("Triggerbot Enabled. Automatically attacking entities in range.", "Triggerbot");
     }
     @Override
     public void onDisable() {
@@ -43,21 +43,36 @@ public class ModuleTriggerBot extends Module {
     }
     private void onClientTick() {
         if (client.player == null || client.world == null) return;
-        // Check if the trigger key is pressed and if the delay has passed
-        if (triggerKey.isPressed() && System.currentTimeMillis() - lastClickTime > delay) {
+        // Check if enough time has passed since the last attack
+        if (System.currentTimeMillis() - lastClickTime > getWeaponDelay()) {
             lastClickTime = System.currentTimeMillis();
             triggerAction();
         }
     }
     private void triggerAction() {
-        if (client.targetedEntity != null) {
-            //Prints toggle message
+        if (client.targetedEntity != null && client.player.canSee(client.targetedEntity)) {
             client.player.attack(client.targetedEntity);
             ChatUtils.sendMessage("Triggered attack on: " + client.targetedEntity.getName().getString(), "Triggerbot");
         }
     }
+
+    private long getWeaponDelay() {
+        if (client.player == null || client.player.getMainHandStack() == null) {
+            return delay;
+        }
+        String itemName = client.player.getMainHandStack().getItem().getTranslationKey();
+        if (itemName.contains("sword")) {
+            return 600;
+        } else if (itemName.contains("axe")) {
+            return 1000;
+        } else {
+            return delay;
+        }
+    }
+
     // Method to set the delay (please finish someone)
     public void setDelay(long delay) {
         this.delay = delay;
+        ChatUtils.sendMessage("Triggerbot delay set to: " + delay + " ms.", "Triggerbot");
     }
 }
