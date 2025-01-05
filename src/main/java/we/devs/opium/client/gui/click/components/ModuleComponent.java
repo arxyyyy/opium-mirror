@@ -1,5 +1,6 @@
 package we.devs.opium.client.gui.click.components;
 
+import me.x150.renderer.render.Renderer2d;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.utilities.ColorUtils;
@@ -72,7 +73,19 @@ public class ModuleComponent extends Component {
             this.colorMap.put(i, ColorUtils.wave(Color.WHITE, ModuleGUI.INSTANCE.fadeOffset.getValue().intValue(), i * 2 + 10));
         }
         if (this.module.isToggled() && ModuleGUI.INSTANCE.rectEnabled.getValue()) {
-            RenderUtils.drawRect(context.getMatrices(),(float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f, Opium.CLICK_GUI.getColor());
+            int radius = (int) ModuleGUI.INSTANCE.moduleRadius.getValue();
+            int samples = 20;
+            if (ModuleGUI.INSTANCE.roundedModules.getValue()) {
+                Renderer2d.renderRoundedQuad(
+                        context.getMatrices(),
+                        Opium.CLICK_GUI.getColor(),
+                        (float) this.getX() - 0.25f, (float) this.getY() - 0.2f, (float) (this.getX() + this.getWidth() + 0.25f), (float) this.getY() + 0.2f + 14.1f,
+                        radius, radius, radius, radius,
+                        samples
+                );
+            } else {
+                RenderUtils.drawRect(context.getMatrices(), (float) this.getX() - 0.25f, (float) this.getY() - 0.2f, (float) (this.getX() + this.getWidth() + 0.25f), (float) this.getY() + 0.2f + 14.1f, Opium.CLICK_GUI.getColor());
+            }
         }
         RenderUtils.drawString(context.getMatrices(), (!this.module.isToggled() ? Formatting.GRAY : "") + this.module.getTag(), this.getX() + 3, this.getY() + 3, ModuleGUI.INSTANCE.fadeText.getValue() ? this.colorMap.get(MathHelper.clamp(this.getY() + 3, 0, height)).getRGB() : -1);
         for (Component component : this.components) {

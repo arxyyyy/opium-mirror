@@ -13,8 +13,10 @@ import java.awt.*;
 public class ModuleGUI extends Module {
     public static ModuleGUI INSTANCE;
     public final ValueColor categoryColor = new ValueColor("CategoryColor", "Category Color", "Color of the category panes.", new Color(29, 29, 29,255));
-    public ValueBoolean roundedCorners = new ValueBoolean("RoundedCorners", "Rounded Corners", "Make the category panes rounded.", true);
-    public ValueNumber cornerRadius = new ValueNumber("cornerRadius", "Corner Radius", "The radius of the category pane corners", 4, 1, 20);
+    public ValueBoolean roundedCorners = new ValueBoolean("RoundedCorners", "Rounded Categories", "Make the category panes rounded.", true);
+    public ValueBoolean roundedModules = new ValueBoolean("RoundedModules", "Rounded Modules", "Make the modules rounded.", true);
+    public ValueNumber cornerRadius = new ValueNumber("cornerRadius", "Category Radius", "The radius of the rounded category corners", 4, 1, 20);
+    public ValueNumber moduleRadius = new ValueNumber("moduleRadius", "Module Radius", "The radius of the rounded module corners", 2, 1, 20);
     public ValueNumber scrollSpeed = new ValueNumber("ScrollSpeed", "Scroll Speed", "The speed for scrolling through the GUI.", 10, 1, 50);
     public ValueBoolean rectEnabled = new ValueBoolean("RectEnabled", "Rect Enabled", "Render a rectangle behind enabled modules.", true);
     public ValueBoolean fadeText = new ValueBoolean("FadeText", "Fade Text", "Add cool animation to the text of the GUI.", false);
