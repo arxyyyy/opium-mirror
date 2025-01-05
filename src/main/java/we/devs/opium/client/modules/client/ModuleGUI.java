@@ -13,6 +13,7 @@ import java.awt.*;
 public class ModuleGUI extends Module {
     public static ModuleGUI INSTANCE;
     public final ValueColor categoryColor = new ValueColor("CategoryColor", "Category Color", "Color of the category panes.", new Color(29, 29, 29,255));
+    public final ValueColor categoryTitleColor = new ValueColor("CategoryTitleColor", "Category Title Color", "Color of the category title.", ModuleColor.getColor());
     public ValueBoolean roundedCorners = new ValueBoolean("RoundedCorners", "Rounded Categories", "Make the category panes rounded.", true);
     public ValueBoolean roundedModules = new ValueBoolean("RoundedModules", "Rounded Modules", "Make the modules rounded.", true);
     public ValueNumber cornerRadius = new ValueNumber("cornerRadius", "Category Radius", "The radius of the rounded category corners", 4, 1, 20);

@@ -9,6 +9,7 @@ import we.devs.opium.client.gui.click.manage.Component;
 import we.devs.opium.client.gui.click.manage.Frame;
 import we.devs.opium.client.modules.client.ModuleColor;
 import we.devs.opium.client.modules.client.ModuleGUI;
+import we.devs.opium.client.modules.client.ModuleOutline;
 import we.devs.opium.client.values.Value;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Formatting;
@@ -83,8 +84,14 @@ public class ModuleComponent extends Component {
                         radius, radius, radius, radius,
                         samples
                 );
+                if(ModuleOutline.INSTANCE.moduleOutline.getValue()) {
+                    Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.moduleOutlineColor.getValue(), (float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f, radius, radius, radius, radius, 0.5f, samples * 4);
+                }
             } else {
                 RenderUtils.drawRect(context.getMatrices(), (float) this.getX() - 0.25f, (float) this.getY() - 0.2f, (float) (this.getX() + this.getWidth() + 0.25f), (float) this.getY() + 0.2f + 14.1f, Opium.CLICK_GUI.getColor());
+            }
+            if(ModuleOutline.INSTANCE.moduleOutline.getValue()) {
+                Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.moduleOutlineColor.getValue(), (float)this.getX() - 0.25f, (float)this.getY() - 0.2f, (float)(this.getX() + this.getWidth() + 0.25f), (float)this.getY() + 0.2f + 14.1f, 0,0,0,0, 0.5f, 20 * 4);
             }
         }
         RenderUtils.drawString(context.getMatrices(), (!this.module.isToggled() ? Formatting.GRAY : "") + this.module.getTag(), this.getX() + 3, this.getY() + 3, ModuleGUI.INSTANCE.fadeText.getValue() ? this.colorMap.get(MathHelper.clamp(this.getY() + 3, 0, height)).getRGB() : -1);

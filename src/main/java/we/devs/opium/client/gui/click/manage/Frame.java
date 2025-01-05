@@ -10,6 +10,7 @@ import we.devs.opium.client.gui.click.components.ColorComponentTest;
 import we.devs.opium.client.gui.click.components.ModuleComponent;
 import net.minecraft.client.gui.DrawContext;
 import we.devs.opium.client.modules.client.ModuleGUI;
+import we.devs.opium.client.modules.client.ModuleOutline;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -70,17 +71,24 @@ public class Frame implements IMinecraft {
         }
         int radius = (int) ModuleGUI.INSTANCE.cornerRadius.getValue();
         int samples = 20;
+        float outlineW = 0.7f;
         if(ModuleGUI.INSTANCE.roundedCorners.getValue()) {
             Renderer2d.renderRoundedQuad(
                     context.getMatrices(),
-                    Opium.CLICK_GUI.getColor(),
+                    ModuleGUI.INSTANCE.categoryTitleColor.getValue(),
                     this.getX() - 2, this.getY() - 3,
                     this.getX() + this.getWidth() + 2, this.getY() + 13,
                     radius, radius, 0, 0,
                     samples
             );
+            if(ModuleOutline.INSTANCE.categoryTitleOutline.getValue()) {
+                Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.categoryTitleOutlineColor.getValue(),this.getX() - 2 + outlineW, this.getY() -3 + outlineW, this.getX() + this.getWidth() + 2 - outlineW, this.getY() + 13 -outlineW, radius, radius, 0, 0, outlineW,samples * 4);
+            }
         } else {
-            RenderUtils.drawRect(context.getMatrices(), this.getX() - 2, this.getY() - 3, this.getX() + this.getWidth() + 2, this.getY() + 13, Opium.CLICK_GUI.getColor());
+            RenderUtils.drawRect(context.getMatrices(), this.getX() - 2, this.getY() - 3, this.getX() + this.getWidth() + 2, this.getY() + 13,ModuleGUI.INSTANCE.categoryTitleColor.getValue());
+            if(ModuleOutline.INSTANCE.categoryTitleOutline.getValue()) {
+                Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.categoryTitleOutlineColor.getValue(),this.getX() - 2 + outlineW, this.getY() -3 + outlineW, this.getX() + this.getWidth() + 2 - outlineW, this.getY() + 13 -outlineW, 0, 0, 0, 0, outlineW,samples * 4);
+            }
         }
         if (this.isOpen()) {
             if(ModuleGUI.INSTANCE.roundedCorners.getValue()) {
@@ -92,8 +100,14 @@ public class Frame implements IMinecraft {
                         0, 0, radius, radius,
                         samples
                 );
+                if(ModuleOutline.INSTANCE.categoryOutline.getValue()) {
+                    Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.categoryOutlineColor.getValue(),this.getX() - 2 + outlineW, this.getY() + 13 + outlineW, this.getX() + this.getWidth() + 2 - outlineW, this.getY() + this.getHeight() + 1f -outlineW, 0, 0, radius, radius, outlineW,samples * 4);
+                }
             } else {
                 RenderUtils.drawRect(context.getMatrices(), this.getX() - 2, this.getY() + 13, this.getX() + this.getWidth() + 2, this.getY() + this.getHeight(), Opium.CLICK_GUI.getCategoryColor());
+                if(ModuleOutline.INSTANCE.categoryOutline.getValue()) {
+                    Renderer2d.renderRoundedOutline(context.getMatrices(), ModuleOutline.INSTANCE.categoryOutlineColor.getValue(),this.getX() - 2 + outlineW, this.getY() + 13 + outlineW, this.getX() + this.getWidth() + 2 - outlineW, this.getY() + this.getHeight() + 1f -outlineW, 0, 0, 0, 0, outlineW,samples * 4);
+                }
             }
         }
         RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3, this.y + 1, -1);
