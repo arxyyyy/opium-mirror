@@ -17,7 +17,7 @@ import we.devs.opium.client.modules.movement.ModuleVelocity;
 import we.devs.opium.client.modules.player.ModuleElytraSwap;
 import we.devs.opium.client.modules.player.ModuleMultiTask;
 import we.devs.opium.client.modules.visuals.ModuleCrosshair;
-import we.devs.opium.client.modules.visuals.ModuleCustomFOV;
+import we.devs.opium.client.modules.visuals.ModuleFOV;
 import we.devs.opium.client.values.Value;
 import org.lwjgl.opengl.GL11;
 
@@ -70,7 +70,7 @@ public class ModuleManager implements IMinecraft, EventListener {
 
         //Visuals
         this.register(new ModuleCrosshair());
-        //this.register(new ModuleCustomFOV());
+        this.register(new ModuleFOV());
         //this.register(new ModuleNameTags());
 
         this.modules.sort(Comparator.comparing(Module::getName));
