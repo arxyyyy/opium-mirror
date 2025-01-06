@@ -203,8 +203,8 @@ public abstract class Module implements IMinecraft, EventListener {
         MISCELLANEOUS("Miscellaneous"),
         MOVEMENT("Movement"),
         VISUALS("Visuals"),
-        CLIENT("Client"),
-        EXPLOIT("Exploit");
+        EXPLOIT("Exploit"),
+        CLIENT("Client");
 
         private final String name;
 
