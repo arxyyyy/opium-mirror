@@ -18,6 +18,7 @@ public class ModuleSpeed extends Module {
 
     @Override
     public void onEnable() {
+        if(nullCheck()) return;
         if (this.mode.getValue().equals(modes.GrimStrafe)) {
             int collisions = 0;
             for (Entity entity : mc.world.getEntities()) {

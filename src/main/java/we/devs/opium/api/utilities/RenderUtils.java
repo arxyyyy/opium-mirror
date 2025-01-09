@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import org.joml.Matrix4f;
@@ -132,40 +133,12 @@ public class RenderUtils implements IMinecraft {
         }
     }
 
-    public static void drawBlockOutline(BlockPos position, Color color, float width) {
-        drawBlockOutline(RenderUtils.getRenderBB(position), color, width);
+    public static void drawBlockOutline(MatrixStack matrices, BlockPos position, Color color) {
+        drawBlockOutline(matrices, new Box(position), color);
     }
 
-    public static void drawBlockOutline(Box bb, Color color, float width) {
-        float red = (float)color.getRed() / 255.0f;
-        float green = (float)color.getGreen() / 255.0f;
-        float blue = (float)color.getBlue() / 255.0f;
-        float alpha = (float)color.getAlpha() / 255.0f;
-        camera.setPosition(Objects.requireNonNull(mc.getCameraEntity()).getX(), mc.getCameraEntity().getY(), mc.getCameraEntity().getZ());
-        if (camera.isVisible(new Box(bb.minX + mc.getEntityRenderDispatcher().camera.getPos().x, bb.minY + mc.getEntityRenderDispatcher().camera.getPos().y, bb.minZ + mc.getEntityRenderDispatcher().camera.getPos().z, bb.maxX + mc.getEntityRenderDispatcher().camera.getPos().x, bb.maxY + mc.getEntityRenderDispatcher().camera.getPos().y, bb.maxZ + mc.getEntityRenderDispatcher().camera.getPos().z))) {
-            prepare();
-            RenderSystem.lineWidth(width);
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder bufferbuilder = tessellator.begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION_COLOR);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.minY, (float) bb.minZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.minY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.minY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.minY, (float) bb.minZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.minY, (float) bb.minZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.maxY, (float) bb.minZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.maxY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.minY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.minY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.maxY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.maxY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.maxY, (float) bb.maxZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.maxY, (float) bb.minZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.minY, (float) bb.minZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.maxX, (float) bb.maxY, (float) bb.minZ).color(red, green, blue, alpha);
-            bufferbuilder.vertex((float) bb.minX, (float) bb.maxY, (float) bb.minZ).color(red, green, blue, alpha);
-            BufferRenderer.drawWithGlobalProgram(bufferbuilder.end());
-            release();
-        }
+    public static void drawBlockOutline(MatrixStack matrices, Box bb, Color color) {
+        Renderer3d.renderOutline(matrices, color, bb.getMinPos(), bb.getMaxPos().subtract(bb.getMinPos()));
     }
 
     public static void scaleAndPosition(MatrixStack matrices, float x, float y, float scale) {

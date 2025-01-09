@@ -34,7 +34,6 @@ public class ModuleHoleFill extends Module {
     ValueNumber delay = new ValueNumber("Delay", "Delay", "Delay to fill holes.", 100, 0, 200);
     ValueCategory renderCategory = new ValueCategory("Render", "Render category.");
     ValueBoolean render = new ValueBoolean("FillRender", "Render", "Render the holes you are filling.", this.renderCategory, true);
-    ValueNumber width = new ValueNumber("OutlineWidth", "Outline Width", "Outline width of the render.", this.renderCategory, Float.valueOf(1.0f), Float.valueOf(0.5f), Float.valueOf(5.0f));
     ValueColor color = new ValueColor("Color", "Color", "", this.renderCategory, new Color(0, 170, 255, 120));
     private List<BlockPos> placeableHoles = Collections.synchronizedList(new ArrayList<>());
     private PlayerEntity target = null;
@@ -89,8 +88,7 @@ public class ModuleHoleFill extends Module {
             return;
         }
         if (this.currentHole != null && this.render.getValue()) {
-            RenderUtils.drawBlock(RenderUtils.getRenderBB(this.currentHole), this.color.getValue());
-            RenderUtils.drawBlockOutline(RenderUtils.getRenderBB(this.currentHole), this.color.getValue(), this.width.getValue().floatValue());
+            Renderer3d.renderEdged(event.getMatrices(), color.getValue(), color.getValue().darker(), Vec3d.of(this.currentHole), new Vec3d(1, 1, 1));
         }
     }
 
