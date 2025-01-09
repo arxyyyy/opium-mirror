@@ -3,18 +3,19 @@
   "package": "we.devs.opium.asm.mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "CameraMixin",
     "ChatHudMixin",
     "ClientConnectionMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
+    "IClientPlayerEntity",
     "IEntityVelocityUpdateS2CPacket",
     "IExplosionS2CPacket",
     "InGameHudMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
-    "WorldRendererMixin",
-    "IClientPlayerEntity",
-    "MixinSplashScreen"
+    "MixinSplashScreen",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
