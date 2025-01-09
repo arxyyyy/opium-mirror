@@ -5,9 +5,8 @@ import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.*;
 import we.devs.opium.client.events.EventMotion;
-import we.devs.opium.client.values.impl.ValueBoolean;
-import we.devs.opium.client.values.impl.ValueEnum;
-import we.devs.opium.client.values.impl.ValueNumber;
+import we.devs.opium.client.events.EventRender3D;
+import we.devs.opium.client.values.impl.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -15,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +33,11 @@ public class ModuleSurround extends Module {
     private int placements;
     private BlockPos startPosition;
 
+    ValueCategory renderCategory = new ValueCategory("Render", "Render category.");
+    ValueColor color = new ValueColor("Color", "Color", "", this.renderCategory, new Color(0, 170, 255, 120));
+    ValueColor outline = new ValueColor("OutlineColor", "OutlineColor", "", this.renderCategory, new Color(0, 170, 255, 120).darker());
+    ValueBoolean render = new ValueBoolean("FillRender", "Render", "Render the holes you are filling.", this.renderCategory, true);
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -41,6 +46,12 @@ public class ModuleSurround extends Module {
             return;
         }
         this.startPosition = new BlockPos((int) Math.round(mc.player.getX()), (int) Math.round(mc.player.getY()), (int) Math.round(mc.player.getZ()));
+    }
+
+    @Override
+    public void onTick() {
+        if(hideTicks <= 0) current = null;
+        else hideTicks--;
     }
 
     @Override
@@ -79,8 +90,12 @@ public class ModuleSurround extends Module {
         }
     }
 
+    BlockPos current = null;
+    int hideTicks = 5;
     public void placeBlock(EventMotion event, BlockPos position) {
         if (BlockUtils.isPositionPlaceable(position, true, true, this.ignoreCrystals.getValue()) && this.placements < this.blocks.getValue().intValue()) {
+            hideTicks = 5;
+            current = position;
             BlockUtils.placeBlock(event, position, Hand.MAIN_HAND);
             if (rotate.getValue()){
                 RotationUtils.rotate(event, RotationUtils.getRotationsTo(position.toCenterPos()));
@@ -175,6 +190,13 @@ public class ModuleSurround extends Module {
             return decimal <= 0.3 ? 1 : 0;
         }
         return decimal >= 0.7 ? 1 : 0;
+    }
+
+    @Override
+    public void onRender3D(EventRender3D event) {
+        if(render.getValue() && current != null) {
+            Renderer3d.renderEdged(event.getMatrices(), color.getValue(), outline.getValue(), Vec3d.of(current), new Vec3d(1, 1, 1));
+        }
     }
 
     public enum Supports {

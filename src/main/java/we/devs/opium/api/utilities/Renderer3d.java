@@ -1,9 +1,6 @@
 package we.devs.opium.api.utilities;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.x150.renderer.util.AlphaOverride;
-import me.x150.renderer.util.BufferUtils;
-import me.x150.renderer.util.RendererUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.*;
@@ -52,7 +49,7 @@ public class Renderer3d {
 
     @SuppressWarnings("removal")
     static float transformColor(float f) {
-        return AlphaOverride.compute(f);
+        return f;
     }
 
     /**
@@ -111,7 +108,7 @@ public class Renderer3d {
 
         setupRender();
         RenderSystem.setShader(() -> shader);
-        BufferUtils.draw(bb);
+        BufferRenderer.drawWithGlobalProgram(bb.end());
         endRender();
     }
 
