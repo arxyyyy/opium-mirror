@@ -1,15 +1,20 @@
 package we.devs.opium.client.modules.combat;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.network.packet.s2c.play.EntityStatusS2CPacket;
+import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.*;
 import we.devs.opium.client.events.EventMotion;
+import we.devs.opium.client.events.EventPacketReceive;
 import we.devs.opium.client.events.EventRender3D;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import we.devs.opium.client.modules.client.ModuleCommands;
 import we.devs.opium.client.values.impl.*;
 
 import java.awt.*;
