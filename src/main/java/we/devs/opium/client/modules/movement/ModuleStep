@@ -1,0 +1,35 @@
+package we.devs.opium.client.modules.movement;
+
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.MinecraftClient;
+import we.devs.opium.client.Module;
+import we.devs.opium.client.modules.render.Freecam;
+
+public class Step extends Module {
+    private final int height = 1;
+
+    private final MinecraftClient client = MinecraftClient.getInstance();
+
+    public Step() {
+        super("Step");
+    }
+
+    @Override
+    protected void onEnable() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player == null || client.world == null) return;
+
+            if (Freecam.isFreecamActive()) return;
+
+            client.player.stepHeight = height;
+        });
+    }
+
+    @Override
+    protected void onDisable() {
+        if (client.player != null) {
+            client.player.stepHeight = 0.6F;
+        }
+        ClientTickEvents.END_CLIENT_TICK.unregister(client -> {});
+    }
+}

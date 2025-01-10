@@ -1,0 +1,90 @@
+package we.devs.opium.client.modules.movement;
+
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.HitResult;
+import net.minecraft.util.math.Vec3d;
+import we.devs.opium.client.Module;
+import we.devs.opium.client.modules.render.Freecam;
+import we.devs.opium.client.util.TimerUtil;
+
+public class ReverseStep extends Module {
+    private final int fallSpeed = 2;
+    private final int height = 10;
+
+    private final MinecraftClient client = MinecraftClient.getInstance();
+    private final TimerUtil flagTime = new TimerUtil();
+
+    public ReverseStep() {
+        super("ReverseStep");
+    }
+
+    @Override
+    protected void onEnable() {
+        reset();
+        ClientTickEvents.END_CLIENT_TICK.register(client -> onUpdate());
+    }
+
+    @Override
+    protected void onDisable() {
+        reset();
+        ClientTickEvents.END_CLIENT_TICK.unregister(client -> {});
+    }
+
+    private void reset() {
+        flagTime.reset();
+    }
+
+    private void onUpdate() {
+        if (client.player == null || client.world == null || Freecam.isFreecamActive()) return;
+        if ((height > 0 && traceDown() > height) ||
+            environmentCheck() ||
+            !flagTime.passedMs(1000L)) return;
+
+        if (traceDown() != 0 && traceDown() <= height && trace() && client.player.isOnGround()) {
+            client.player.setVelocity(0.05, client.player.getVelocity().y, 0.05);
+        }
+
+        if (client.player.isOnGround()) {
+            client.player.setVelocity(client.player.getVelocity().x, -fallSpeed, client.player.getVelocity().z);
+        }
+    }
+
+    private boolean environmentCheck() {
+        return client.player.hasVehicle() ||
+                client.player.isClimbing() ||
+                client.player.isFallFlying() ||
+                client.player.getVelocity().y > 0.0 ||
+                client.player.isTouchingWater() ||
+                client.player.isInLava() ||
+                client.player.isSwimming();
+    }
+
+    private int traceDown() {
+        int y = (int) Math.round(client.player.getY()) - 1;
+        for (int tracey = y; tracey >= 0; tracey--) {
+            Vec3d start = client.player.getPos();
+            Vec3d end = new Vec3d(client.player.getX(), tracey, client.player.getZ());
+            HitResult hit = client.world.raycast(new net.minecraft.util.hit.RaycastContext(start, end, net.minecraft.util.hit.RaycastContext.ShapeType.COLLIDER, net.minecraft.util.hit.RaycastContext.FluidHandling.NONE, client.player));
+            
+            if (hit.getType() == HitResult.Type.BLOCK) {
+                return y - tracey;
+            }
+        }
+        return 0;
+    }
+
+    private boolean trace() {
+        AxisAlignedBB bbox = client.player.getBoundingBox();
+        Vec3d base = bbox.getCenter();
+        BlockPos blockPos = new BlockPos(base.subtract(0, 1.0D, 0));
+        BlockState state = client.world.getBlockState(blockPos);
+        
+        return state.isAir();
+    }
+}

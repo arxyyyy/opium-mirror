@@ -1,5 +1,6 @@
 package we.devs.opium.client.modules.combat;
 
+import net.minecraft.client.util.math.MatrixStack;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
@@ -16,7 +17,9 @@ import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @RegisterModule(name="Surround", description="Places blocks around your feet to protect you from crystals.", category=Module.Category.COMBAT)
 public class ModuleSurround extends Module {
@@ -36,7 +39,7 @@ public class ModuleSurround extends Module {
     ValueCategory renderCategory = new ValueCategory("Render", "Render category.");
     ValueColor color = new ValueColor("Color", "Color", "", this.renderCategory, new Color(0, 170, 255, 120));
     ValueColor outline = new ValueColor("OutlineColor", "OutlineColor", "", this.renderCategory, new Color(0, 170, 255, 120).darker());
-    ValueBoolean render = new ValueBoolean("FillRender", "Render", "Render the holes you are filling.", this.renderCategory, true);
+    ValueBoolean render = new ValueBoolean("Render", "Render", "Render the holes you are filling.", this.renderCategory, true);
 
     @Override
     public void onEnable() {
@@ -46,12 +49,6 @@ public class ModuleSurround extends Module {
             return;
         }
         this.startPosition = new BlockPos((int) Math.round(mc.player.getX()), (int) Math.round(mc.player.getY()), (int) Math.round(mc.player.getZ()));
-    }
-
-    @Override
-    public void onTick() {
-        if(hideTicks <= 0) current = null;
-        else hideTicks--;
     }
 
     @Override
@@ -90,12 +87,16 @@ public class ModuleSurround extends Module {
         }
     }
 
-    BlockPos current = null;
-    int hideTicks = 5;
     public void placeBlock(EventMotion event, BlockPos position) {
         if (BlockUtils.isPositionPlaceable(position, true, true, this.ignoreCrystals.getValue()) && this.placements < this.blocks.getValue().intValue()) {
-            hideTicks = 5;
-            current = position;
+            boolean found = false;
+            for (Block fade : fades) {
+                if(fade.pos.equals(position)) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) fades.add(new Block(position));
             BlockUtils.placeBlock(event, position, Hand.MAIN_HAND);
             if (rotate.getValue()){
                 RotationUtils.rotate(event, RotationUtils.getRotationsTo(position.toCenterPos()));
@@ -192,10 +193,34 @@ public class ModuleSurround extends Module {
         return decimal >= 0.7 ? 1 : 0;
     }
 
+    ArrayList<Block> fades = new ArrayList<>();
     @Override
     public void onRender3D(EventRender3D event) {
-        if(render.getValue() && current != null) {
-            Renderer3d.renderEdged(event.getMatrices(), color.getValue(), outline.getValue(), Vec3d.of(current), new Vec3d(1, 1, 1));
+        Iterator<Block> i = fades.iterator();
+        while (i.hasNext()) {
+            Block next = i.next();
+            if(next.shouldRemove()) i.remove();
+            else next.render(event.getMatrices());
+        }
+    }
+
+    class Block {
+        private final BlockPos pos;
+        private final FadeUtils fade = new FadeUtils(450);
+
+        public Block(BlockPos pos) {
+            this.pos = pos;
+        }
+
+        public void render(MatrixStack matrices) {
+            if(!render.getValue()) return;
+            Color init = color.getValue();
+            Color initO = outline.getValue();
+            Renderer3d.renderEdged(matrices, new Color(init.getRed(), init.getGreen(), init.getBlue(), (int) (150 * (1 - fade.ease(FadeUtils.Ease.Fast)))), new Color(initO.getRed(), initO.getGreen(), initO.getBlue(), (int) (150 * (1 - fade.ease(FadeUtils.Ease.Fast)))), Vec3d.of(pos), new Vec3d(1, 1, 1));
+        }
+
+        public boolean shouldRemove() {
+            return fade.isEnd();
         }
     }
 
