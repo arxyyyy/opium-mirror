@@ -65,12 +65,10 @@ public class InventoryUtils implements IMinecraft {
     public static void offhandItem(Item item) {
         int slot = findItem(item);
         if (slot != -1) {
-            Opium.PLAYER_MANAGER.setSwitching(true);
             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 45, 0, SlotActionType.PICKUP, mc.player);
             mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
             mc.interactionManager.tick();
-            Opium.PLAYER_MANAGER.setSwitching(false);
         }
     }
 
