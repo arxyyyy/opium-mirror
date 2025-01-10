@@ -15,6 +15,7 @@ import we.devs.opium.client.modules.movement.ModuleSpeed;
 import we.devs.opium.client.modules.movement.ModuleSprint;
 import we.devs.opium.client.modules.movement.ModuleVelocity;
 import we.devs.opium.client.modules.movement.ModuleStep;
+import we.devs.opium.client.modules.movement.ModuleReverseStep;
 import we.devs.opium.client.modules.player.ModuleElytraSwap;
 import we.devs.opium.client.modules.player.ModuleMultiTask;
 import we.devs.opium.client.modules.visuals.ModuleCameraClip;
@@ -67,6 +68,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleSprint());
         this.register(new ModuleVelocity());
         this.register(new ModuleStep());
+        this.register(new ModuleReverseStep());
 
         //Player
         this.register(new ModuleMultiTask());

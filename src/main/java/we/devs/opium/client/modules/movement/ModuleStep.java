@@ -7,8 +7,7 @@ import we.devs.opium.client.values.impl.ValueNumber;
 
 @RegisterModule(name = "Step", tag = "Step", description = "Makes you Step up Blocks", category = Module.Category.MOVEMENT)
 public class ModuleStep extends Module {
-    public static ValueNumber height = new ValueNumber("Height", "Height", "Changes the amount of blocks you can step up", 1.0f, 1.0f, 3.0f);
-
+    public static ValueNumber height = new ValueNumber("Height", "Height", "Changes the amount of blocks you can step up", 1.0, 1.0, 3.0);
     private float originalStepHeight;
 
 
