@@ -1,0 +1,142 @@
+package we.devs.opium.client.modules.movement;
+
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.util.math.MathHelper;
+import org.lwjgl.glfw.GLFW;
+import we.devs.opium.client.Module;
+
+public class GuiWalk extends Module {
+    private static final double DEFAULT_SPEED = 0.05D;
+
+    private final MinecraftClient client = MinecraftClient.getInstance();
+
+    public GuiWalk() {
+        super("GuiWalk");
+    }
+
+    @Override
+    protected void onEnable() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> onClientTick());
+    }
+
+    @Override
+    protected void onDisable() {
+        ClientTickEvents.END_CLIENT_TICK.unregister(client -> onClientTick());
+    }
+
+    private void onClientTick() {
+        if (!(client.currentScreen instanceof ChatScreen ||
+                client.currentScreen instanceof HandledScreens)) {
+            return;
+        }
+
+        double speed = DEFAULT_SPEED;
+
+        if (!client.player.isOnGround()) {
+            speed /= 4.0D;
+        }
+
+        handleJump();
+        handleForward(speed);
+
+        if (!client.player.isOnGround()) {
+            speed /= 2.0D;
+        }
+
+        handleBack(speed);
+        handleLeft(speed);
+        handleRight(speed);
+    }
+
+    private void moveForward(double speed) {
+        float direction = getDirection();
+        client.player.setVelocity(
+                client.player.getVelocity().x - MathHelper.sin(direction) * speed,
+                client.player.getVelocity().y,
+                client.player.getVelocity().z + MathHelper.cos(direction) * speed
+        );
+    }
+
+    private void moveBack(double speed) {
+        float direction = getDirection();
+        client.player.setVelocity(
+                client.player.getVelocity().x + MathHelper.sin(direction) * speed,
+                client.player.getVelocity().y,
+                client.player.getVelocity().z - MathHelper.cos(direction) * speed
+        );
+    }
+
+    private void moveLeft(double speed) {
+        float direction = getDirection();
+        client.player.setVelocity(
+                client.player.getVelocity().x + MathHelper.cos(direction) * speed,
+                client.player.getVelocity().y,
+                client.player.getVelocity().z + MathHelper.sin(direction) * speed
+        );
+    }
+
+    private void moveRight(double speed) {
+        float direction = getDirection();
+        client.player.setVelocity(
+                client.player.getVelocity().x - MathHelper.cos(direction) * speed,
+                client.player.getVelocity().y,
+                client.player.getVelocity().z - MathHelper.sin(direction) * speed
+        );
+    }
+
+    private void handleForward(double speed) {
+        if (!isKeyPressed(client.options.forwardKey.getDefaultKey().getCode())) return;
+        moveForward(speed);
+    }
+
+    private void handleBack(double speed) {
+        if (!isKeyPressed(client.options.backKey.getDefaultKey().getCode())) return;
+        moveBack(speed);
+    }
+
+    private void handleLeft(double speed) {
+        if (!isKeyPressed(client.options.leftKey.getDefaultKey().getCode())) return;
+        moveLeft(speed);
+    }
+
+    private void handleRight(double speed) {
+        if (!isKeyPressed(client.options.rightKey.getDefaultKey().getCode())) return;
+        moveRight(speed);
+    }
+
+    private void handleJump() {
+        if (client.player.isOnGround() &&
+                isKeyPressed(client.options.jumpKey.getDefaultKey().getCode())) {
+            client.player.jump();
+        }
+    }
+
+    private boolean isKeyPressed(int glfwKey) {
+        return GLFW.glfwGetKey(client.getWindow().getHandle(), glfwKey) == GLFW.GLFW_PRESS;
+    }
+
+    public static float getDirection() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        float yaw = client.player.getYaw();
+        if (client.player.forwardSpeed < 0.0F) {
+            yaw += 180.0F;
+        }
+        float forward = 1.0F;
+        if (client.player.forwardSpeed < 0.0F) {
+            forward = -0.5F;
+        } else if (client.player.forwardSpeed > 0.0F) {
+            forward = 0.5F;
+        }
+        if (client.player.sidewaysSpeed > 0.0F) {
+            yaw -= 90.0F * forward;
+        }
+        if (client.player.sidewaysSpeed < 0.0F) {
+            yaw += 90.0F * forward;
+        }
+        yaw *= 0.017453292F;
+        return yaw;
+    }
+}
