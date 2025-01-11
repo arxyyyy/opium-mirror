@@ -21,10 +21,7 @@ import we.devs.opium.client.modules.movement.ModuleReverseStep;
 import we.devs.opium.client.modules.player.ModuleFastPlace;
 import we.devs.opium.client.modules.player.ModuleElytraSwap;
 import we.devs.opium.client.modules.player.ModuleMultiTask;
-import we.devs.opium.client.modules.visuals.ModuleCameraClip;
-import we.devs.opium.client.modules.visuals.ModuleCrosshair;
-import we.devs.opium.client.modules.visuals.ModuleFOV;
-import we.devs.opium.client.modules.visuals.ModulePopChams;
+import we.devs.opium.client.modules.visuals.*;
 import we.devs.opium.client.values.Value;
 import org.lwjgl.opengl.GL11;
 
@@ -84,9 +81,10 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleElytraSwap());
 
         //Visuals
-        this.register(new ModuleCrosshair());
-        this.register(new ModuleFOV());
         this.register(ModuleCameraClip.INSTANCE);
+        this.register(new ModuleCrosshair());
+        this.register(new ModuleDeathEffects());
+        this.register(new ModuleFOV());
         this.register(new ModulePopChams());
         //this.register(new ModuleNameTags());
 
