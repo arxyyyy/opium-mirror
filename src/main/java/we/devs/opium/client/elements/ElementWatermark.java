@@ -27,7 +27,7 @@ public class ElementWatermark extends Element {
     }
 
     private String getText() {
-        return (this.mode.getValue().equals(Modes.Custom) ? this.customValue.getValue() : "Opium") + (!this.version.getValue().equals(Versions.None) ? " " + (this.version.getValue().equals(Versions.Normal) ? "v" : "") + "1.3.6" : "");
+        return (this.mode.getValue().equals(Modes.Custom) ? this.customValue.getValue() : "Opium") + (!this.version.getValue().equals(Versions.None) ? " " + (this.version.getValue().equals(Versions.Normal) ? "v" : "") + "1.3.7" : "");
     }
 
     public enum Versions {
