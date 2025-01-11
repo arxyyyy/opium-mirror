@@ -14,7 +14,7 @@ import java.awt.*;
  * todo color settings, height settings, fix double hole detection
  */
 @RegisterModule(name = "Hole ESP", description = "Hole ESP", tag = "Hole ESP", category = Module.Category.VISUALS)
-public class HoleESP extends Module {
+public class ModuleHoleESP extends Module {
     @Override
     public void onRender3D(EventRender3D event) {
         for (FastHoleUtil.Hole hole : FastHoleUtil.holes) {
