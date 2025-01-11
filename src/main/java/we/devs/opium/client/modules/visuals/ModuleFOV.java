@@ -13,6 +13,7 @@ public class ModuleFOV extends Module {
 
     @Override
     public void onEnable() {
+        if(mc.options == null) return;
         oldFov = mc.options.getFov().getValue();
     }
 

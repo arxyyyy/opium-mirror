@@ -86,7 +86,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleDeathEffects());
         this.register(new ModuleFOV());
         this.register(new ModulePopChams());
-        //this.register(new ModuleNameTags());
+        this.register(new ModuleHoleESP());
 
         this.modules.sort(Comparator.comparing(Module::getName));
     }
