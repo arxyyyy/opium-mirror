@@ -14,7 +14,7 @@ import java.awt.*;
 /**
  * todo color settings, height settings, fix double hole detection, range settings
  */
-@RegisterModule(name = "Hole ESP", description = "Hole ESP", tag = "Hole ESP", category = Module.Category.VISUALS)
+@RegisterModule(name = "HoleEsp", description = "HoleEsp", tag = "Hole ESP", category = Module.Category.VISUALS)
 public class ModuleHoleESP extends Module {
 
     @Override
