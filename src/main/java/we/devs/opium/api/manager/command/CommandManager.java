@@ -23,6 +23,7 @@ public class CommandManager implements IMinecraft, EventListener {
         this.register(new CommandDrawn());
         this.register(new CommandFolder());
         this.register(new CommandFriend());
+        this.register(new CommandHelp());
         this.register(new CommandNotify());
         this.register(new CommandPrefix());
         this.register(new CommandTag());

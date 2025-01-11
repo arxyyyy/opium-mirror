@@ -31,7 +31,7 @@ public class ChatUtils implements IMinecraft {
             return;
         }
         message = fastFormat(message, args);
-        Text component = Text.literal(getWatermark() + (!ModuleCommands.INSTANCE.watermarkMode.getValue().equals(ModuleCommands.WatermarkModes.None) ? " " : "") + Formatting.AQUA + "[" + name + "]: " + ModuleCommands.getFirstColor() + message);
+        Text component = Text.literal(getWatermark() + (!ModuleCommands.INSTANCE.watermarkMode.getValue().equals(ModuleCommands.WatermarkModes.None) ? " " : "") + Formatting.BLUE + "[" + name + "]: " + ModuleCommands.getFirstColor() + message);
         mc.inGameHud.getChatHud().addMessage(component);
     }
 
