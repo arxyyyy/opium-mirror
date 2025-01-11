@@ -12,7 +12,7 @@ import net.minecraft.network.packet.s2c.play.EntityStatusS2CPacket;
 
 import java.util.HashMap;
 
-@RegisterModule(name="PopCounter", tag="Pop Counter", description="Keeps count of how any totems a player pops.", category=Module.Category.COMBAT)
+@RegisterModule(name="PopCounter", tag="PopCounter", description="Keeps count of how any totems a player pops.", category=Module.Category.COMBAT)
 public class ModulePopCounter extends Module {
     public static final HashMap<String, Integer> popCount = new HashMap<>();
 
@@ -54,8 +54,6 @@ public class ModulePopCounter extends Module {
             if (!popCount.containsKey(player.getName().getString()) || player.isDead() && !(player.getHealth() <= 0.0f)) continue;
             int count = popCount.get(player.getName().getString());
             popCount.remove(player.getName().getString());
-            if (player == mc.player) continue;
-            ChatUtils.sendMessage(ModuleCommands.getFirstColor() + player.getName().getString() + " died after popping " + ModuleCommands.getSecondColor() + count + ModuleCommands.getFirstColor() + " totems!");
         }
     }
 }

@@ -23,7 +23,12 @@ public class ElementKillHud extends Element {
         "LOL dumbass nn %s died to Opium Client",
         "fn %s explodes due to OpiumClient.vip",
         "pooron nn %s dies to the king client",
-        "retarded ass kid %s dies to 0piumh4ck.cc"
+        "retarded ass kid %s dies to 0piumh4ck.cc",
+            "allah just blessed me with this win on hvh",
+            "my grandma can fight better than you",
+            "nn dog pounded by opium",
+            "better pray to allah next time for the win",
+            "call for backup next time asshole"
     };
 
     int hold = 0;
@@ -50,7 +55,7 @@ public class ElementKillHud extends Element {
                 this.frame.setHeight(mc.textRenderer.fontHeight);
             }
             RenderUtils.drawString(new MatrixStack(),text, (int) this.frame.getX(), (int) this.frame.getY(), ModuleColor.getColor().getRGB());
-            if(hold <= 0) hold = 100;
+            if(hold <= 0) hold = 300;
             else hold--;
         } else if(mc.currentScreen instanceof HudEditorScreen) {
             if(ModuleFont.INSTANCE.customFonts.getValue()) {

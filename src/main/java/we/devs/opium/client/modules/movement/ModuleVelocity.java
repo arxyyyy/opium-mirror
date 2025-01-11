@@ -40,22 +40,15 @@ public class ModuleVelocity extends Module {
         }
 
         if (event.getPacket() instanceof EntityVelocityUpdateS2CPacket && (sPacketEntityVelocity = (EntityVelocityUpdateS2CPacket) event.getPacket()).getEntityId() == mc.player.getId()) {
-            if (horizontal.getValue().floatValue() == 0.0f && vertical.getValue().floatValue() == 0.0f) {
-                event.cancel();
-            } else {
                 ((IEntityVelocityUpdateS2CPacket) sPacketEntityVelocity).setX((int) (sPacketEntityVelocity.getVelocityX() * horizontal.getValue().floatValue() / 100));
                 ((IEntityVelocityUpdateS2CPacket) sPacketEntityVelocity).setY((int) (sPacketEntityVelocity.getVelocityY() * vertical.getValue().floatValue() / 100));
                 ((IEntityVelocityUpdateS2CPacket) sPacketEntityVelocity).setZ((int) (sPacketEntityVelocity.getVelocityZ() * horizontal.getValue().floatValue() / 100));
-            }
+
         }
         if (event.getPacket() instanceof ExplosionS2CPacket sPacketExplosion) {
-            if (horizontal.getValue().floatValue() == 0.0f && vertical.getValue().floatValue() == 0.0f) {
-                event.cancel();
-            } else {
                 ((IExplosionS2CPacket) sPacketExplosion).setX((int) (sPacketExplosion.getPlayerVelocityX() * horizontal.getValue().floatValue() / 100));
                 ((IExplosionS2CPacket) sPacketExplosion).setY((int) (sPacketExplosion.getPlayerVelocityY() * vertical.getValue().floatValue() / 100));
                 ((IExplosionS2CPacket) sPacketExplosion).setZ((int) (sPacketExplosion.getPlayerVelocityZ() * horizontal.getValue().floatValue() / 100));
-            }
         }
     }
 
