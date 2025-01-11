@@ -28,6 +28,7 @@ public class ElementManager implements EventListener {
         this.register(new ElementTPS());
         this.register(new ElementPing());
         this.register(new ElementFPS());
+        this.register(new ElementKillHud());
     }
 
     public void register(Element element) {
