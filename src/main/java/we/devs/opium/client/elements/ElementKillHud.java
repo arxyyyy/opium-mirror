@@ -50,7 +50,7 @@ public class ElementKillHud extends Element {
                 this.frame.setHeight(mc.textRenderer.fontHeight);
             }
             RenderUtils.drawString(new MatrixStack(),text, (int) this.frame.getX(), (int) this.frame.getY(), ModuleColor.getColor().getRGB());
-            if(hold <= 0) hold = 10;
+            if(hold <= 0) hold = 100;
             else hold--;
         } else if(mc.currentScreen instanceof HudEditorScreen) {
             if(ModuleFont.INSTANCE.customFonts.getValue()) {
