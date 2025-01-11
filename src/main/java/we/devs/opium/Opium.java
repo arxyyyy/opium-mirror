@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import we.devs.opium.api.manager.miscellaneous.FontManager;
 
 import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Opium implements ModInitializer {
     public static final String NAME = "0piumh4ck.cc";
@@ -37,6 +39,7 @@ public class Opium implements ModInitializer {
     public static HudEditorScreen HUD_EDITOR;
     public static ConfigManager CONFIG_MANAGER;
     public static FontManager FONT_MANAGER;
+    private static final Timer configTimer = new Timer("Config timer", true);
 
     @Override
     public void onInitialize() {
@@ -56,6 +59,14 @@ public class Opium implements ModInitializer {
         CONFIG_MANAGER.attach();
         new TPSUtils();
 
+        configTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                // save config every 30s
+                Opium.CONFIG_MANAGER.save();
+            }
+        }, 30000, 30000);
+
         //To prevent the font renderer from fucking crashing (make this prettier if you can be bothered)
         EVENT_MANAGER.register(new EventListener() {
             private boolean fontsInitialized = false;
@@ -70,6 +81,8 @@ public class Opium implements ModInitializer {
                 }
             }
         });
+
+
 
         long endTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has finished! Took {} ms", endTime - startTime);

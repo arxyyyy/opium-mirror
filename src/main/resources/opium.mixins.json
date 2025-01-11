@@ -15,6 +15,7 @@
     "KeyboardMixin",
     "MinecraftClientMixin",
     "MixinSplashScreen",
+    "TitleScreenMixin",
     "WorldRendererMixin"
   ],
   "injectors": {

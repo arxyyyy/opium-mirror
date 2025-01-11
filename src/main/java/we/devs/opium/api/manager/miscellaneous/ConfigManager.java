@@ -27,7 +27,10 @@ public class ConfigManager {
         }
     }
 
+    boolean saving = false;
     public void save() {
+        if(saving) return;
+        saving = true;
         try {
             if (!Files.exists(Paths.get("Opium/"))) {
                 Files.createDirectories(Paths.get("Opium/"));
@@ -48,6 +51,7 @@ public class ConfigManager {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+        saving = false;
     }
 
     public void attach() {
