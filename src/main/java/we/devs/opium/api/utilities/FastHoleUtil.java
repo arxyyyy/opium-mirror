@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FastHoleUtil implements IMinecraft, EventListener {
+
+    private FastHoleUtil() {}
+
+    public static FastHoleUtil INSTANCE = new FastHoleUtil();
+
     public static @Nullable Hole getHole(BlockPos pos) {
         HoleType type = HoleType.SINGLE;
         List<BlockPos> airList = new ArrayList<>();

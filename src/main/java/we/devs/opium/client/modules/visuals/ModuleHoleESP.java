@@ -7,6 +7,7 @@ import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.FastHoleUtil;
 import we.devs.opium.api.utilities.Renderer3d;
 import we.devs.opium.client.events.EventRender3D;
+import we.devs.opium.client.events.EventTick;
 
 import java.awt.*;
 
@@ -15,6 +16,12 @@ import java.awt.*;
  */
 @RegisterModule(name = "Hole ESP", description = "Hole ESP", tag = "Hole ESP", category = Module.Category.VISUALS)
 public class ModuleHoleESP extends Module {
+
+    @Override
+    public void onTick(EventTick event) {
+        FastHoleUtil.INSTANCE.onTick(event);
+    }
+
     @Override
     public void onRender3D(EventRender3D event) {
         for (FastHoleUtil.Hole hole : FastHoleUtil.holes) {
@@ -27,12 +34,12 @@ public class ModuleHoleESP extends Module {
             };
 
             for (BlockPos blockPos : hole.air()) {
-                Renderer3d.renderEdged(event.getMatrices(), injectAlpha(color), injectAlpha(color.darker()), Vec3d.of(blockPos), new Vec3d(1, 0.2, 1));
+                Renderer3d.renderEdged(event.getMatrices(), injectAlpha(color), injectAlpha(color.darker()), Vec3d.of(blockPos), new Vec3d(1, 0.05, 1));
             }
         }
     }
 
     Color injectAlpha(Color color) {
-        return new Color(color.getRed(), color.getGreen(), color.getBlue(), 80);
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), 40);
     }
 }
