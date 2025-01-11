@@ -5,10 +5,9 @@ import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.FindItemResult;
 import we.devs.opium.api.utilities.InventoryUtil;
-import we.devs.opium.client.values.impl.ValueBoolean;
 
 @RegisterModule(name = "PacketExp", description = "Throws Exp.", category = Module.Category.COMBAT)
-public class PacketExp extends Module {
+public class ModulePacketExp extends Module {
 
     @Override
     public void onTick() {
