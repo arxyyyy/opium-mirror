@@ -7,6 +7,7 @@ import we.devs.opium.api.utilities.IMinecraft;
 import we.devs.opium.client.events.*;
 import we.devs.opium.client.modules.client.*;
 import we.devs.opium.client.modules.combat.*;
+import we.devs.opium.client.modules.exploit.ModuleIPCheck;
 import we.devs.opium.client.modules.miscellaneous.ModuleFakePlayer;
 import we.devs.opium.client.modules.exploit.ModuleHitboxDesync;
 import we.devs.opium.client.modules.miscellaneous.ModuleGhastFarmer;
@@ -61,6 +62,7 @@ public class ModuleManager implements IMinecraft, EventListener {
 
         //Exploit
         this.register(new ModuleHitboxDesync());
+        this.register(new ModuleIPCheck());
 
         //Miscellaneous
         this.register(new ModuleFakePlayer());
