@@ -6,7 +6,7 @@ import we.devs.opium.client.values.impl.ValueNumber;
 
 @RegisterModule(name = "FOV", description = "Customize your field of range.", category = Module.Category.VISUALS)
 public class ModuleFOV extends Module {
-    private final ValueNumber fovSetting = new ValueNumber("Amount", "Amount", "", 90.0f, 30.0f, 110.0f);
+    private final ValueNumber fovSetting = new ValueNumber("Amount", "Amount", "", 90, 30, 110);
 
 
     private int oldFov;
@@ -21,5 +21,8 @@ public class ModuleFOV extends Module {
         if (mc.player == null || mc.world == null) return;
         mc.options.getFov().setValue(fovSetting.getValue().intValue());
         System.out.println("Current FOV: " + mc.options.getFov().getValue());
+    }
+    public void onDisable() {
+        mc.options.getFov().setValue(oldFov);
     }
 }
