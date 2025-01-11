@@ -16,17 +16,17 @@ public class ModuleCommands extends Module {
     public final ValueString firstSymbol = new ValueString("WatermarkFirstSymbol", "First Symbol", "The first symbol on the watermark.", this.watermarkCategory, "[");
     public final ValueString secondSymbol = new ValueString("WatermarkSecondSymbol", "Second Symbol", "The second symbol on the watermark.", this.watermarkCategory, "]");
     public final ValueCategory firstWatermarkColorCategory = new ValueCategory("First Mark Color", "The colors for the first color on the Watermark.");
-    public final ValueEnum firstWatermarkColor = new ValueEnum("FirstWatermarkColor", "Color", "The color of the first watermark color.", this.firstWatermarkColorCategory, ColorModes.Purple);
+    public final ValueEnum firstWatermarkColor = new ValueEnum("FirstWatermarkColor", "Color", "The color of the first watermark color.", this.firstWatermarkColorCategory, ColorModes.White);
     public final ValueEnum firstWatermarkBrightness = new ValueEnum("FirstWatermarkBrightness", "Brightness", "The brightness of the second watermark color.", this.firstWatermarkColorCategory, LightModes.Light);
     public final ValueCategory secondWatermarkColorCategory = new ValueCategory("Second Mark Color", "The colors for the second color on the Watermark.");
-    public final ValueEnum secondWatermarkColor = new ValueEnum("SecondWatermarkColor", "Color", "The color of the second watermark color.", this.secondWatermarkColorCategory, ColorModes.Purple);
+    public final ValueEnum secondWatermarkColor = new ValueEnum("SecondWatermarkColor", "Color", "The color of the second watermark color.", this.secondWatermarkColorCategory, ColorModes.Gray);
     public final ValueEnum secondWatermarkBrightness = new ValueEnum("SecondWatermarkBrightness", "Brightness", "The brightness of the second watermark color.", this.secondWatermarkColorCategory, LightModes.Dark);
     public final ValueCategory firstColorCategory = new ValueCategory("First Color", "The first color in the chat sending.");
-    public final ValueEnum firstColorMode = new ValueEnum("FirstColorMode", "Color", "The color for the First Color.", this.firstColorCategory, ColorModes.Purple);
-    public final ValueEnum firstColorBrightness = new ValueEnum("FirstColorBrightness", "Brightness", "The brightness for the First Color.", this.firstColorCategory, LightModes.Light);
+    public final ValueEnum firstColorMode = new ValueEnum("FirstColorMode", "Color", "The color for the First Color.", this.firstColorCategory, ColorModes.Black);
+    public final ValueEnum firstColorBrightness = new ValueEnum("FirstColorBrightness", "Brightness", "The brightness for the First Color.", this.firstColorCategory, LightModes.Dark);
     public final ValueCategory secondColorCategory = new ValueCategory("Second Color", "The second color in the chat sending.");
-    public final ValueEnum secondColorMode = new ValueEnum("SecondColorMode", "Color", "The color for the Second Color.", this.secondColorCategory, ColorModes.Purple);
-    public final ValueEnum secondColorBrightness = new ValueEnum("SecondColorBrightness", "Brightness", "The brightness for the Second Color.", this.secondColorCategory, LightModes.Dark);
+    public final ValueEnum secondColorMode = new ValueEnum("SecondColorMode", "Color", "The color for the Second Color.", this.secondColorCategory, ColorModes.White);
+    public final ValueEnum secondColorBrightness = new ValueEnum("SecondColorBrightness", "Brightness", "The brightness for the Second Color.", this.secondColorCategory, LightModes.Light);
 
     public ModuleCommands() {
         INSTANCE = this;
