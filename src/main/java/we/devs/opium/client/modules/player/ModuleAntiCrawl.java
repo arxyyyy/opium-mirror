@@ -1,4 +1,4 @@
-package we.devs.opium.client.modules.combat;
+package we.devs.opium.client.modules.player;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Items;
@@ -12,7 +12,7 @@ import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.InventoryUtils;
 
-@RegisterModule(name = "AntiCrawl", description = "Mines Blocks Over or Under you to get you out of a crawl state.", category = Module.Category.COMBAT)
+@RegisterModule(name = "AntiCrawl", description = "Mines Blocks Over or Under you to get you out of a crawl state.", category = Module.Category.PLAYER)
 public class ModuleAntiCrawl extends Module {
     //ValueEnum autoSwitch = new ValueEnum("AutoSwitch", "Auto Switch", "Automatically switches to your Pickaxe.", AutoSwitch.None);
 
