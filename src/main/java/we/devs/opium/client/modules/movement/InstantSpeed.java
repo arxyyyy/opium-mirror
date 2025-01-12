@@ -11,7 +11,7 @@ import we.devs.opium.api.manager.module.RegisterModule;
 public class InstantSpeed extends Module {
 
     @Subscribe
-    public void onTick(PlayerMoveEvent event) {
+    public void onEnable(PlayerMoveEvent event) {
         if (mc.player != null && mc.world != null) {
             if (mc.player.isFallFlying()) return;
             event.cancel();
