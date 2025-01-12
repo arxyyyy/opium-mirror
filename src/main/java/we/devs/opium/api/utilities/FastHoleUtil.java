@@ -52,11 +52,11 @@ public class FastHoleUtil implements IMinecraft, EventListener {
                         } else if(isBedrock(offsetPos2)) {
                             bedrock++;
                             obOrBed++;
-                        } else if(!isAir(offsetPos2)) {
+                        } else if(isAir(offsetPos2) && dir2 != direction.getOpposite()) {
                             return null;
                         }
                     }
-                    if(obOrBed == 4)  {
+                    if(obOrBed > 3)  {
                         type = HoleType.DOUBLE;
                         airList.add(offsetPos);
                     }
@@ -93,7 +93,7 @@ public class FastHoleUtil implements IMinecraft, EventListener {
     public enum HoleType {
         SINGLE,
         DOUBLE,
-        QUAD
+        QUAD // todo
     }
 
     public enum HoleSafety {
