@@ -16,7 +16,7 @@ import java.util.Objects;
 public class FontLoader {
     private static final String FONTS_FOLDER = "opium/fonts";
     private static final String ICON_FONTS_FOLDER = "opium/fonts/icons";
-    private static final String[] DEFAULT_FONT = {"gilroy.otf"};
+    private static final String[] DEFAULT_FONT = {"font.ttf"};
 
     public static Font[] loadFonts() {
         return loadFonts(FONTS_FOLDER, DEFAULT_FONT);
