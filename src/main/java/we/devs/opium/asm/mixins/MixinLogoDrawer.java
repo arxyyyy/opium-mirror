@@ -61,7 +61,7 @@ public class MixinLogoDrawer {
         drawLogo(context, screenWidth, alpha, y);
         renderEffects(context, screenWidth, screenHeight);
 
-        String text = "0piumh4ck.cc by heedi & Cxiy";
+        String text = "0piumh4ck.cc by heedi & Cxiy & VoidMatter";
         int x = 10;
         int yPosition = 10;
         int color = 0xFF808080;
