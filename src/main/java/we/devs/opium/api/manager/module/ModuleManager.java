@@ -60,11 +60,12 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleWelcomer());
 
         //Movement
+        this.register(new InstantSpeed());
+        this.register(new ModuleReverseStep());
         this.register(new ModuleSpeed());
         this.register(new ModuleSprint());
         this.register(new ModuleVelocity());
         this.register(new ModuleStep());
-        this.register(new ModuleReverseStep());
 
         //Player
         this.register(new ModuleMultiTask());
