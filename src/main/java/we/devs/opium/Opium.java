@@ -66,8 +66,7 @@ public class Opium implements ModInitializer {
             return;
         } else {
             LOGGER.info("Authentication Success: HWID validated.");
-            if (System.getenv("COMPUTERNAME").equals("CX-PC")) LOGGER.info("CxOnTop");
-            else sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
         }
 
         EVENT_MANAGER = new EventManager();
