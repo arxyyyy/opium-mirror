@@ -72,11 +72,11 @@ public class ModuleManager implements IMinecraft, EventListener {
 
         //Visuals
         this.register(new ModuleCrosshair());
-        this.register(new ModuleFOV());
+        this.register(new ModuleZoom());
         this.register(ModuleCameraClip.INSTANCE);
         this.register(new ModulePopChams());
         this.register(new ModuleHoleESP());
-        //this.register(new ModuleNameTags());
+        this.register(new ModuleNametags());
 
         this.modules.sort(Comparator.comparing(Module::getName));
     }
