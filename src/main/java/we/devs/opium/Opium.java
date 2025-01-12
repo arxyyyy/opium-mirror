@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -57,11 +58,6 @@ public class Opium implements ModInitializer {
     public void onInitialize() {
         long startTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has started!");
-
-        if (!checkInternetConnection()) {
-            showErrorAndCrash("Internet Connection Error", "No internet connection. The game could not start.");
-            return;
-        }
 
         if (!isHWIDValid()) {
             LOGGER.error("Authentication Denied: HWID not found.");
@@ -120,28 +116,19 @@ public class Opium implements ModInitializer {
         LOGGER.info("Initialization process for Opium has finished! Took {} ms", endTime - startTime);
     }
 
-    private boolean checkInternetConnection() {
-        try {
-            InetAddress address = InetAddress.getByName("google.com");
-            return address.isReachable(3000);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private boolean isHWIDValid() {
         try {
-            URL url = new URL(HWID_LIST_URL);
+            URL url = new URI(HWID_LIST_URL).toURL();
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
             String hwid = getSHA256Hash();
             String username = MinecraftClient.getInstance().getSession().getUsername();
-            LOGGER.info("Generated HWID (SHA-256): " + hwid);
+            LOGGER.info("Generated HWID (SHA-256): {}", hwid);
 
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().equalsIgnoreCase(hwid)) {
-                    LOGGER.info("HWID matched successfully for username: " + username);
+                    LOGGER.info("HWID matched successfully for username: {}", username);
                     return true;
                 }
             }
