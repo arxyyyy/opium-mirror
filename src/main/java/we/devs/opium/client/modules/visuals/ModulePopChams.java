@@ -104,6 +104,7 @@ public final class ModulePopChams extends Module {
     }
 
     private void renderEntity(MatrixStack matrices, LivingEntity entity, BipedEntityModel<PlayerEntity> modelBase, int alpha) {
+        if(!(entity instanceof PlayerEntity)) return;
         double x = entity.getX() - mc.getEntityRenderDispatcher().camera.getPos().getX();
         double y = entity.getY() - mc.getEntityRenderDispatcher().camera.getPos().getY();
         double z = entity.getZ() - mc.getEntityRenderDispatcher().camera.getPos().getZ();

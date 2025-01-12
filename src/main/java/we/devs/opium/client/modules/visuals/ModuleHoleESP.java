@@ -8,14 +8,33 @@ import we.devs.opium.api.utilities.FastHoleUtil;
 import we.devs.opium.api.utilities.Renderer3d;
 import we.devs.opium.client.events.EventRender3D;
 import we.devs.opium.client.events.EventTick;
+import we.devs.opium.client.values.impl.ValueCategory;
+import we.devs.opium.client.values.impl.ValueColor;
+import we.devs.opium.client.values.impl.ValueNumber;
 
 import java.awt.*;
 
 /**
- * todo color settings, height settings, fix double hole detection, range settings
+ * todo fix double hole detection
  */
 @RegisterModule(name = "HoleEsp", description = "HoleEsp", tag = "Hole ESP", category = Module.Category.VISUALS)
 public class ModuleHoleESP extends Module {
+
+    ValueNumber range = new ValueNumber("Range", "Range", "Range", 5, 0, 15);
+
+    // render
+    ValueCategory render = new ValueCategory("Render", "Render settings");
+    ValueColor safeFill = getSetting("Safe fill", new Color(20, 250, 20));
+    ValueColor safeOutline = getSetting("Safe outline", new Color(20, 250, 20).darker());
+    ValueColor mixedFill = getSetting("Mixed fill", new Color(246, 120, 65));
+    ValueColor mixedOutline = getSetting("Mixed outline", new Color(246, 120, 65).darker());
+    ValueColor unsafeFill = getSetting("Unsafe fill", new Color(250, 20, 20));
+    ValueColor unsafeOutline = getSetting("Unsafe outline", new Color(250, 20, 20).darker());
+    ValueNumber height = new ValueNumber("Height", "Height", "Box height", 0.05, 0, 0.5);
+
+    ValueColor getSetting(String name, Color defaultC) {
+        return new ValueColor(name, name, name, render, defaultC);
+    }
 
     @Override
     public void onTick(EventTick event) {
@@ -25,16 +44,23 @@ public class ModuleHoleESP extends Module {
     @Override
     public void onRender3D(EventRender3D event) {
         for (FastHoleUtil.Hole hole : FastHoleUtil.holes) {
-            if(hole.safety() == FastHoleUtil.HoleSafety.UNSAFE) continue;
-            Color color = switch (hole.safety()) {
-                case UNBREAKABLE -> Color.GREEN;
-                case PARTIALLY_UNBREAKABLE -> Color.YELLOW;
-                case BREAKABLE -> Color.RED;
+            if(hole.safety() == FastHoleUtil.HoleSafety.UNSAFE || Vec3d.of(hole.air().get(0)).distanceTo(mc.player.getPos()) > range.getValue().doubleValue()) continue;
+            Color fill = switch (hole.safety()) {
+                case UNBREAKABLE -> safeFill.getValue();
+                case PARTIALLY_UNBREAKABLE -> mixedFill.getValue();
+                case BREAKABLE -> unsafeFill.getValue();
+                default -> throw new IllegalStateException("Unexpected value: " + hole.safety());
+            };
+
+            Color outline = switch (hole.safety()) {
+                case UNBREAKABLE -> safeOutline.getValue();
+                case PARTIALLY_UNBREAKABLE -> mixedOutline.getValue();
+                case BREAKABLE -> unsafeOutline.getValue();
                 default -> throw new IllegalStateException("Unexpected value: " + hole.safety());
             };
 
             for (BlockPos blockPos : hole.air()) {
-                Renderer3d.renderEdged(event.getMatrices(), injectAlpha(color), injectAlpha(color.darker()), Vec3d.of(blockPos), new Vec3d(1, 0.05, 1));
+                Renderer3d.renderEdged(event.getMatrices(), injectAlpha(fill), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
             }
         }
     }
