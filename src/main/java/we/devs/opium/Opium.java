@@ -37,8 +37,8 @@ public class Opium implements ModInitializer {
     public static final String VERSION = "1.3.8-beta";
     public static final Logger LOGGER = LoggerFactory.getLogger("Opium");
 
-    private static final String HWID_LIST_URL = "https://raw.githubusercontent.com/goddanger/Opium-Hwid/refs/heads/main/hwid-list";
-    private static final String WEBHOOK_URL = "https://discord.com/api/webhooks/1327943548175384630/_1ZQT_bV7_DWTWWMioPvRyfEvpAoghITgrBoSikPzCuydzwmXBvPhlrtdLorci10CXXw";
+    private static final String HWID_LIST_URL = "https://raw.githubusercontent.com/heeedii/Opium-Hwid/refs/heads/main/hwid-list";
+    private static final String WEBHOOK_URL = "https://discord.com/api/webhooks/1327969292943102004/o4ytRZZtrVQdfWSGc_bFRMffljq58W2aPLZXbnt9jdhCXAy5Qn7VrP6wrzW7SdjR11r0";
 
     public static Color COLOR_CLIPBOARD;
     public static CommandManager COMMAND_MANAGER;
