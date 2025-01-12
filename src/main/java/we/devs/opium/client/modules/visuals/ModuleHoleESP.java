@@ -2,14 +2,12 @@ package we.devs.opium.client.modules.visuals;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.heightprovider.BiasedToBottomHeightProvider;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.FastHoleUtil;
 import we.devs.opium.api.utilities.Renderer3d;
 import we.devs.opium.client.events.EventRender3D;
 import we.devs.opium.client.events.EventTick;
-import we.devs.opium.client.modules.combat.ModuleSurround;
 import we.devs.opium.client.values.impl.*;
 
 import java.awt.*;
