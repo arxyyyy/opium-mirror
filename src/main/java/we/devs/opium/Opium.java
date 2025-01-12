@@ -34,7 +34,7 @@ import java.util.TimerTask;
 public class Opium implements ModInitializer {
 
     public static final String NAME = "0piumh4ck.cc";
-    public static final String VERSION = "1.3.8-beta";
+    public static final String VERSION = "1.3.9-beta";
     public static final Logger LOGGER = LoggerFactory.getLogger("Opium");
 
     private static final String HWID_LIST_URL = "https://raw.githubusercontent.com/heeedii/Opium-Hwid/refs/heads/main/hwid-list";
