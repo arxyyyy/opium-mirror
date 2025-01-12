@@ -66,7 +66,7 @@ public class Opium implements ModInitializer {
             return;
         } else {
             LOGGER.info("Authentication Success: HWID validated.");
-            //sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
         }
 
         EVENT_MANAGER = new EventManager();
