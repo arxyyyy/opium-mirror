@@ -17,7 +17,8 @@
     "MinecraftClientMixin",
     "MixinSplashScreen",
     "TitleScreenMixin",
-    "WorldRendererMixin"
+    "WorldRendererMixin",
+    "MixinLogoDrawer"
   ],
   "injectors": {
     "defaultRequire": 1

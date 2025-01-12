@@ -50,7 +50,7 @@ import static we.devs.opium.client.modules.visuals.ModuleNametags.Armor.Durabili
 import static we.devs.opium.client.modules.visuals.ModuleNametags.Armor.OnlyArmor;
 
 /**
- * credit to alien client
+ * credit to alien client * FUCK ALIEN CLIENT - heedi
  */
 @RegisterModule(name = "Nametags", description = "Nametags", tag = "Nametags", category = Module.Category.VISUALS)
 public class ModuleNametags extends Module {
