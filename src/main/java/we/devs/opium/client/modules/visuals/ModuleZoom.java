@@ -4,9 +4,9 @@ import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.client.values.impl.ValueNumber;
 
-@RegisterModule(name = "FOV", description = "Customize your field of range.", category = Module.Category.VISUALS)
-public class ModuleFOV extends Module {
-    private final ValueNumber fovSetting = new ValueNumber("Amount", "Amount", "", 90, 30, 110);
+@RegisterModule(name = "Zoom/Fov", description = "Zooms/FOV change.", category = Module.Category.VISUALS)
+public class ModuleZoom extends Module {
+    private final ValueNumber fovSetting = new ValueNumber("Amount", "Amount", "", 30, 30, 130);
 
 
     private int oldFov;
