@@ -44,7 +44,8 @@ public class Opium implements ModInitializer {
     @Override
     public void onInitialize() {
         long startTime = System.currentTimeMillis();
-        LOGGER.info("Initialization process for Opium has started!");
+        LOGGER.info("EN: Initialization process for Opium has started!");
+        LOGGER.info("JP: アヘンの初期化プロセスが始まりました！");
 
         EVENT_MANAGER = new EventManager();
         COMMAND_MANAGER = new CommandManager();
@@ -52,9 +53,21 @@ public class Opium implements ModInitializer {
         MODULE_MANAGER = new ModuleManager();
         ELEMENT_MANAGER = new ElementManager();
         PLAYER_MANAGER = new PlayerManager();
+
+        LOGGER.info("EN: 0piumh4ck.cc's managers loaded!");
+        LOGGER.info("JP: 0piumh4ck。ccのマネージャーがロードされました！");
+
         CLICK_GUI = new ClickGuiScreen();
         HUD_EDITOR = new HudEditorScreen();
+
+        LOGGER.info("EN: 0piumh4ck's Guis Loaded!");
+        LOGGER.info("JP: 0piumh4ckのGUIがロードされました！");
+
         CONFIG_MANAGER = new ConfigManager();
+
+        LOGGER.info("EN: 0piumh4ck's config manager loaded!");
+        LOGGER.info("JP: 0piumh4ckの構成マネージャーがロードされました！");
+
         CONFIG_MANAGER.load();
         CONFIG_MANAGER.attach();
         new TPSUtils();
