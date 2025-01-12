@@ -2,14 +2,12 @@ package we.devs.opium.client.modules.visuals;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.gen.heightprovider.BiasedToBottomHeightProvider;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.FastHoleUtil;
 import we.devs.opium.api.utilities.Renderer3d;
 import we.devs.opium.client.events.EventRender3D;
 import we.devs.opium.client.events.EventTick;
-import we.devs.opium.client.modules.combat.ModuleSurround;
 import we.devs.opium.client.values.impl.*;
 
 import java.awt.*;
@@ -66,7 +64,7 @@ public class ModuleHoleESP extends Module {
                 } else if (this.renderMode.getValue().equals(ModuleHoleESP.RenderMode.Fill)) {
                     Renderer3d.renderFilled(event.getMatrices(), injectAlpha(fill), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
                 } else if (this.renderMode.getValue().equals(ModuleHoleESP.RenderMode.Outline)) {
-                    Renderer3d.renderFilled(event.getMatrices(), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
+                    Renderer3d.renderOutline(event.getMatrices(), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
                 }
             }
         }
