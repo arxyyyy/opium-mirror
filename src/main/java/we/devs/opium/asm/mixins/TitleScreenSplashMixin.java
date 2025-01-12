@@ -21,7 +21,6 @@ public class TitleScreenSplashMixin {
         String[] customSplashes = {
                 "Cxiy",
                 "Heedi",
-                "Idk Any Other Devs",
                 "Opium",
                 "" // Empty cz looks good ngl
         };
