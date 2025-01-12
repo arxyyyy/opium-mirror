@@ -14,19 +14,31 @@ import we.devs.opium.client.events.EventTick;
 import we.devs.opium.client.gui.click.ClickGuiScreen;
 import we.devs.opium.client.gui.hud.HudEditorScreen;
 import net.fabricmc.api.ModInitializer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import we.devs.opium.api.manager.miscellaneous.FontManager;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Opium implements ModInitializer {
+
     public static final String NAME = "0piumh4ck.cc";
-    public static final String VERSION = "1.3.8-beta";
+    public static final String VERSION = "1.3.9-beta";
     public static final Logger LOGGER = LoggerFactory.getLogger("Opium");
+
+    private static final String HWID_LIST_URL = "https://raw.githubusercontent.com/heeedii/Opium-Hwid/refs/heads/main/hwid-list";
+    private static final String WEBHOOK_URL = "https://discord.com/api/webhooks/1327969292943102004/o4ytRZZtrVQdfWSGc_bFRMffljq58W2aPLZXbnt9jdhCXAy5Qn7VrP6wrzW7SdjR11r0";
 
     public static Color COLOR_CLIPBOARD;
     public static CommandManager COMMAND_MANAGER;
@@ -44,8 +56,22 @@ public class Opium implements ModInitializer {
     @Override
     public void onInitialize() {
         long startTime = System.currentTimeMillis();
-        LOGGER.info("EN: Initialization process for Opium has started!");
-        LOGGER.info("JP: アヘンの初期化プロセスが始まりました！");
+        LOGGER.info("Initialization process for Opium has started!");
+
+        if (!checkInternetConnection()) {
+            showErrorAndCrash("Internet Connection Error", "No internet connection. The game could not start.");
+            return;
+        }
+
+        if (!isHWIDValid()) {
+            LOGGER.error("Authentication Denied: HWID not found.");
+            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
+            showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
+            return;
+        } else {
+            LOGGER.info("Authentication Success: HWID validated.");
+            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+        }
 
         EVENT_MANAGER = new EventManager();
         COMMAND_MANAGER = new CommandManager();
@@ -54,33 +80,28 @@ public class Opium implements ModInitializer {
         ELEMENT_MANAGER = new ElementManager();
         PLAYER_MANAGER = new PlayerManager();
 
-        LOGGER.info("EN: 0piumh4ck.cc's managers loaded!");
-        LOGGER.info("JP: 0piumh4ck。ccのマネージャーがロードされました！");
+        LOGGER.info("Managers loaded successfully!");
 
         CLICK_GUI = new ClickGuiScreen();
         HUD_EDITOR = new HudEditorScreen();
 
-        LOGGER.info("EN: 0piumh4ck's Guis Loaded!");
-        LOGGER.info("JP: 0piumh4ckのGUIがロードされました！");
+        LOGGER.info("GUI screens loaded successfully!");
 
         CONFIG_MANAGER = new ConfigManager();
-
-        LOGGER.info("EN: 0piumh4ck's config manager loaded!");
-        LOGGER.info("JP: 0piumh4ckの構成マネージャーがロードされました！");
-
         CONFIG_MANAGER.load();
         CONFIG_MANAGER.attach();
-        new TPSUtils();
+
+        LOGGER.info("Configuration manager initialized!");
 
         configTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                // save config every 30s
-                Opium.CONFIG_MANAGER.save();
+                CONFIG_MANAGER.save();
             }
         }, 30000, 30000);
 
-        //To prevent the font renderer from fucking crashing (make this prettier if you can be bothered)
+        new TPSUtils();
+
         EVENT_MANAGER.register(new EventListener() {
             private boolean fontsInitialized = false;
 
@@ -95,10 +116,112 @@ public class Opium implements ModInitializer {
             }
         });
 
-
-
         long endTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has finished! Took {} ms", endTime - startTime);
     }
 
+    private boolean checkInternetConnection() {
+        try {
+            InetAddress address = InetAddress.getByName("google.com");
+            return address.isReachable(3000);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isHWIDValid() {
+        try {
+            URL url = new URL(HWID_LIST_URL);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String hwid = getSHA256Hash();
+            String username = MinecraftClient.getInstance().getSession().getUsername();
+            LOGGER.info("Generated HWID (SHA-256): " + hwid);
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().equalsIgnoreCase(hwid)) {
+                    LOGGER.info("HWID matched successfully for username: " + username);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed to fetch HWID list: {}", e.getMessage());
+        }
+        LOGGER.error("HWID not found in the list.");
+        return false;
+    }
+
+    private String getSHA256Hash() {
+        try {
+            String rawHWID = System.getenv("COMPUTERNAME") + System.getProperty("user.name");
+
+            MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = sha256Digest.digest(rawHWID.getBytes());
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString().toUpperCase(Locale.ROOT);
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("Failed to generate SHA-256 hash: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private void sendWebhook(String title, String message, boolean isSuccess) {
+        try {
+            URL url = new URL(WEBHOOK_URL);
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+
+            String username = MinecraftClient.getInstance().getSession().getUsername();
+            String pcName = System.getenv("COMPUTERNAME");
+            String hwid = getSHA256Hash();
+            String color = isSuccess ? "3066993" : "15158332";
+
+            String jsonPayload = String.format(
+                    "{" +
+                            "\"embeds\": [{" +
+                            "\"title\": \"%s\"," +
+                            "\"description\": \"%s\"," +
+                            "\"fields\": [" +
+                            "{\"name\": \"Username\", \"value\": \"%s\", \"inline\": true}," +
+                            "{\"name\": \"PC Name\", \"value\": \"%s\", \"inline\": true}," +
+                            "{\"name\": \"HWID\", \"value\": \"%s\", \"inline\": true}" +
+                            "]," +
+                            "\"color\": %s" +
+                            "}]" +
+                            "}", title, message, username, pcName, hwid, color);
+
+            try (OutputStream os = connection.getOutputStream()) {
+                os.write(jsonPayload.getBytes());
+                os.flush();
+            }
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200 || responseCode == 204) {
+                LOGGER.info("Webhook message sent successfully.");
+            } else {
+                LOGGER.error("Webhook message sent. Response code: {}", responseCode);
+                LOGGER.error("Webhook URL: {}", WEBHOOK_URL);
+                LOGGER.error("JSON Payload: {}", jsonPayload);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Webhook message error: {}", e.getMessage());
+        }
+    }
+
+    private void showErrorAndCrash(String title, String message) {
+        System.err.println(title + ": " + message);
+        LOGGER.error(title + ": " + message);
+        MinecraftClient.getInstance().scheduleStop();
+        throw new RuntimeException(message);
+    }
 }

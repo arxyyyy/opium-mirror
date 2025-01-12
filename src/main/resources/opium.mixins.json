@@ -8,6 +8,7 @@
     "ClientConnectionMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
+    "EntityRendererMixin",
     "IClientPlayerEntity",
     "IEntityVelocityUpdateS2CPacket",
     "IExplosionS2CPacket",
