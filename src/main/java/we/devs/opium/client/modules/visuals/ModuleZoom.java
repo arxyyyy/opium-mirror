@@ -5,7 +5,7 @@ import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.client.values.impl.ValueNumber;
 
 @RegisterModule(name = "Zoom", description = "Zooms lol.", category = Module.Category.VISUALS)
-public class ModuleFOV extends Module {
+public class ModuleZoom extends Module {
     private final ValueNumber fovSetting = new ValueNumber("Amount", "Amount", "", 30, 10, 130);
 
 
