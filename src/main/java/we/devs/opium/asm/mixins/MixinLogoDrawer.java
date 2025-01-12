@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,21 +18,24 @@ public class MixinLogoDrawer {
     @Shadow
     @Final
     private boolean ignoreAlpha;
+
     private final List<Snowflake> snowflakes = new ArrayList<>();
     private static final int INITIAL_SNOWFLAKE_COUNT = 100;
     private static final Random RANDOM = new Random();
 
-    private long nextLightningTime = 0; // Next lightning event time
+    private long nextLightningTime = 0; // Zeitpunkt für den nächsten Blitz
+
 
     /**
+     * Zeichnet das Logo mit Schnee- und Blitzeffekten
      * @author Cxiy
-     * @reason Drawing Logo with Snow Effect and Lightning
+     * @reason cz
      */
     @Overwrite
     public void draw(DrawContext context, int screenWidth, float alpha, int y) {
         int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
 
-        // Background gradient
+        // Hintergrund-Gradient
         context.fillGradient(0, 0, screenWidth, screenHeight, 0x55000000, 0x33000000);
 
         if (snowflakes.isEmpty()) {
@@ -44,6 +46,31 @@ public class MixinLogoDrawer {
 
         drawLogo(context, screenWidth, alpha, y);
         renderEffects(context, screenWidth, screenHeight);
+
+        // Benutzerdefinierter Text
+        String text = "0piumh4ck.cc by heedi & Cxiy";
+        int x = 10; // Start X-Position
+        int yPosition = 10; // Start Y-Position
+        int color = 0xFF808080; // Textfarbe (Grau)
+
+        // Zeichnen des normalen Textes
+        for (int i = 0; i < text.length(); i++) {
+            int charX = x + MinecraftClient.getInstance().textRenderer.getWidth(text.substring(0, i));
+            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, String.valueOf(text.charAt(i)), charX, yPosition, color);
+        }
+
+        // Glitzereffekt: Drei Zeichen hervorheben
+        long time = System.currentTimeMillis();
+        int charIndex = (int) ((time / 100) % text.length()); // Animierter Startpunkt (zyklisch)
+        int glintColor = 0xFFFFFFFF; // Glänzendes Weiß
+
+        // Glitzer-Effekt über drei Zeichen
+        for (int i = 0; i < 5; i++) {
+            int currentIndex = (charIndex + i) % text.length(); // Nächstes Zeichen im Text (zyklisch)
+            int glintCharX = x + MinecraftClient.getInstance().textRenderer.getWidth(text.substring(0, currentIndex));
+            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, String.valueOf(text.charAt(currentIndex)), glintCharX, yPosition, glintColor);
+        }
+
     }
 
     private void initializeSnowflakes(int screenWidth, int screenHeight) {
@@ -128,7 +155,7 @@ public class MixinLogoDrawer {
         }
 
         public void update(int screenWidth, int screenHeight) {
-            this.screenHeight = screenHeight; // Update screenHeight
+            this.screenHeight = screenHeight;
             y += speedY;
             rotationAngle += rotationSpeed;
 
