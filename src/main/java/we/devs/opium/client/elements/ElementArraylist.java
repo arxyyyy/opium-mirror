@@ -33,6 +33,7 @@ public class ElementArraylist extends Element {
 
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         frame.color = new Color(0, 0, 0, 0);
         float sWidth = mc.getWindow().getScaledWidth();
         float sHeight = mc.getWindow().getScaledHeight();

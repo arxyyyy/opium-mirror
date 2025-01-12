@@ -22,7 +22,7 @@ public class ModuleCommands extends Module {
     public final ValueEnum secondWatermarkColor = new ValueEnum("SecondWatermarkColor", "Color", "The color of the second watermark color.", this.secondWatermarkColorCategory, ColorModes.Gray);
     public final ValueEnum secondWatermarkBrightness = new ValueEnum("SecondWatermarkBrightness", "Brightness", "The brightness of the second watermark color.", this.secondWatermarkColorCategory, LightModes.Dark);
     public final ValueCategory firstColorCategory = new ValueCategory("First Color", "The first color in the chat sending.");
-    public final ValueEnum firstColorMode = new ValueEnum("FirstColorMode", "Color", "The color for the First Color.", this.firstColorCategory, ColorModes.Black);
+    public final ValueEnum firstColorMode = new ValueEnum("FirstColorMode", "Color", "The color for the First Color.", this.firstColorCategory, ColorModes.White);
     public final ValueEnum firstColorBrightness = new ValueEnum("FirstColorBrightness", "Brightness", "The brightness for the First Color.", this.firstColorCategory, LightModes.Dark);
     public final ValueCategory secondColorCategory = new ValueCategory("Second Color", "The second color in the chat sending.");
     public final ValueEnum secondColorMode = new ValueEnum("SecondColorMode", "Color", "The color for the Second Color.", this.secondColorCategory, ColorModes.White);
