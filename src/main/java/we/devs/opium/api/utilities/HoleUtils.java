@@ -129,4 +129,13 @@ public class HoleUtils implements IMinecraft {
         }
         return retVal;
     }
+    public static boolean isInCrawlHole(PlayerEntity player) {
+        boolean retVal = false;
+        BlockPos pos = new BlockPos((int) Math.floor(player.getX()), (int) player.getY(), (int) Math.floor(player.getZ()));
+        if (mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.down()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.east()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.west()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.south()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.north()).getBlock().equals(Blocks.AIR) && mc.player.isInSwimmingPose()) {
+            retVal = true;
+        }
+        return retVal;
+    }
+
 }

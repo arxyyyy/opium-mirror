@@ -13,6 +13,7 @@ public class ModuleStep extends Module {
 
     @Override
     public void onEnable() {
+        if (mc.player == null) return;
         originalStepHeight = mc.player.getStepHeight();
     }
 

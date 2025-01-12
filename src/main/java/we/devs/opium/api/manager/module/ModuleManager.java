@@ -7,23 +7,11 @@ import we.devs.opium.api.utilities.IMinecraft;
 import we.devs.opium.client.events.*;
 import we.devs.opium.client.modules.client.*;
 import we.devs.opium.client.modules.combat.*;
-import we.devs.opium.client.modules.exploit.ModuleIPCheck;
-import we.devs.opium.client.modules.miscellaneous.ModuleFakePlayer;
-import we.devs.opium.client.modules.exploit.ModuleHitboxDesync;
-import we.devs.opium.client.modules.miscellaneous.ModuleGhastFarmer;
-import we.devs.opium.client.modules.miscellaneous.ModuleMiddleClick;
-import we.devs.opium.client.modules.miscellaneous.ModuleWelcomer;
-import we.devs.opium.client.modules.movement.ModuleSpeed;
-import we.devs.opium.client.modules.movement.ModuleSprint;
-import we.devs.opium.client.modules.movement.ModuleVelocity;
-import we.devs.opium.client.modules.movement.ModuleStep;
-import we.devs.opium.client.modules.movement.ModuleReverseStep;
-import we.devs.opium.client.modules.player.ModuleElytraSwap;
-import we.devs.opium.client.modules.player.ModuleMultiTask;
-import we.devs.opium.client.modules.visuals.ModuleCameraClip;
-import we.devs.opium.client.modules.visuals.ModuleCrosshair;
-import we.devs.opium.client.modules.visuals.ModuleFOV;
-import we.devs.opium.client.modules.visuals.ModulePopChams;
+import we.devs.opium.client.modules.exploit.*;
+import we.devs.opium.client.modules.miscellaneous.*;
+import we.devs.opium.client.modules.movement.*;
+import we.devs.opium.client.modules.player.*;
+import we.devs.opium.client.modules.visuals.*;
 import we.devs.opium.client.values.Value;
 import org.lwjgl.opengl.GL11;
 
@@ -59,6 +47,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleSurround());
         this.register(new ModuleTriggerBot());
         this.register(new ModulePacketExp());
+        this.register(new ModuleAntiCrawl());
 
         //Exploit
         this.register(new ModuleHitboxDesync());
