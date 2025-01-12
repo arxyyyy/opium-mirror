@@ -2,15 +2,15 @@ package we.devs.opium.client.modules.visuals;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.gen.heightprovider.BiasedToBottomHeightProvider;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.FastHoleUtil;
 import we.devs.opium.api.utilities.Renderer3d;
 import we.devs.opium.client.events.EventRender3D;
 import we.devs.opium.client.events.EventTick;
-import we.devs.opium.client.values.impl.ValueCategory;
-import we.devs.opium.client.values.impl.ValueColor;
-import we.devs.opium.client.values.impl.ValueNumber;
+import we.devs.opium.client.modules.combat.ModuleSurround;
+import we.devs.opium.client.values.impl.*;
 
 import java.awt.*;
 
@@ -24,6 +24,7 @@ public class ModuleHoleESP extends Module {
 
     // render
     ValueCategory render = new ValueCategory("Render", "Render settings");
+    ValueEnum renderMode = new ValueEnum("RenderMode", "Render Mode", "Determines how the Block is rendered.", RenderMode.Both);
     ValueColor safeFill = getSetting("Safe fill", new Color(20, 250, 20));
     ValueColor safeOutline = getSetting("Safe outline", new Color(20, 250, 20).darker());
     ValueColor mixedFill = getSetting("Mixed fill", new Color(246, 120, 65));
@@ -60,12 +61,24 @@ public class ModuleHoleESP extends Module {
             };
 
             for (BlockPos blockPos : hole.air()) {
-                Renderer3d.renderEdged(event.getMatrices(), injectAlpha(fill), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
+                if (this.renderMode.getValue().equals(ModuleHoleESP.RenderMode.Both)) {
+                    Renderer3d.renderEdged(event.getMatrices(), injectAlpha(fill), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
+                } else if (this.renderMode.getValue().equals(ModuleHoleESP.RenderMode.Fill)) {
+                    Renderer3d.renderFilled(event.getMatrices(), injectAlpha(fill), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
+                } else if (this.renderMode.getValue().equals(ModuleHoleESP.RenderMode.Outline)) {
+                    Renderer3d.renderFilled(event.getMatrices(), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
+                }
             }
         }
     }
 
     Color injectAlpha(Color color) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), 40);
+    }
+
+    public enum RenderMode {
+        Both,
+        Fill,
+        Outline
     }
 }
