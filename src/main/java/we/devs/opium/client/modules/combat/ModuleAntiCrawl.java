@@ -1,8 +1,6 @@
 package we.devs.opium.client.modules.combat;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
@@ -32,7 +30,7 @@ public class ModuleAntiCrawl extends Module {
         progress += BlockUtils.getBreakDelta(slot, state);
 
         if (HoleUtils.isInCrawlHole(mc.player)) {
-            if (BlockUtils.getBlockResistance(pos) == BlockUtils.BlockResistance.Breakable || BlockUtils.getBlockResistance(pos) == BlockUtils.BlockResistance.Resistant) {
+            if ((BlockUtils.getBlockResistance(pos.up()) == BlockUtils.BlockResistance.Breakable || BlockUtils.getBlockResistance(pos.up()) == BlockUtils.BlockResistance.Resistant) || (BlockUtils.getBlockResistance(pos.down()) == BlockUtils.BlockResistance.Breakable || BlockUtils.getBlockResistance(pos.down()) == BlockUtils.BlockResistance.Resistant)) {
                 if (progress >= 0.0) {
                     mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos, Direction.UP));
                 }
@@ -48,7 +46,7 @@ public class ModuleAntiCrawl extends Module {
 
     @Override
     public String getHudInfo() {
-        return "No Breakable Blocks Found";
+        return "Not";
     }
 
     public enum AutoSwitch {
