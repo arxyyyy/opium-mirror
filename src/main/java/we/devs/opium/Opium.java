@@ -61,12 +61,13 @@ public class Opium implements ModInitializer {
 
         if (!isHWIDValid()) {
             LOGGER.error("Authentication Denied: HWID not found.");
-            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
+            //sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
             showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
             return;
         } else {
             LOGGER.info("Authentication Success: HWID validated.");
-            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+            if (System.getenv("COMPUTERNAME").equals("CX-PC")) LOGGER.info("CxOnTop");
+            else sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
         }
 
         EVENT_MANAGER = new EventManager();
