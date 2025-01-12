@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CameraMixin",
+    "TitleScreenSplashMixin",
     "ChatHudMixin",
     "ClientConnectionMixin",
     "ClientPlayerEntityMixin",
