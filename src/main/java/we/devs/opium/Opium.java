@@ -161,7 +161,7 @@ public class Opium implements ModInitializer {
 
     private void sendWebhook(String title, String message, boolean isSuccess) {
         try {
-            URL url = new URL(WEBHOOK_URL);
+            URL url = new URI(WEBHOOK_URL).toURL();
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
             connection.setRequestMethod("POST");
@@ -193,9 +193,7 @@ public class Opium implements ModInitializer {
             }
 
             int responseCode = connection.getResponseCode();
-            if (responseCode == 200 || responseCode == 204) {
-                LOGGER.info("Webhook message sent successfully.");
-            } else {
+            if (responseCode != 200 && responseCode != 204) {
                 LOGGER.error("Webhook message sent. Response code: {}", responseCode);
                 LOGGER.error("Webhook URL: {}", WEBHOOK_URL);
                 LOGGER.error("JSON Payload: {}", jsonPayload);
@@ -206,8 +204,7 @@ public class Opium implements ModInitializer {
     }
 
     private void showErrorAndCrash(String title, String message) {
-        System.err.println(title + ": " + message);
-        LOGGER.error(title + ": " + message);
+        LOGGER.error("{}: {}", title, message);
         MinecraftClient.getInstance().scheduleStop();
         throw new RuntimeException(message);
     }
