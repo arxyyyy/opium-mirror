@@ -66,7 +66,7 @@ public class ModuleHoleESP extends Module {
                 } else if (this.renderMode.getValue().equals(ModuleHoleESP.RenderMode.Fill)) {
                     Renderer3d.renderFilled(event.getMatrices(), injectAlpha(fill), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
                 } else if (this.renderMode.getValue().equals(ModuleHoleESP.RenderMode.Outline)) {
-                    Renderer3d.renderFilled(event.getMatrices(), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
+                    Renderer3d.renderOutline(event.getMatrices(), injectAlpha(outline), Vec3d.of(blockPos), new Vec3d(1, height.getValue().doubleValue(), 1));
                 }
             }
         }
