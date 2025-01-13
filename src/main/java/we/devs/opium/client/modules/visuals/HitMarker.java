@@ -20,7 +20,7 @@ public class HitMarker extends Module {
     public Timer timer=new Timer();
     public int ticks= 114514;
 
-    
+
     public void onRender2D(DrawContext drawContext, float tickDelta) {
         if(timer.passedMs(1/20)) {
             timer.reset();
