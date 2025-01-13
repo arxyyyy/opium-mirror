@@ -8,7 +8,7 @@ import we.devs.opium.client.events.EventRender3D;
 import we.devs.opium.client.values.impl.ValueBoolean;
 import we.devs.opium.client.values.impl.ValueNumber;
 
-@RegisterModule(name = "Camera Clip", description = "Camera clip", tag = "Camera clip", category = Module.Category.VISUALS)
+@RegisterModule(name = "CameraClip", description = "CameraClip", tag = "CameraClip", category = Module.Category.VISUALS)
 public class ModuleCameraClip extends Module {
     public static ModuleCameraClip INSTANCE = new ModuleCameraClip();
 
