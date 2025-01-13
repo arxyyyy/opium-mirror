@@ -1,14 +1,16 @@
 package we.devs.opium.asm.mixins;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
+import we.devs.opium.Opium;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Mixin(LogoDrawer.class)
 public class MixinLogoDrawer {
@@ -17,17 +19,33 @@ public class MixinLogoDrawer {
     @Final
     private boolean ignoreAlpha;
 
+    @Unique
     private final List<Snowflake> snowflakes = new ArrayList<>();
+    @Unique
     private static final int INITIAL_SNOWFLAKE_COUNT = 100;
+    @Unique
     private static final Random RANDOM = new Random();
 
+    @Unique
     private long nextLightningTime = 0;
+    @Unique
     private long shakeEndTime = 0;
-    private int shakeOffsetX = 0;
-    private int shakeOffsetY = 0;
 
-    private static String text = "0piumh4ck.cc by heedi & Cxiy & VoidMatter & Qweru";
-
+    @Unique
+    private static String text = "0piumh4ck.cc";
+    static {
+        Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer("opium");
+        if(modContainer.isPresent()) {
+            StringBuilder builder = new StringBuilder("0piumh4ck.cc by ");
+            Iterator<Person> i = modContainer.get().getMetadata().getAuthors().iterator();
+            while (i.hasNext()) {
+                Person next = i.next();
+                builder.append(next.getName());
+                if(i.hasNext()) builder.append(" & ");
+            }
+            text = builder.toString();
+        }
+    }
     /**
      * Makes Menu Hot
      * @author Cxiy
@@ -37,18 +55,18 @@ public class MixinLogoDrawer {
     public void draw(DrawContext context, int screenWidth, float alpha, int y) {
         int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
 
-        // Falls Shake aktiv ist, berechne zufällige Offsets
+        int shakeOffsetY;
+        int shakeOffsetX;
         if (System.currentTimeMillis() < shakeEndTime) {
-            shakeOffsetX = RANDOM.nextInt(10) - 5; // Zufällige Bewegung in X (-5 bis 5)
-            shakeOffsetY = RANDOM.nextInt(10) - 5; // Zufällige Bewegung in Y (-5 bis 5)
+            shakeOffsetX = RANDOM.nextInt(10) - 5;
+            shakeOffsetY = RANDOM.nextInt(10) - 5;
         } else {
             shakeOffsetX = 0;
             shakeOffsetY = 0;
         }
 
-        // Hintergrund zeichnen mit Shake-Offsets
         context.getMatrices().push();
-        context.getMatrices().translate(shakeOffsetX, shakeOffsetY, 0); // Offsets anwenden
+        context.getMatrices().translate(shakeOffsetX, shakeOffsetY, 0);
         context.fillGradient(0, 0, screenWidth, screenHeight, 0x55000000, 0x33000000);
 
         if (snowflakes.isEmpty()) {
@@ -79,9 +97,10 @@ public class MixinLogoDrawer {
             context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, String.valueOf(text.charAt(currentIndex)), glintCharX, yPosition, glintColor);
         }
 
-        context.getMatrices().pop(); // Shake-Offsets zurücksetzen
+        context.getMatrices().pop();
     }
 
+    @Unique
     private void drawLogo(DrawContext context, int screenWidth, float alpha, int y) {
         float pulsationFactor = 1.0f + 0.05f * (float) Math.sin(System.currentTimeMillis() / 300.0);
         int width = 506, height = 75;
@@ -103,12 +122,14 @@ public class MixinLogoDrawer {
         context.getMatrices().pop();
     }
 
+    @Unique
     private void initializeSnowflakes(int screenWidth, int screenHeight) {
         for (int i = 0; i < INITIAL_SNOWFLAKE_COUNT; i++) {
             snowflakes.add(new Snowflake(screenWidth, screenHeight));
         }
     }
 
+    @Unique
     private void resizeSnowflakesIfNecessary(int screenWidth) {
         int targetSnowflakeCount = screenWidth / 10;
         if (snowflakes.size() < targetSnowflakeCount) {
@@ -120,6 +141,7 @@ public class MixinLogoDrawer {
         }
     }
 
+    @Unique
     private void renderEffects(DrawContext context, int screenWidth, int screenHeight) {
         snowflakes.forEach(snowflake -> {
             snowflake.update(screenWidth, screenHeight);
@@ -128,6 +150,7 @@ public class MixinLogoDrawer {
         handleLightning(context, screenWidth, screenHeight);
     }
 
+    @Unique
     private void handleLightning(DrawContext context, int screenWidth, int screenHeight) {
         long currentTime = System.currentTimeMillis();
         if (currentTime >= nextLightningTime) {
@@ -141,6 +164,7 @@ public class MixinLogoDrawer {
         }
     }
 
+    @Unique
     private void drawLightning(DrawContext context, int startX, int startY, int endY) {
         int boltWidth = 2;
         int currentX = startX, currentY = startY;
@@ -166,6 +190,7 @@ public class MixinLogoDrawer {
         }
     }
 
+    @Unique
     private void drawBranch(DrawContext context, int startX, int startY, int baseColor, int baseAlpha, int branchLength) {
         int boltWidth = 1;
         int currentX = startX, currentY = startY;
