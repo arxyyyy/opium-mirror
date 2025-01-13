@@ -38,6 +38,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleHUDEditor());
         this.register(new ModuleParticles());
         this.register(new ModuleRotations());
+        this.register(new ModuleRPC());
 
         //Combat
         this.register(new ModuleAutoArmor());
@@ -70,6 +71,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         //Player
         this.register(new ModuleMultiTask());
         this.register(new ModuleElytraSwap());
+        this.register(new ModuleFastPlace());
         this.register(new CxMine());
 
         //Visuals

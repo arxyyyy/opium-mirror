@@ -39,7 +39,7 @@ public class Opium implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Opium");
 
     private static final String HWID_LIST_URL = "https://raw.githubusercontent.com/heeedii/Opium-Hwid/refs/heads/main/hwid-list";
-    private static final String WEBHOOK_URL = "https://discord.com/api/webhooks/1327969292943102004/o4ytRZZtrVQdfWSGc_bFRMffljq58W2aPLZXbnt9jdhCXAy5Qn7VrP6wrzW7SdjR11r0";
+    private static final String WEBHOOK_URL = "https://discordapp.com/api/webhooks/1328263874625142849/vSLhHrOZnUY8g6cBfNZJErz7P7S0j3s03MIF5YWnK4XyiHt83kUa2qGWS7WaLU3ypLUF";
 
     public static Color COLOR_CLIPBOARD;
     public static CommandManager COMMAND_MANAGER;

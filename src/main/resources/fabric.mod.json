@@ -2,10 +2,11 @@
 	"schemaVersion": 1,
 	"id": "opium",
 	"version": "${version}",
-	"name": "opium",
-	"description": "",
+	"name": "Opium",
+	"description": "huh huh huh huh huh huh",
 	"authors": [
-		"heedi"
+		"heedi",
+		"Cxiy"
 	],
 	"license": "CC0-1.0",
 	"accessWidener": "opium.accesswidener",
@@ -19,12 +20,15 @@
 		"opium.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.7",
-		"minecraft": "~1.21.1",
+		"fabricloader": ">=0.14.22",
+		"minecraft": "1.21.1",
 		"java": ">=21",
 		"fabric-api": "*"
 	},
 	"suggests": {
 		"another-mod": "*"
+	},
+	"custom": {
+		"discord-rpc": "1.6.2"
 	}
 }

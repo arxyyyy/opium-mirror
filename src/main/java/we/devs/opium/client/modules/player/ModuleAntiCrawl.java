@@ -6,7 +6,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.math.Direction;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket.Action;
+import org.apache.commons.compress.harmony.unpack200.bytecode.CPMember;
 import we.devs.opium.api.utilities.BlockUtils;
+import we.devs.opium.api.utilities.ChatUtils;
 import we.devs.opium.api.utilities.HoleUtils;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
@@ -17,6 +19,25 @@ public class ModuleAntiCrawl extends Module {
     //ValueEnum autoSwitch = new ValueEnum("AutoSwitch", "Auto Switch", "Automatically switches to your Pickaxe.", AutoSwitch.None);
 
     double progress = 0;
+    int status = -2;
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        progress = 0;
+        status = -2;
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        progress = 0;
+        assert mc.player != null;
+        BlockPos pos = new BlockPos((int) Math.floor(mc.player.getX()), (int) mc.player.getY(), (int) Math.floor(mc.player.getZ()));
+        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.ABORT_DESTROY_BLOCK, pos.up(), Direction.UP));
+        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.ABORT_DESTROY_BLOCK, pos.down(), Direction.UP));
+        status = -2;
+    }
 
     @Override
     public void onTick() {
@@ -25,28 +46,76 @@ public class ModuleAntiCrawl extends Module {
             return;
         }
         int slot = InventoryUtils.findItem(Items.NETHERITE_PICKAXE, 0, 8);
-        BlockPos pos = new BlockPos((int) Math.floor(mc.player.getX()), (int) mc.player.getY(), (int) Math.floor(mc.player.getZ()));
-        BlockState state = mc.world.getBlockState(pos);
-        progress += BlockUtils.getBreakDelta(slot, state);
+        if (slot != -1) {
+            assert mc.player != null;
+            if (HoleUtils.isInCrawlHole(mc.player)) {
 
-        if (HoleUtils.isInCrawlHole(mc.player)) {
-            if ((BlockUtils.getBlockResistance(pos.up()) == BlockUtils.BlockResistance.Breakable || BlockUtils.getBlockResistance(pos.up()) == BlockUtils.BlockResistance.Resistant) || (BlockUtils.getBlockResistance(pos.down()) == BlockUtils.BlockResistance.Breakable || BlockUtils.getBlockResistance(pos.down()) == BlockUtils.BlockResistance.Resistant)) {
-                if (progress >= 0.0) {
-                    mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos, Direction.UP));
-                }
-                if (progress >= 1.0) {
-                    mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos, Direction.UP));
+                BlockPos pos = new BlockPos((int) Math.floor(mc.player.getX()), (int) mc.player.getY(), (int) Math.floor(mc.player.getZ()));
+                assert mc.world != null;
+                BlockState state = mc.world.getBlockState(pos.up());
+                BlockState state2 = mc.world.getBlockState(pos.down());
+
+                double up = state.getHardness(mc.world, null);
+                double down = state2.getHardness(mc.world, null);
+
+                if ((up < down) && (up != -1)) {
+                    progress += BlockUtils.getBreakDelta(slot, state);
+                    status = 1;
+                    if (progress <= 0.2) {
+                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.up(), Direction.UP));
+                    }
+                    if (progress > 1.0) {
+                        InventoryUtils.switchSlot(slot, true);
+                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos.up(), Direction.UP));
+                        progress = 0;
+                        status = -2;
+                    }
+                } else if ((down < up) && (down != -1)) {
+                    progress += BlockUtils.getBreakDelta(slot, state2);
+                    status = 0;
+                    if (progress <= 0.2) {
+                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.down(), Direction.DOWN));
+                    }
+                    if (progress > 1.0) {
+                        InventoryUtils.switchSlot(slot, true);
+                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos.down(), Direction.DOWN));
+                        progress = 0;
+                        status = -2;
+                    }
+                } else if ((up == down) && (up != -1)) {
+                    progress += BlockUtils.getBreakDelta(slot, state);
+                    status = 1;
+                    if (progress <= 0.2) {
+                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.up(), Direction.UP));
+                    }
+                    if (progress > 1.0) {
+                        InventoryUtils.switchSlot(slot, true);
+                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos.up(), Direction.UP));
+                        progress = 0;
+                        status = -2;
+                    }
+                } else {
+                    status = -1;
                     progress = 0;
                 }
-            } else if (BlockUtils.getBlockResistance(pos) == BlockUtils.BlockResistance.Unbreakable) {
-                this.getHudInfo();
             }
-        }
+        } else return;
     }
 
     @Override
     public String getHudInfo() {
-        return "Not";
+        if (status == 1) {
+            return "Mining Up";
+        }
+        else if (status == 0) {
+            return "Mining Down";
+        }
+        else if (status == -1) {
+            return "Ur Fucked";
+        }
+        else {
+            return "Idle";
+        }
     }
 
     public enum AutoSwitch {
