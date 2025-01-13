@@ -74,15 +74,24 @@ java {
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}" }
+	from {
+		// Include runtime classpath dependencies
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
-}
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Avoid duplicate entries
 
-shadowJar {
-	configurations = [project.configurations.runtimeClasspath]
-	archiveClassifier.set('') // Ensures the final JAR is not classified as 'all'
-	relocate 'net.arikia.dev.drpc', 'we.devs.opium.shaded.drpc' // Avoids classloader conflicts
+	// Relocate `discord-rpc` if needed (optional)
+	doLast {
+		configurations.runtimeClasspath.each { file ->
+			if (file.name.contains("discord-rpc")) {
+				ant.replaceregexp(match: "net/arikia/dev/drpc",
+						replace: "we/devs/opium/lib/discordrpc",
+						flags: "g", byline: false) {
+					fileset(dir: "$buildDir/libs", includes: "**/*.class")
+				}
+			}
+		}
+	}
 }
 
 publishing {
