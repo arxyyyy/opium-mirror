@@ -23,6 +23,7 @@ public class ModuleRPC extends Module {
     public void onDisable() {
         super.onDisable();
         stopRPC();
+        isRpcRunning = false;
     }
 
     @Override
@@ -60,8 +61,9 @@ public class ModuleRPC extends Module {
                 .setSmallImage("ken", "")
                 .build();
         DiscordRPC.discordUpdatePresence(presence);
-
+        ChatUtils.sendMessage("Discord RPC Started");
         // Start a new thread to handle Discord RPC events
+
         new Thread(() -> {
             while (isRpcRunning) {
                 DiscordRPC.discordRunCallbacks();
@@ -81,6 +83,7 @@ public class ModuleRPC extends Module {
 
         isRpcRunning = false;
         DiscordRPC.discordShutdown();
+        ChatUtils.sendMessage("Disconected From DiscordRPC");
         
     }
 
