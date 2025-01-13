@@ -1,12 +1,14 @@
 package we.devs.opium.client.modules.player;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.math.Direction;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket.Action;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import we.devs.opium.Opium;
 import we.devs.opium.api.utilities.*;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
@@ -72,56 +74,47 @@ public class ModuleAntiCrawl extends Module {
         BlockState belowState = mc.world.getBlockState(pos.down());
         double up = aboveState.getHardness(mc.world, null);
         double down = belowState.getHardness(mc.world, null);
+//        Opium.LOGGER.info("Hardness: down: {} up: {}", down, up);
 
-        if(up == -1 && down == -1) return;
-        int slot = InventoryUtils.findBestTool((up < down && up != -1) ? aboveState : belowState, true);
+        if(up == -1 && down == -1) {
+            status = -1;
+            progress = 0;
+            return;
+        }
+
+        BlockState target;
+        if(up != -1 && down != -1) {
+            if(down < up) target = belowState;
+            else target = aboveState;
+        } else {
+            if(up != -1) target = aboveState;
+            else target = belowState;
+        }
+
+        int slot = InventoryUtils.findBestTool(target, true);
+        int s = target == aboveState ? 1 : 0;
+
         if (slot != -1) {
             if (HoleUtils.isInCrawlHole(mc.player)) {
-                if ((up < down) && (up != -1)) {
-                    blockPos = pos.up();
-                    progress += BlockUtils.getBreakDelta(slot, aboveState);
-                    status = 1;
-                    if (progress <= 0.2) {
-                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.up(), Direction.UP));
-                    }
-                    if (progress > 1.0) {
-                        InventoryUtils.switchSlot(slot, true);
-                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos.up(), Direction.UP));
-                        progress = 0;
-                        status = -2;
-                    }
-                } else if ((down < up) && (down != -1)) {
-                    blockPos = pos.down();
-                    progress += BlockUtils.getBreakDelta(slot, belowState);
-                    status = 0;
-                    if (progress <= 0.2) {
-                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.down(), Direction.DOWN));
-                    }
-                    if (progress > 1.0) {
-                        InventoryUtils.switchSlot(slot, true);
-                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos.down(), Direction.DOWN));
-                        progress = 0;
-                        status = -2;
-                    }
-                } else if ((up == down) && (up != -1)) {
-                    progress += BlockUtils.getBreakDelta(slot, aboveState);
-                    blockPos = pos.up();
-                    status = 1;
-                    if (progress <= 0.2) {
-                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.up(), Direction.UP));
-                    }
-                    if (progress > 1.0) {
-                        InventoryUtils.switchSlot(slot, true);
-                        mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos.up(), Direction.UP));
-                        progress = 0;
-                        blockPos = null; // todo add fade out
-                        status = -2;
-                    }
-                } else {
-                    status = -1;
-                    progress = 0;
-                }
+//                Opium.LOGGER.info("Is in crawl hole");
+                doMine(target == aboveState ? pos.up() : pos.down(), target, slot, s);
             }
+        }
+    }
+
+    void doMine(BlockPos pos, BlockState state, int slot, int s) {
+        blockPos = pos;
+        progress += BlockUtils.getBreakDelta(slot, state);
+        status = s;
+        assert mc.player != null;
+        if (progress <= 0.2) {
+            mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos, Direction.UP));
+        }
+        if (progress > 1.0) {
+            InventoryUtils.switchSlot(slot, true);
+            mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos, Direction.UP));
+            progress = 0;
+            status = -2;
         }
     }
 
