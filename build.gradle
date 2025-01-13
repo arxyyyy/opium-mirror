@@ -51,7 +51,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Replace the old Discord RPC dependency with the new one
-	implementation 'com.github.Vatuu:discord-rpc:1.6.2'
+	include modImplementation("com.github.Vatuu:discord-rpc:1.6.2")
 }
 
 processResources {
