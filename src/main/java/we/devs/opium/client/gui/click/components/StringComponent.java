@@ -50,6 +50,8 @@ public class StringComponent extends Component implements EventListener {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        selecting = false;
+        listening = false;
         super.mouseClicked(mouseX, mouseY, mouseButton);
         if (mouseButton == 0 && this.isHovering(mouseX, mouseY)) {
             this.listening = !this.listening;
@@ -96,11 +98,13 @@ public class StringComponent extends Component implements EventListener {
                 this.currentString = this.selecting ? "" : this.removeLastCharacter(this.currentString);
             } else if (event.getKeyCode() == InputUtil.GLFW_KEY_DELETE) {
                 this.currentString = this.selecting ? "" : this.removeLastCharacter(this.currentString);
+            } else if (event.getKeyCode() == GLFW.GLFW_KEY_SPACE) { // Handle space character
+                this.currentString += " ";
             } else if (event.getKeyCode() == InputUtil.GLFW_KEY_V &&
                     (InputUtil.isKeyPressed(mc.getWindow().getHandle(), InputUtil.GLFW_KEY_LEFT_CONTROL) ||
                             InputUtil.isKeyPressed(mc.getWindow().getHandle(), InputUtil.GLFW_KEY_RIGHT_CONTROL))) {
                 try {
-                    this.currentString = this.currentString + Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                    this.currentString += Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
                 } catch (UnsupportedFlavorException | IOException exception) {
                     exception.printStackTrace();
                 }
@@ -110,13 +114,20 @@ public class StringComponent extends Component implements EventListener {
                     this.currentString = this.selecting ? keyName : this.currentString + keyName;
                 }
             }
-            this.selecting = false;
 
-            if (event.getKeyCode() == InputUtil.GLFW_KEY_A &&
+            this.selecting = event.getKeyCode() == InputUtil.GLFW_KEY_A &&
                     (InputUtil.isKeyPressed(mc.getWindow().getHandle(), InputUtil.GLFW_KEY_LEFT_CONTROL) ||
-                            InputUtil.isKeyPressed(mc.getWindow().getHandle(), InputUtil.GLFW_KEY_RIGHT_CONTROL))) {
-                this.selecting = true;
-            }
+                            InputUtil.isKeyPressed(mc.getWindow().getHandle(), InputUtil.GLFW_KEY_RIGHT_CONTROL));
+        }
+    }
+
+    @Override
+    public void mouseReleased(int mouseX, int mouseY, int mouseButton) {
+        super.mouseReleased(mouseX, mouseY, mouseButton);
+        if (this.listening && !this.isHovering(mouseX, mouseY)) {
+
+            this.updateString();
+            this.listening = false;
         }
     }
 
@@ -125,14 +136,11 @@ public class StringComponent extends Component implements EventListener {
     }
 
     private void updateString() {
-        if (this.currentString.length() > 0) {
-            this.value.setValue(this.currentString);
-        }
-        this.currentString = "";
+        this.value.setValue(this.currentString);
     }
 
     private String removeLastCharacter(String input) {
-        if (input.length() > 0) {
+        if (!input.isEmpty()) {
             return input.substring(0, input.length() - 1);
         }
         return input;
