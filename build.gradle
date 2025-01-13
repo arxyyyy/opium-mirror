@@ -50,7 +50,7 @@ dependencies {
 	include modImplementation('io.github.0x3c50.renderer:renderer-fabric:1.2')
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	// Discord RPC library from JitPack
+	// Replace the old Discord RPC dependency with the new one
 	implementation 'com.github.Vatuu:discord-rpc:1.6.2'
 }
 
@@ -74,23 +74,8 @@ java {
 }
 
 jar {
-	from {
-		// Include runtime classpath dependencies
-		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Avoid duplicate entries
-
-	// Relocate `discord-rpc` if needed (optional)
-	doLast {
-		configurations.runtimeClasspath.each { file ->
-			if (file.name.contains("discord-rpc")) {
-				ant.replaceregexp(match: "net/arikia/dev/drpc",
-						replace: "we/devs/opium/lib/discordrpc",
-						flags: "g", byline: false) {
-					fileset(dir: "$buildDir/libs", includes: "**/*.class")
-				}
-			}
-		}
+	from("LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}" }
 	}
 }
 
