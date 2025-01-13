@@ -4,10 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +25,8 @@ public class MixinLogoDrawer {
     private long shakeEndTime = 0;
     private int shakeOffsetX = 0;
     private int shakeOffsetY = 0;
+
+    private static String text = "0piumh4ck.cc by heedi & Cxiy & VoidMatter & Qweru";
 
     /**
      * Makes Menu Hot
@@ -61,7 +60,6 @@ public class MixinLogoDrawer {
         drawLogo(context, screenWidth, alpha, y);
         renderEffects(context, screenWidth, screenHeight);
 
-        String text = "0piumh4ck.cc by heedi & Cxiy & VoidMatter";
         int x = 10;
         int yPosition = 10;
         int color = 0xFF808080;
