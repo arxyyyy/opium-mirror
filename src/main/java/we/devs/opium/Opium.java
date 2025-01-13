@@ -59,15 +59,15 @@ public class Opium implements ModInitializer {
         long startTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has started!");
 
-//        if (!isHWIDValid()) {
-//            LOGGER.error("Authentication Denied: HWID not found.");
-//            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
-//            showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
-//            return;
-//        } else {
-//            LOGGER.info("Authentication Success: HWID validated.");
-//            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
-//        }
+        if (!isHWIDValid()) {
+            LOGGER.error("Authentication Denied: HWID not found.");
+            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
+            showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
+            return;
+        } else {
+            LOGGER.info("Authentication Success: HWID validated.");
+            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+        }
 
         EVENT_MANAGER = new EventManager();
         COMMAND_MANAGER = new CommandManager();
