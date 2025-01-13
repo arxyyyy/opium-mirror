@@ -3,20 +3,45 @@ package we.devs.opium.client.modules.client;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
 import net.arikia.dev.drpc.DiscordEventHandlers;
-import net.minecraft.text.Text;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.ChatUtils;
+import we.devs.opium.client.values.impl.ValueBoolean;
+import we.devs.opium.client.values.impl.ValueCategory;
+import we.devs.opium.client.values.impl.ValueEnum;
+import we.devs.opium.client.values.impl.ValueString;
+
+import java.util.Objects;
 
 @RegisterModule(name = "Discord RPC", description = "Displayes Opium As Your Dc-RPC", category = Module.Category.CLIENT)
 public class ModuleRPC extends Module {
+    private static ModuleRPC INSTANCE;
+    private final ValueEnum ModeES = new ValueEnum("Mode", "Mode", "Lets You Change Between RPC Modes", modeE.Preset);
+    private final ValueBoolean ShowServer = new ValueBoolean("Display Server", "Display Server", "Displayes the name of the server on rpc", true);
+    private final ValueEnum BigImg = new ValueEnum("Big Image", "Big Image", "Sets The Large RPC Image", ImgE.Logo);
+    private final ValueEnum SmallImg = new ValueEnum("Small Image", "Small Image", "Sets The Small RPC Image", ImgE.KenCarson);
+    private final ValueCategory CustomModeCategory = new ValueCategory("Custom Mode", "Custom Mode Catagory");
+    private final ValueString line1 = new ValueString("Line 1", "Line 1", "Text For Line 1", this.CustomModeCategory, "Owning With Opium");
+    private final ValueString line2 = new ValueString("Line 2", "Line 2", "Text For Line 2", this.CustomModeCategory, "-----------------");
+    private final ValueString line3 = new ValueString("Big Image Text", "Big Image Text", "Hover Text For Big Image", this.CustomModeCategory, "Opium");
+    private final ValueString line4 = new ValueString("Small Image Text", "Small Image Text", "Hover Text For Small Image", this.CustomModeCategory, "Cxiy");
 
     private boolean isRpcRunning = false;
+
+    private void onInitialize() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> onClientTick());
+    }
+    public ModuleRPC() {
+        INSTANCE = this;
+    }
+
 
     @Override
     public void onEnable() {
         super.onEnable();
         startRPC();
+        onInitialize();
     }
 
     @Override
@@ -26,12 +51,15 @@ public class ModuleRPC extends Module {
         isRpcRunning = false;
     }
 
-    @Override
-    public void onTick() {
-        super.onTick();
-        // Optional: Update RPC data dynamically if needed
+    public void onClientTick() {
+        //System.out.println("RECEAVED TICK");
         if (isRpcRunning) {
-            // updateRPC(); // You can update the presence dynamically here if needed
+            if (ModuleRPC.INSTANCE.ModeES.getValue().equals(modeE.CustomText)) updateRPC(line1.getValue(), line2.getValue(), line3.getValue(), line4.getValue());
+            else {
+                if (mc.player == null || mc.world == null) updateRPC("In Main Menu", "", "","");
+                else if (ShowServer.getValue()) updateRPC("Playing On " + Objects.requireNonNull(mc.getNetworkHandler()).getConnection().getAddress(), "", "", "");
+                else updateRPC("No Peeking", "", "", "");
+            }
         }
     }
 
@@ -88,14 +116,36 @@ public class ModuleRPC extends Module {
     }
 
 
-    private void updateRPC() {
-        // Example: Update the presence dynamically
-        DiscordRichPresence presence = new DiscordRichPresence.Builder("Still Playing Minecraft")
-                .setDetails("Modding with Opium Client")
+    private void updateRPC(String mainText, String DetailText, String BigImgText, String SmallImgText) {
+        String BigImgShit = "";
+        String SmallImgShit = "";
+        if (ModuleRPC.INSTANCE.BigImg.getValue().equals(ImgE.Logo)) BigImgShit = "title";
+        else if (ModuleRPC.INSTANCE.BigImg.getValue().equals(ImgE.KenCarson)) BigImgShit = "ken";
+        else BigImgShit = "";
+
+        if (ModuleRPC.INSTANCE.SmallImg.getValue().equals(ImgE.Logo)) SmallImgShit = "title";
+        else if (ModuleRPC.INSTANCE.SmallImg.getValue().equals(ImgE.KenCarson)) SmallImgShit = "ken";
+        else SmallImgShit = "";
+
+        DiscordRichPresence presence = new DiscordRichPresence.Builder(mainText)
+                .setDetails(DetailText)
                 .setStartTimestamps(System.currentTimeMillis() / 1000L)
-                .setBigImage("large_image_key", "Large Image Text")
-                .setSmallImage("small_image_key", "Small Image Text")
+                .setBigImage(BigImgShit, BigImgText)
+                .setSmallImage(SmallImgShit, SmallImgText)
                 .build();
         DiscordRPC.discordUpdatePresence(presence);
     }
+
+    public enum ImgE {
+        Logo,
+        KenCarson,
+        None
+    }
+
+    public enum modeE {
+        CustomText,
+        Preset
+    }
+
+
 }
