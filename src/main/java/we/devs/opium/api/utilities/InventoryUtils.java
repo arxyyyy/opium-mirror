@@ -1,5 +1,7 @@
 package we.devs.opium.api.utilities;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.item.Items;
 import we.devs.opium.Opium;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -45,6 +47,21 @@ public class InventoryUtils implements IMinecraft {
             return i;
         }
         return -1;
+    }
+
+    public static int findBestTool(BlockState block, boolean onlyHotbar) {
+        float bestMultiplier = Float.MIN_VALUE;
+        int bestSlot = -1;
+        for (int i = 0; i < (onlyHotbar ? 9 : 36); i++) {
+            ItemStack stack = mc.player.getInventory().getStack(i);
+            float mul = stack.getMiningSpeedMultiplier(block);
+            if(stack.isSuitableFor(block) && mul > bestMultiplier) {
+                bestMultiplier = mul;
+                bestSlot = i;
+            }
+        }
+        Opium.LOGGER.info("Best slot: {}", bestSlot);
+        return bestSlot;
     }
 
     public static ItemStack get(int slot) {

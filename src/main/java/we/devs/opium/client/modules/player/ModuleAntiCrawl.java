@@ -14,7 +14,7 @@ import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.InventoryUtils;
 
-@RegisterModule(name = "AntiCrawl", description = "Mines Blocks Over or Under you to get you out of a crawl state.", category = Module.Category.PLAYER)
+@RegisterModule(name = "AntiCrawl", description = "Mines Blocks above or below you to get you out of a crawl state.", category = Module.Category.PLAYER)
 public class ModuleAntiCrawl extends Module {
     //ValueEnum autoSwitch = new ValueEnum("AutoSwitch", "Auto Switch", "Automatically switches to your Pickaxe.", AutoSwitch.None);
 
@@ -42,24 +42,24 @@ public class ModuleAntiCrawl extends Module {
     @Override
     public void onTick() {
         super.onTick();
-        if (super.nullCheck()) {
+        if (nullCheck()) {
             return;
         }
-        int slot = InventoryUtils.findItem(Items.NETHERITE_PICKAXE, 0, 8);
+        assert mc.world != null;
+        assert mc.player != null;
+
+        BlockPos pos = BlockPos.ofFloored(mc.player.getPos());
+        BlockState aboveState = mc.world.getBlockState(pos.up());
+        BlockState belowState = mc.world.getBlockState(pos.down());
+        double up = aboveState.getHardness(mc.world, null);
+        double down = belowState.getHardness(mc.world, null);
+
+        if(up == -1 && down == -1) return;
+        int slot = InventoryUtils.findBestTool((up < down && up != -1) ? aboveState : belowState, true);
         if (slot != -1) {
-            assert mc.player != null;
             if (HoleUtils.isInCrawlHole(mc.player)) {
-
-                BlockPos pos = new BlockPos((int) Math.floor(mc.player.getX()), (int) mc.player.getY(), (int) Math.floor(mc.player.getZ()));
-                assert mc.world != null;
-                BlockState state = mc.world.getBlockState(pos.up());
-                BlockState state2 = mc.world.getBlockState(pos.down());
-
-                double up = state.getHardness(mc.world, null);
-                double down = state2.getHardness(mc.world, null);
-
                 if ((up < down) && (up != -1)) {
-                    progress += BlockUtils.getBreakDelta(slot, state);
+                    progress += BlockUtils.getBreakDelta(slot, aboveState);
                     status = 1;
                     if (progress <= 0.2) {
                         mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.up(), Direction.UP));
@@ -71,7 +71,7 @@ public class ModuleAntiCrawl extends Module {
                         status = -2;
                     }
                 } else if ((down < up) && (down != -1)) {
-                    progress += BlockUtils.getBreakDelta(slot, state2);
+                    progress += BlockUtils.getBreakDelta(slot, belowState);
                     status = 0;
                     if (progress <= 0.2) {
                         mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.down(), Direction.DOWN));
@@ -83,7 +83,7 @@ public class ModuleAntiCrawl extends Module {
                         status = -2;
                     }
                 } else if ((up == down) && (up != -1)) {
-                    progress += BlockUtils.getBreakDelta(slot, state);
+                    progress += BlockUtils.getBreakDelta(slot, aboveState);
                     status = 1;
                     if (progress <= 0.2) {
                         mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos.up(), Direction.UP));
@@ -99,7 +99,7 @@ public class ModuleAntiCrawl extends Module {
                     progress = 0;
                 }
             }
-        } else return;
+        }
     }
 
     @Override
