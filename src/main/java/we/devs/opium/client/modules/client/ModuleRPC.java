@@ -7,25 +7,30 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.ChatUtils;
-import we.devs.opium.client.values.impl.ValueBoolean;
-import we.devs.opium.client.values.impl.ValueCategory;
-import we.devs.opium.client.values.impl.ValueEnum;
-import we.devs.opium.client.values.impl.ValueString;
+import we.devs.opium.client.values.impl.*;
 
+import java.awt.*;
 import java.util.Objects;
 
 @RegisterModule(name = "Discord RPC", description = "Displayes Opium As Your Dc-RPC", category = Module.Category.CLIENT)
 public class ModuleRPC extends Module {
+    ValueString getSetting(String name, String D, String value) {
+        return new ValueString(name, name, D, CustomModeCategory, value);
+    }
+
+
     private static ModuleRPC INSTANCE;
     private final ValueEnum ModeES = new ValueEnum("Mode", "Mode", "Lets You Change Between RPC Modes", modeE.Preset);
     private final ValueBoolean ShowServer = new ValueBoolean("Display Server", "Display Server", "Displayes the name of the server on rpc", true);
     private final ValueEnum BigImg = new ValueEnum("Big Image", "Big Image", "Sets The Large RPC Image", ImgE.Logo);
     private final ValueEnum SmallImg = new ValueEnum("Small Image", "Small Image", "Sets The Small RPC Image", ImgE.KenCarson);
+
     private final ValueCategory CustomModeCategory = new ValueCategory("Custom Mode", "Custom Mode Catagory");
-    private final ValueString line1 = new ValueString("Line 1", "Line 1", "Text For Line 1", this.CustomModeCategory, "Owning With Opium");
-    private final ValueString line2 = new ValueString("Line 2", "Line 2", "Text For Line 2", this.CustomModeCategory, "-----------------");
-    private final ValueString line3 = new ValueString("Big Image Text", "Big Image Text", "Hover Text For Big Image", this.CustomModeCategory, "Opium");
-    private final ValueString line4 = new ValueString("Small Image Text", "Small Image Text", "Hover Text For Small Image", this.CustomModeCategory, "Cxiy");
+    ValueString line1 = getSetting("Line 1", "Text For Line 1", "Owning With Opium");
+    ValueString line2 = getSetting("Line 2", "Text For Line 2", "-----------------");
+    ValueString line3 = getSetting("Big Image Text", "Text For Big Image", ".");
+    ValueString line4 = getSetting("Small Image Text", "Text For Small Image", "Cxiy");
+
 
     private boolean isRpcRunning = false;
 
