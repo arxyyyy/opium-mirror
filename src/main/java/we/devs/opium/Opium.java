@@ -171,24 +171,33 @@ public class Opium implements ModInitializer {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
+            String author = "0piumh4ck.cc";
+            String footer = author + " Authentication System";
             String username = MinecraftClient.getInstance().getSession().getUsername();
             String pcName = System.getenv("COMPUTERNAME");
+            String opsys = System.getProperty("os.name");
             String hwid = getSHA256Hash();
             String color = isSuccess ? "3066993" : "15158332";
 
             String jsonPayload = String.format(
                     "{" +
                             "\"embeds\": [{" +
+                            "\"author\": {\"name\": \"%s\"}," + // Corrected author field to a JSON object
+                            "\"footer\": {\"text\": \"%s\"}," + // Corrected footer field to a JSON object
                             "\"title\": \"%s\"," +
                             "\"description\": \"%s\"," +
                             "\"fields\": [" +
                             "{\"name\": \"Username\", \"value\": \"%s\", \"inline\": true}," +
                             "{\"name\": \"PC Name\", \"value\": \"%s\", \"inline\": true}," +
+                            "{\"name\": \"OS\", \"value\": \"%s\", \"inline\": true}," +
                             "{\"name\": \"HWID\", \"value\": \"%s\", \"inline\": true}" +
                             "]," +
                             "\"color\": %s" +
                             "}]" +
-                            "}", title, message, username, pcName, hwid, color);
+                            "}",
+                    author, footer, title, message, username, pcName, opsys, hwid, color
+            );
+
 
             try (OutputStream os = connection.getOutputStream()) {
                 os.write(jsonPayload.getBytes());

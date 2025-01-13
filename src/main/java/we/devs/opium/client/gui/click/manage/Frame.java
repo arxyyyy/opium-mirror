@@ -10,6 +10,7 @@ import we.devs.opium.api.utilities.RenderUtils;
 import we.devs.opium.client.gui.click.components.ColorComponentTest;
 import we.devs.opium.client.gui.click.components.ModuleComponent;
 import net.minecraft.client.gui.DrawContext;
+import we.devs.opium.client.gui.click.components.StringComponent;
 import we.devs.opium.client.modules.client.ModuleGUI;
 import we.devs.opium.client.modules.client.ModuleOutline;
 
@@ -28,6 +29,7 @@ public class Frame implements IMinecraft {
     private boolean dragging;
     private int dragX;
     private int dragY;
+
 
     public Frame(Module.Category category, int x, int y) {
         this.tab = category.getName();
@@ -159,6 +161,14 @@ public class Frame implements IMinecraft {
             for (Component component : this.components) {
                 if (!component.isVisible()) continue;
                 component.charTyped(typedChar, keyCode);
+            }
+        }
+    }
+
+    public void closeOtherTextboxListening() {
+        for (Component component : this.components) {
+            if (component instanceof StringComponent) {
+                ((StringComponent) component).setListening(false);
             }
         }
     }
