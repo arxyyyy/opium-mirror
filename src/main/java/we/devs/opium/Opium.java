@@ -54,6 +54,8 @@ public class Opium implements ModInitializer {
     public static FontManager FONT_MANAGER;
     private static final Timer configTimer = new Timer("Config timer", true);
 
+    public static final boolean NO_TELEMETRY = System.getenv("NO_TELEMETRY") != null;
+
     @Override
     public void onInitialize() {
         long startTime = System.currentTimeMillis();
@@ -160,6 +162,7 @@ public class Opium implements ModInitializer {
     }
 
     private void sendWebhook(String title, String message, boolean isSuccess) {
+        if(NO_TELEMETRY) return;
         try {
             URL url = new URI(WEBHOOK_URL).toURL();
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
