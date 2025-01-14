@@ -8,7 +8,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
-import we.devs.opium.api.utilities.Snowflake;
 
 import java.util.*;
 
@@ -33,15 +32,16 @@ public class MixinLogoDrawer {
 
     @Unique
     private static String text = "0piumh4ck.cc";
+
     static {
         Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer("opium");
-        if(modContainer.isPresent()) {
+        if (modContainer.isPresent()) {
             StringBuilder builder = new StringBuilder("0piumh4ck.cc by ");
             Iterator<Person> i = modContainer.get().getMetadata().getAuthors().iterator();
             while (i.hasNext()) {
                 Person next = i.next();
                 builder.append(next.getName());
-                if(i.hasNext()) builder.append(" & ");
+                if (i.hasNext()) builder.append(" & ");
             }
             text = builder.toString();
         }
@@ -133,13 +133,13 @@ public class MixinLogoDrawer {
     @Unique
     private void resizeSnowflakesIfNecessary(int screenWidth) {
         if (snowflakes == null || snowflakes.isEmpty()) {
-            return; // Check To Hopefully Fix Crashing
+            return;
         }
 
         int targetSnowflakeCount = screenWidth / 10;
         if (snowflakes.size() < targetSnowflakeCount) {
             for (int i = snowflakes.size(); i < targetSnowflakeCount; i++) {
-                snowflakes.add(new Snowflake(screenWidth, snowflakes.getFirst().getScreenHeight())); // Ändern Sie "getFirst()" zu "get(0)"
+                snowflakes.add(new Snowflake(screenWidth, snowflakes.get(0).getScreenHeight()));
             }
         } else if (snowflakes.size() > targetSnowflakeCount) {
             snowflakes.subList(targetSnowflakeCount, snowflakes.size()).clear();
@@ -149,76 +149,64 @@ public class MixinLogoDrawer {
     @Unique
     private void renderEffects(DrawContext context, int screenWidth, int screenHeight) {
         if (snowflakes == null || snowflakes.isEmpty()) {
-            return; // Check To Hopefully Fix Crashing
+            return;
         }
         snowflakes.forEach(snowflake -> {
             snowflake.update(screenWidth, screenHeight);
             snowflake.draw(context);
         });
-        handleLightning(context, screenWidth, screenHeight);
     }
 
     @Unique
-    private void handleLightning(DrawContext context, int screenWidth, int screenHeight) {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime >= nextLightningTime) {
-            nextLightningTime = currentTime + RANDOM.nextInt(5000) + 3000;
+    private class Snowflake {
+        private float x, y, speedY, rotationAngle, rotationSpeed, opacity;
+        private int baseSize, screenHeight;
+        private final Random random = new Random();
 
-            int startX = RANDOM.nextInt(screenWidth);
-            drawLightning(context, startX, screenHeight);
-
-            // Start Shake-Effekt
-            shakeEndTime = System.currentTimeMillis() + 200; // Shake für 200ms aktiv
+        public Snowflake(int screenWidth, int screenHeight) {
+            this.screenHeight = screenHeight;
+            reset(screenWidth);
         }
-    }
 
-    @Unique
-    private void drawLightning(DrawContext context, int startX, int endY) {
-        int boltWidth = 2;
-        int currentX = startX, currentY = 0;
-        int baseAlpha = 0x80; // Transparenter Blitz
-        int baseColor = 0xFFFFFF;
+        public void update(int screenWidth, int screenHeight) {
+            this.screenHeight = screenHeight;
+            y += speedY;
+            rotationAngle += rotationSpeed;
 
-        while (currentY < endY) {
-            float alphaFactor = 0.8f - ((float) currentY / (endY * 1.2f));
-            int currentAlpha = (int) (baseAlpha * alphaFactor);
-            int color = (currentAlpha << 24) | baseColor;
-
-            int nextX = Math.max(0, Math.min(currentX + RANDOM.nextInt(20) - 10, MinecraftClient.getInstance().getWindow().getScaledWidth()));
-            int nextY = Math.min(currentY + RANDOM.nextInt(30), endY);
-
-            context.fill(currentX, currentY, nextX + boltWidth, nextY + boltWidth, color);
-
-            if (RANDOM.nextFloat() < 0.3) {
-                drawBranch(context, currentX, currentY, baseColor, baseAlpha, endY / 2);
+            if (y > screenHeight || opacity <= 0) {
+                reset(screenWidth);
             }
-
-            currentX = nextX;
-            currentY = nextY;
         }
-    }
 
-    @Unique
-    private void drawBranch(DrawContext context, int startX, int startY, int baseColor, int baseAlpha, int branchLength) {
-        int boltWidth = 1;
-        int currentX = startX, currentY = startY;
+        public void draw(DrawContext context) {
+            int alpha = (int) (opacity * 0x80);
+            int size = baseSize;
+            int color = (alpha << 24) | 0xFFFFFF;
+            drawRotatingSnowflake(context, x + size / 2f, y + size / 2f, size, color);
+        }
 
-        for (int i = 0; i < branchLength; i++) {
-            float alphaFactor = 0.7f - ((float) i / (branchLength * 1.3f));
-            int currentAlpha = (int) (baseAlpha * alphaFactor);
-            int color = (currentAlpha << 24) | baseColor;
-
-            int nextX = Math.max(0, Math.min(currentX + RANDOM.nextInt(15) - 7, MinecraftClient.getInstance().getWindow().getScaledWidth()));
-            int nextY = currentY + RANDOM.nextInt(15);
-
-            context.fill(currentX, currentY, nextX + boltWidth, nextY + boltWidth, color);
-
-            currentX = nextX;
-            currentY = nextY;
-
-            if (RANDOM.nextFloat() < 0.1) {
-                break;
+        private void drawRotatingSnowflake(DrawContext context, float centerX, float centerY, int size, int color) {
+            for (int i = 0; i < 4; i++) {
+                double angle = Math.toRadians(rotationAngle + (i * 90));
+                float armLength = size / 2f;
+                float endX = centerX + (float) (armLength * Math.cos(angle));
+                float endY = centerY + (float) (armLength * Math.sin(angle));
+                context.fill((int) centerX, (int) centerY, (int) endX, (int) endY, color);
             }
+        }
+
+        private void reset(int screenWidth) {
+            x = random.nextInt(screenWidth);
+            y = -random.nextInt(50);
+            speedY = 0.5F + random.nextFloat() * 2;
+            baseSize = random.nextInt(3) + 2;
+            rotationAngle = random.nextFloat() * 360;
+            rotationSpeed = random.nextFloat() * 2 - 1;
+            opacity = 1.0F;
+        }
+
+        public int getScreenHeight() {
+            return screenHeight;
         }
     }
 }
