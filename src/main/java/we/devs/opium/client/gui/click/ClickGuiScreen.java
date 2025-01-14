@@ -33,6 +33,8 @@ public class ClickGuiScreen extends Screen implements EventListener {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, 0.1);
         RenderUtils.setDrawContext(context);
         for (Frame frame : this.frames) {
             frame.render(context, mouseX, mouseY, delta);
@@ -41,6 +43,7 @@ public class ClickGuiScreen extends Screen implements EventListener {
             for (Component c : frame.getComponents()) {
                 if (c instanceof ModuleComponent component) {
                     if (component.isHovering(mouseX, mouseY) && frame.isOpen() && !component.getModule().getDescription().isEmpty()) {
+                        context.getMatrices().translate(0, 0, -0.1);
                         RenderUtils.drawRect(context.getMatrices(), mouseX + 5, mouseY - 2,
                                 mouseX + MinecraftClient.getInstance().textRenderer.getWidth(component.getModule().getDescription()) + 7.0f,
                                 mouseY + 11, new Color(40, 40, 40));
@@ -50,10 +53,13 @@ public class ClickGuiScreen extends Screen implements EventListener {
 
                         RenderUtils.drawString(context.getMatrices(),
                                 component.getModule().getDescription(), mouseX + 7, mouseY, -1);
+                        context.getMatrices().translate(0, 0, 0.1);
                     }
                 }
             }
         }
+        context.getMatrices().translate(0, 0, -0.1);
+        context.getMatrices().pop();
     }
 
     @Override
