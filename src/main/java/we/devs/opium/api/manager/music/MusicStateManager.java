@@ -1,5 +1,6 @@
 package we.devs.opium.api.manager.music;
 
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class MusicStateManager {
             Identifier.of("opium", "playboicarti_eviljordan")
     );
     private static final Random RANDOM = new Random();
+    private static SoundInstance currentSongInstance;
 
     public static boolean isPlayingCustomMusic() {
         return isPlayingCustomMusic;
@@ -24,7 +26,15 @@ public class MusicStateManager {
     }
 
     public static Identifier getRandomMusicTrack() {
-        // Wähle einen zufälligen Track aus der Liste aus
+        // Zufälligen Track auswählen
         return CUSTOM_MUSIC_TRACKS.get(RANDOM.nextInt(CUSTOM_MUSIC_TRACKS.size()));
+    }
+
+    public static void setCurrentSong(SoundInstance songInstance) {
+        currentSongInstance = songInstance;
+    }
+
+    public static SoundInstance getCurrentSongInstance() {
+        return currentSongInstance;
     }
 }

@@ -17,8 +17,6 @@ import we.devs.opium.api.manager.music.MusicStateManager;
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin implements IMinecraft {
 
-    private static final Identifier CUSTOM_MUSIC = Identifier.of("opium", "custom_music");
-
     @Inject(method = "init()V", at = @At("TAIL"))
     void init(CallbackInfo ci) {
         // Erhalte den Musik-Tracker
@@ -30,14 +28,20 @@ public abstract class TitleScreenMixin implements IMinecraft {
         // Prüfe, ob die benutzerdefinierte Musik bereits läuft
         if (!MusicStateManager.isPlayingCustomMusic()) {
             MusicStateManager.setPlayingCustomMusic(true); // Setze das Flag
-
-            // Wähle einen zufälligen Song aus
-            Identifier randomMusic = MusicStateManager.getRandomMusicTrack();
-
-            // Erstelle einen neuen Musik-Instanz mit dem zufälligen Track
-            SoundInstance musicInstance = PositionedSoundInstance.music(SoundEvent.of(randomMusic));
-            mc.getSoundManager().play(musicInstance); // Spiele die benutzerdefinierte Musik ab
+            playNextTrack();
         }
+    }
+
+    private void playNextTrack() {
+        // Wähle einen zufälligen Song aus
+        Identifier randomMusic = MusicStateManager.getRandomMusicTrack();
+
+        // Erstelle den SoundInstance
+        SoundInstance musicInstance = PositionedSoundInstance.music(SoundEvent.of(randomMusic));
+
+        // Speichere die aktuelle Instanz und starte sie
+        MusicStateManager.setCurrentSong(musicInstance);
+        mc.getSoundManager().play(musicInstance);
     }
 
     @Inject(method = "removed()V", at = @At("HEAD"))
@@ -47,6 +51,12 @@ public abstract class TitleScreenMixin implements IMinecraft {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;renderPanoramaBackground(Lnet/minecraft/client/gui/DrawContext;F)V", shift = At.Shift.AFTER))
     public void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        // Überprüfe, ob der aktuelle Song noch läuft
+        SoundInstance currentSong = MusicStateManager.getCurrentSongInstance();
+        if (currentSong != null && !mc.getSoundManager().isPlaying(currentSong)) {
+            playNextTrack(); // Starte den nächsten Song
+        }
+
         context.drawTexture(
                 Identifier.of("opium", "textures/gayassbackground.png"),
                 0, 0, 0, 0,
