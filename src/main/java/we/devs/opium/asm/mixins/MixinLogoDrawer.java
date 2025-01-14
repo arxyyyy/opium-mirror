@@ -9,7 +9,6 @@ import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
 import we.devs.opium.api.utilities.Snowflake;
-import we.devs.opium.Opium;
 
 import java.util.*;
 
@@ -48,6 +47,10 @@ public class MixinLogoDrawer {
         }
     }
 
+    /**
+     * @author Cxiy
+     * @reason Czzzz
+     */
     @Overwrite
     public void draw(DrawContext context, int screenWidth, float alpha, int y) {
         int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
@@ -66,10 +69,11 @@ public class MixinLogoDrawer {
         context.getMatrices().translate(shakeOffsetX, shakeOffsetY, 0);
         context.fillGradient(0, 0, screenWidth, screenHeight, 0x55000000, 0x33000000);
 
-        if (snowflakes.isEmpty()) {
+        // Check To Hopefully prevent Crashing
+        if (snowflakes == null || snowflakes.isEmpty()) {
             initializeSnowflakes(screenWidth, screenHeight);
         } else {
-            resizeSnowflakesIfNecessary(screenWidth); // Snowflakes sayısını kontrol et
+            resizeSnowflakesIfNecessary(screenWidth);
         }
 
         drawLogo(context, screenWidth, alpha, y);
@@ -128,10 +132,14 @@ public class MixinLogoDrawer {
 
     @Unique
     private void resizeSnowflakesIfNecessary(int screenWidth) {
+        if (snowflakes == null || snowflakes.isEmpty()) {
+            return; // Check To Hopefully Fix Crashing
+        }
+
         int targetSnowflakeCount = screenWidth / 10;
         if (snowflakes.size() < targetSnowflakeCount) {
             for (int i = snowflakes.size(); i < targetSnowflakeCount; i++) {
-                snowflakes.add(new Snowflake(screenWidth, snowflakes.get(0).getScreenHeight()));
+                snowflakes.add(new Snowflake(screenWidth, snowflakes.getFirst().getScreenHeight())); // Ändern Sie "getFirst()" zu "get(0)"
             }
         } else if (snowflakes.size() > targetSnowflakeCount) {
             snowflakes.subList(targetSnowflakeCount, snowflakes.size()).clear();
@@ -140,6 +148,9 @@ public class MixinLogoDrawer {
 
     @Unique
     private void renderEffects(DrawContext context, int screenWidth, int screenHeight) {
+        if (snowflakes == null || snowflakes.isEmpty()) {
+            return; // Check To Hopefully Fix Crashing
+        }
         snowflakes.forEach(snowflake -> {
             snowflake.update(screenWidth, screenHeight);
             snowflake.draw(context);
@@ -154,7 +165,7 @@ public class MixinLogoDrawer {
             nextLightningTime = currentTime + RANDOM.nextInt(5000) + 3000;
 
             int startX = RANDOM.nextInt(screenWidth);
-            drawLightning(context, startX, 0, screenHeight);
+            drawLightning(context, startX, screenHeight);
 
             // Start Shake-Effekt
             shakeEndTime = System.currentTimeMillis() + 200; // Shake für 200ms aktiv
@@ -162,9 +173,9 @@ public class MixinLogoDrawer {
     }
 
     @Unique
-    private void drawLightning(DrawContext context, int startX, int startY, int endY) {
+    private void drawLightning(DrawContext context, int startX, int endY) {
         int boltWidth = 2;
-        int currentX = startX, currentY = startY;
+        int currentX = startX, currentY = 0;
         int baseAlpha = 0x80; // Transparenter Blitz
         int baseColor = 0xFFFFFF;
 
