@@ -12,7 +12,20 @@ public class MusicStateManager {
             Identifier.of("opium", "kencarson_overseas"),
             Identifier.of("opium", "kencarson_ss"),
             Identifier.of("opium", "playboicarti_24songs"),
-            Identifier.of("opium", "playboicarti_eviljordan")
+            Identifier.of("opium", "playboicarti_eviljordan"),
+            Identifier.of("opium", "destroylonely_nostylist"),
+            Identifier.of("opium", "kencarson_hardcore"),
+            Identifier.of("opium", "kencarson_moneyandsex"),
+            Identifier.of("opium", "kencarson_boss"),
+            Identifier.of("opium", "kencarson_freeyoungthug"),
+            Identifier.of("opium", "playboicarti_lean4real"),
+            Identifier.of("opium", "playboicarti_longtime"),
+            Identifier.of("opium", "playboicarti_vampanthem"),
+            Identifier.of("opium", "homixidegang_guitars"),
+            Identifier.of("opium", "kencarson_mdma"),
+            Identifier.of("opium", "homixidegang_rckstarbitch"),
+            Identifier.of("opium", "playboicarti_onthattime"),
+            Identifier.of("opium", "destroylonely_intheair")
     );
     private static final Random RANDOM = new Random();
     private static SoundInstance currentSongInstance;
