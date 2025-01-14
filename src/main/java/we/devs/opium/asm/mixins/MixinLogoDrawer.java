@@ -47,11 +47,7 @@ public class MixinLogoDrawer {
             text = builder.toString();
         }
     }
-    /**
-     * Makes Menu Hot
-     * @author Cxiy
-     * @reason cz why not
-     */
+
     @Overwrite
     public void draw(DrawContext context, int screenWidth, float alpha, int y) {
         int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
@@ -72,6 +68,8 @@ public class MixinLogoDrawer {
 
         if (snowflakes.isEmpty()) {
             initializeSnowflakes(screenWidth, screenHeight);
+        } else {
+            resizeSnowflakesIfNecessary(screenWidth); // Snowflakes sayısını kontrol et
         }
 
         drawLogo(context, screenWidth, alpha, y);
