@@ -134,5 +134,21 @@
         "stream": true
       }
     ]
+  },
+  "kencarson_swagoverload": {
+    "sounds": [
+      {
+        "name": "opium:kencarson_swagoverload",
+        "stream": true
+      }
+    ]
+  },
+  "destroylonely_vvsvalentine": {
+    "sounds": [
+      {
+        "name": "opium:destroylonely_vvsvalentine",
+        "stream": true
+      }
+    ]
   }
 }

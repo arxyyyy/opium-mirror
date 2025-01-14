@@ -57,6 +57,32 @@ public abstract class TitleScreenMixin implements IMinecraft {
             playNextTrack(); // Starte den nächsten Song
         }
 
+        // Zeichne die aktuelle Track-Info unten in der Ecke
+        if (currentSong != null) {
+            String baseText = "Playing: ";
+            String trackName = currentSong.getId().getPath().replaceAll("_", " ");
+            String fullText = baseText + trackName; // Gesamter Text "Playing: <Trackname>"
+            int screenWidth = mc.getWindow().getScaledWidth();
+            int screenHeight = mc.getWindow().getScaledHeight();
+            int x = 2; // Links unten
+            int y = screenHeight - 20;
+
+            // Zeichne den Basis-Text
+            context.drawTextWithShadow(mc.textRenderer, fullText, x, y, 0xFF808080);
+
+            // Füge Glint-Effekt hinzu
+            long time = System.currentTimeMillis();
+            int charIndex = (int) ((time / 100) % fullText.length());
+            int glintColor = 0xFFFFFF;
+
+            for (int i = 0; i < 4; i++) { // 4 Charaktere hervorheben
+                int currentIndex = (charIndex + i) % fullText.length();
+                int glintCharX = x + mc.textRenderer.getWidth(fullText.substring(0, currentIndex));
+                context.drawTextWithShadow(mc.textRenderer, String.valueOf(fullText.charAt(currentIndex)), glintCharX, y, glintColor);
+            }
+        }
+
+        // Optional: Hintergrundtextur darstellen
         context.drawTexture(
                 Identifier.of("opium", "textures/gayassbackground.png"),
                 0, 0, 0, 0,

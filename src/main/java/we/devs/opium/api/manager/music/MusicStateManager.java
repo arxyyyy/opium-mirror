@@ -25,10 +25,13 @@ public class MusicStateManager {
             Identifier.of("opium", "kencarson_mdma"),
             Identifier.of("opium", "homixidegang_rckstarbitch"),
             Identifier.of("opium", "playboicarti_onthattime"),
-            Identifier.of("opium", "destroylonely_intheair")
+            Identifier.of("opium", "destroylonely_intheair"),
+            Identifier.of("opium", "kencarson_swagoverload"),
+            Identifier.of("opium", "destroylonely_vvsvalentine")
     );
     private static final Random RANDOM = new Random();
     private static SoundInstance currentSongInstance;
+    private static Identifier lastPlayedTrack = null; // Speichert den zuletzt gespielten Track
 
     public static boolean isPlayingCustomMusic() {
         return isPlayingCustomMusic;
@@ -39,8 +42,16 @@ public class MusicStateManager {
     }
 
     public static Identifier getRandomMusicTrack() {
-        // Zufälligen Track auswählen
-        return CUSTOM_MUSIC_TRACKS.get(RANDOM.nextInt(CUSTOM_MUSIC_TRACKS.size()));
+        Identifier nextTrack;
+
+        // Stelle sicher, dass der neue Track nicht gleich dem letzten ist
+        do {
+            nextTrack = CUSTOM_MUSIC_TRACKS.get(RANDOM.nextInt(CUSTOM_MUSIC_TRACKS.size()));
+        } while (nextTrack.equals(lastPlayedTrack) && CUSTOM_MUSIC_TRACKS.size() > 1);
+
+        lastPlayedTrack = nextTrack; // Aktualisiere den zuletzt gespielten Track
+
+        return nextTrack;
     }
 
     public static void setCurrentSong(SoundInstance songInstance) {
