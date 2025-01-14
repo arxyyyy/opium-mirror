@@ -174,11 +174,12 @@ public class ModuleComponent extends Component {
             component.update(mouseX, mouseY, delta);
         }
         if (this.isOpen()) {
+            context.getMatrices().push();
+            context.getMatrices().translate(0, 0, 0.1); // this crashes for whatever reason, something in font renderer
             for (Component component : this.components) {
                 if (!component.isVisible()) continue;
                 component.render(context, mouseX, mouseY, delta);
-                context.getMatrices().push();
-                context.getMatrices().translate(0, 0, 0.1);
+                context.getMatrices().translate(0, 0, -0.1);
                 switch (component) {
                     case BooleanComponent booleanComponent -> {
                         if (!component.isHovering(mouseX, mouseY) || ((BooleanComponent) component).getValue().getDescription().isEmpty())
@@ -214,22 +215,20 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (!(component instanceof StringComponent stringComponent)) {
-                    context.getMatrices().translate(0, 0, -0.1);
-                    context.getMatrices().pop();
+                    context.getMatrices().translate(0, 0, 0.1);
                     continue;
                 }
                 if (!component.isHovering(mouseX, mouseY) || stringComponent.getValue().getDescription().isEmpty()) {
-                    context.getMatrices().translate(0, 0, -0.1);
-                    context.getMatrices().pop();
+                    context.getMatrices().translate(0, 0, 0.1);
                     continue;
                 }
 
                 RenderUtils.drawRect(context.getMatrices(), mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(stringComponent.getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
                 RenderUtils.drawOutline(context.getMatrices(), mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(stringComponent.getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
                 RenderUtils.drawString(context.getMatrices(), stringComponent.getValue().getDescription(), mouseX + 7, mouseY, -1);
-                context.getMatrices().translate(0, 0, -0.1);
-                context.getMatrices().pop();
+                context.getMatrices().translate(0, 0, 0.1);
             }
+            context.getMatrices().pop();
         }
     }
 
