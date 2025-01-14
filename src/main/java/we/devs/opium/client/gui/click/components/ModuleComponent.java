@@ -178,37 +178,36 @@ public class ModuleComponent extends Component {
                 Component c;
                 if (!component.isVisible()) continue;
                 component.render(context, mouseX, mouseY, delta);
-                if (component instanceof BooleanComponent) {
-                    c = component;
-                    if (!component.isHovering(mouseX, mouseY) || ((BooleanComponent)c).getValue().getDescription().isEmpty()) continue;
-                    RenderUtils.drawRect(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((BooleanComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
-                    RenderUtils.drawOutline(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((BooleanComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
-                    RenderUtils.drawString(context.getMatrices(), ((BooleanComponent)c).getValue().getDescription(), mouseX + 7, mouseY, -1);
-                    continue;
-                }
-                if (component instanceof NumberComponent) {
-                    c = component;
-                    if (!component.isHovering(mouseX, mouseY) || ((NumberComponent)c).getValue().getDescription().isEmpty()) continue;
-                    RenderUtils.drawRect(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((NumberComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
-                    RenderUtils.drawOutline(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((NumberComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
-                    RenderUtils.drawString(context.getMatrices(), ((NumberComponent)c).getValue().getDescription(), mouseX + 7, mouseY, -1);
-                    continue;
-                }
-                if (component instanceof EnumComponent) {
-                    c = component;
-                    if (!component.isHovering(mouseX, mouseY) || ((EnumComponent)c).getValue().getDescription().isEmpty()) continue;
-                    RenderUtils.drawRect(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((EnumComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
-                    RenderUtils.drawOutline(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((EnumComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
-                    RenderUtils.drawString(context.getMatrices(), ((EnumComponent)c).getValue().getDescription(), mouseX + 7, mouseY, -1);
-                    continue;
-                }
-                if (component instanceof EnumComponent) {
-                    c = component;
-                    if (!component.isHovering(mouseX, mouseY) || ((EnumComponent)c).getValue().getDescription().isEmpty()) continue;
-                    RenderUtils.drawRect(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((EnumComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
-                    RenderUtils.drawOutline(context.getMatrices(),mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((EnumComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
-                    RenderUtils.drawString(context.getMatrices(), ((EnumComponent)c).getValue().getDescription(), mouseX + 7, mouseY, -1);
-                    continue;
+                switch (component) {
+                    case BooleanComponent booleanComponent -> {
+                        c = component;
+                        if (!component.isHovering(mouseX, mouseY) || ((BooleanComponent) c).getValue().getDescription().isEmpty())
+                            continue;
+                        RenderUtils.drawRect(context.getMatrices(), mouseX + 5, mouseY - 2, (float) mouseX + mc.textRenderer.getWidth(((BooleanComponent) c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
+                        RenderUtils.drawOutline(context.getMatrices(), mouseX + 5, mouseY - 2, (float) mouseX + mc.textRenderer.getWidth(((BooleanComponent) c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
+                        RenderUtils.drawString(context.getMatrices(), ((BooleanComponent) c).getValue().getDescription(), mouseX + 7, mouseY, -1);
+                        continue;
+                    }
+                    case NumberComponent numberComponent -> {
+                        c = component;
+                        if (!component.isHovering(mouseX, mouseY) || ((NumberComponent) c).getValue().getDescription().isEmpty())
+                            continue;
+                        RenderUtils.drawRect(context.getMatrices(), mouseX + 5, mouseY - 2, (float) mouseX + mc.textRenderer.getWidth(((NumberComponent) c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
+                        RenderUtils.drawOutline(context.getMatrices(), mouseX + 5, mouseY - 2, (float) mouseX + mc.textRenderer.getWidth(((NumberComponent) c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
+                        RenderUtils.drawString(context.getMatrices(), ((NumberComponent) c).getValue().getDescription(), mouseX + 7, mouseY, -1);
+                        continue;
+                    }
+                    case EnumComponent enumComponent -> {
+                        c = component;
+                        if (!component.isHovering(mouseX, mouseY) || ((EnumComponent) c).getValue().getDescription().isEmpty())
+                            continue;
+                        RenderUtils.drawRect(context.getMatrices(), mouseX + 5, mouseY - 2, (float) mouseX + mc.textRenderer.getWidth(((EnumComponent) c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
+                        RenderUtils.drawOutline(context.getMatrices(), mouseX + 5, mouseY - 2, (float) mouseX + mc.textRenderer.getWidth(((EnumComponent) c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
+                        RenderUtils.drawString(context.getMatrices(), ((EnumComponent) c).getValue().getDescription(), mouseX + 7, mouseY, -1);
+                        continue;
+                    }
+                    default -> {
+                    }
                 }
                 if (!(component instanceof StringComponent)) continue;
                 c = component;
