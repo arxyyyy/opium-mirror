@@ -213,9 +213,11 @@ public class ModuleComponent extends Component {
                 if (!(component instanceof StringComponent)) continue;
                 c = component;
                 if (!component.isHovering(mouseX, mouseY) || ((StringComponent)c).getValue().getDescription().isEmpty()) continue;
+                context.getMatrices().translate(0, 0, -0.1);
                 RenderUtils.drawRect(context.getMatrices(), mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((StringComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, new Color(40, 40, 40));
                 RenderUtils.drawOutline(context.getMatrices(), mouseX + 5, mouseY - 2, (float)mouseX + mc.textRenderer.getWidth(((StringComponent)c).getValue().getDescription()) + 7.0f, mouseY + 11, 1.0f, ModuleColor.getColor());
                 RenderUtils.drawString(context.getMatrices(), ((StringComponent)c).getValue().getDescription(), mouseX + 7, mouseY, -1);
+                context.getMatrices().translate(0, 0, 0.1);
             }
         }
     }
