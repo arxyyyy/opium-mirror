@@ -21,7 +21,7 @@ public class ModuleFakeDuelMessage extends Module {
     @Override
     public void onEnable() {
         super.onEnable();
-        ChatUtils.sendMessage((Text.literal("[Duels] ").setStyle(Style.EMPTY.withFormatting(Formatting.BLUE))
+        ChatUtils.sendMessage(String.valueOf((Text.literal("[Duels] ").setStyle(Style.EMPTY.withFormatting(Formatting.BLUE))
                 .append(Text.literal(winName.getValue()).setStyle(Style.EMPTY.withFormatting(Formatting.WHITE)))
                 .append(Text.literal(" (100) (+0) ").setStyle(Style.EMPTY.withFormatting(Formatting.GREEN)))
                 .append(Text.literal("has defeated ").setStyle(Style.EMPTY.withFormatting(Formatting.GRAY)))
@@ -30,6 +30,6 @@ public class ModuleFakeDuelMessage extends Module {
                 .append(Text.literal("on kit ").setStyle(Style.EMPTY.withFormatting(Formatting.GRAY)))
                 .append(Text.literal("none ").setStyle(Style.EMPTY.withFormatting(Formatting.DARK_AQUA)))
                 .append(Text.literal("with ").setStyle(Style.EMPTY.withFormatting(Formatting.GRAY)))
-                .append(Text.literal(".0\\u2665\")").setStyle(Style.EMPTY.withFormatting(Formatting.LIGHT_PURPLE)))));
+                .append(Text.literal(".0\\u2665\")").setStyle(Style.EMPTY.withFormatting(Formatting.LIGHT_PURPLE))))));
         this.disable(true);
 }}

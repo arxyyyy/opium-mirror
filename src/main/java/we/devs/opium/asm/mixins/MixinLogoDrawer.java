@@ -72,8 +72,6 @@ public class MixinLogoDrawer {
 
         if (snowflakes.isEmpty()) {
             initializeSnowflakes(screenWidth, screenHeight);
-        } else {
-            resizeSnowflakesIfNecessary(screenWidth);
         }
 
         drawLogo(context, screenWidth, alpha, y);
