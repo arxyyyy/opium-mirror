@@ -19,6 +19,7 @@ import java.net.URL;
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
 
+
     @Redirect(method = "handleBlockBreaking", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z"))
     public boolean injectHandleBlockBreaking(ClientPlayerEntity clientPlayerEntity) {
         return !Opium.MODULE_MANAGER.isModuleEnabled("MultiTask") && clientPlayerEntity.isUsingItem();
@@ -28,7 +29,6 @@ public class MinecraftClientMixin {
     public boolean injectDoItemUse(ClientPlayerInteractionManager clientPlayerInteractionManager) {
         return !Opium.MODULE_MANAGER.isModuleEnabled("MultiTask") && clientPlayerInteractionManager.isBreakingBlock();
     }
-
 
 
 }

@@ -9,6 +9,7 @@
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityRendererMixin",
+    "GameMenuScreenMixin",
     "IClientPlayerEntity",
     "IEntityVelocityUpdateS2CPacket",
     "IExplosionS2CPacket",
@@ -17,6 +18,7 @@
     "MinecraftClientMixin",
     "MixinLogoDrawer",
     "MixinSplashScreen",
+    "MusicTickerMixin",
     "TitleScreenMixin",
     "TitleScreenSplashMixin",
     "WorldRendererMixin"
