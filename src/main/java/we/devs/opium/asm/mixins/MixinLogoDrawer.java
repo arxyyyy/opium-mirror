@@ -30,7 +30,7 @@ public class MixinLogoDrawer {
     @Unique
     private static String text = "0piumh4ck.cc";
 
-    // Liste von Schneeflocken-Daten
+    // List of Snowflake Data
     @Unique
     private final List<Map<String, Object>> snowflakes = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class MixinLogoDrawer {
     public void draw(DrawContext context, int screenWidth, float alpha, int y) {
         int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
 
-        // Bildschirmzittern
+        // Screen shake
         int shakeOffsetX = 0, shakeOffsetY = 0;
         if (System.currentTimeMillis() < shakeEndTime) {
             shakeOffsetX = RANDOM.nextInt(10) - 5;
@@ -67,21 +67,21 @@ public class MixinLogoDrawer {
         context.getMatrices().translate(shakeOffsetX, shakeOffsetY, 0);
         context.fillGradient(0, 0, screenWidth, screenHeight, 0x55000000, 0x33000000);
 
-        // Falls Schneeflocken noch nicht initialisiert sind
+        // If snowflakes aren't initialized
         if (snowflakes == null || snowflakes.isEmpty()) {
             initializeSnowflakes(screenWidth, screenHeight);
         } else {
             resizeSnowflakesIfNecessary(screenWidth);
         }
 
-        // Blitzeffekt
+        // lightning effect
         handleLightning(context, screenWidth, screenHeight);
 
-        // Zeichne Logo, Effekte und Schnee
+        // Draw Logo, effect and snow
         drawLogo(context, screenWidth, alpha, y);
         renderEffects(context, screenWidth, screenHeight);
 
-        // Text zeichnen
+        // Draw text
         drawText(context, text, screenWidth);
 
         context.getMatrices().pop();
@@ -171,7 +171,7 @@ public class MixinLogoDrawer {
         float centerX = (float) snowflake.get("x") + size / 2f;
         float centerY = (float) snowflake.get("y") + size / 2f;
 
-        // Zeichne Schneeflockenarme
+        // Draw Snowflake arms
         for (int i = 0; i < 4; i++) {
             double angle = Math.toRadians((float) snowflake.get("rotationAngle") + (i * 90));
             float armLength = size / 2f;
@@ -190,7 +190,7 @@ public class MixinLogoDrawer {
             int startX = RANDOM.nextInt(screenWidth);
             drawLightning(context, startX, 0, screenHeight);
 
-            // Zitter-Effekt
+            // Shake effect
             shakeEndTime = currentTime + 200;
         }
     }
