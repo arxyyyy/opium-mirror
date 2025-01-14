@@ -50,7 +50,7 @@ public class MixinLogoDrawer {
 
     /**
      * @author Cxiy
-     * @reason Cxxxxx
+     * @reason If You Tutch This Class Your Gay! Dont Change Shit without dming me first
      */
     @Overwrite
     public void draw(DrawContext context, int screenWidth, float alpha, int y) {
