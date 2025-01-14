@@ -8,7 +8,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
-import we.devs.opium.Opium;
 
 import java.util.*;
 
@@ -20,8 +19,6 @@ public class MixinLogoDrawer {
     private boolean ignoreAlpha;
 
     @Unique
-    private final List<Snowflake> snowflakes = new ArrayList<>();
-    @Unique
     private static final int INITIAL_SNOWFLAKE_COUNT = 100;
     @Unique
     private static final Random RANDOM = new Random();
@@ -30,72 +27,62 @@ public class MixinLogoDrawer {
     private long nextLightningTime = 0;
     @Unique
     private long shakeEndTime = 0;
-
     @Unique
     private static String text = "0piumh4ck.cc";
+
+    // List of Snowflake Data
+    @Unique
+    private final List<Map<String, Object>> snowflakes = new ArrayList<>();
+
     static {
         Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer("opium");
-        if(modContainer.isPresent()) {
+        if (modContainer.isPresent()) {
             StringBuilder builder = new StringBuilder("0piumh4ck.cc by ");
             Iterator<Person> i = modContainer.get().getMetadata().getAuthors().iterator();
             while (i.hasNext()) {
                 Person next = i.next();
                 builder.append(next.getName());
-                if(i.hasNext()) builder.append(" & ");
+                if (i.hasNext()) builder.append(" & ");
             }
             text = builder.toString();
         }
     }
+
     /**
-     * Makes Menu Hot
      * @author Cxiy
-     * @reason cz why not
+     * @reason Cxxxxx
      */
     @Overwrite
     public void draw(DrawContext context, int screenWidth, float alpha, int y) {
         int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
 
-        int shakeOffsetY;
-        int shakeOffsetX;
+        // Screen shake
+        int shakeOffsetX = 0, shakeOffsetY = 0;
         if (System.currentTimeMillis() < shakeEndTime) {
             shakeOffsetX = RANDOM.nextInt(10) - 5;
             shakeOffsetY = RANDOM.nextInt(10) - 5;
-        } else {
-            shakeOffsetX = 0;
-            shakeOffsetY = 0;
         }
 
         context.getMatrices().push();
         context.getMatrices().translate(shakeOffsetX, shakeOffsetY, 0);
         context.fillGradient(0, 0, screenWidth, screenHeight, 0x55000000, 0x33000000);
 
-        if (snowflakes.isEmpty()) {
+        // If snowflakes aren't initialized
+        if (snowflakes == null || snowflakes.isEmpty()) {
             initializeSnowflakes(screenWidth, screenHeight);
         } else {
             resizeSnowflakesIfNecessary(screenWidth);
         }
 
+        // lightning effect
+        handleLightning(context, screenWidth, screenHeight);
+
+        // Draw Logo, effect and snow
         drawLogo(context, screenWidth, alpha, y);
         renderEffects(context, screenWidth, screenHeight);
 
-        int x = 10;
-        int yPosition = 10;
-        int color = 0xFF808080;
-
-        for (int i = 0; i < text.length(); i++) {
-            int charX = x + MinecraftClient.getInstance().textRenderer.getWidth(text.substring(0, i));
-            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, String.valueOf(text.charAt(i)), charX, yPosition, color);
-        }
-
-        long time = System.currentTimeMillis();
-        int charIndex = (int) ((time / 100) % text.length());
-        int glintColor = 0xFFFFFFFF;
-
-        for (int i = 0; i < 5; i++) {
-            int currentIndex = (charIndex + i) % text.length();
-            int glintCharX = x + MinecraftClient.getInstance().textRenderer.getWidth(text.substring(0, currentIndex));
-            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, String.valueOf(text.charAt(currentIndex)), glintCharX, yPosition, glintColor);
-        }
+        // Draw text
+        drawText(context, text, screenWidth);
 
         context.getMatrices().pop();
     }
@@ -124,9 +111,24 @@ public class MixinLogoDrawer {
 
     @Unique
     private void initializeSnowflakes(int screenWidth, int screenHeight) {
+        snowflakes.clear();
         for (int i = 0; i < INITIAL_SNOWFLAKE_COUNT; i++) {
-            snowflakes.add(new Snowflake(screenWidth, screenHeight));
+            snowflakes.add(createSnowflake(screenWidth, screenHeight));
         }
+    }
+
+    @Unique
+    private Map<String, Object> createSnowflake(int screenWidth, int screenHeight) {
+        Map<String, Object> snowflake = new HashMap<>();
+        snowflake.put("x", (float) RANDOM.nextInt(screenWidth));
+        snowflake.put("y", (float) -RANDOM.nextInt(50));
+        snowflake.put("speedY", 0.5F + RANDOM.nextFloat() * 2);
+        snowflake.put("size", RANDOM.nextInt(3) + 2);
+        snowflake.put("rotationAngle", RANDOM.nextFloat() * 360);
+        snowflake.put("rotationSpeed", RANDOM.nextFloat() * 2 - 1);
+        snowflake.put("opacity", 1.0F);
+        snowflake.put("screenHeight", screenHeight);
+        return snowflake;
     }
 
     @Unique
@@ -134,7 +136,7 @@ public class MixinLogoDrawer {
         int targetSnowflakeCount = screenWidth / 10;
         if (snowflakes.size() < targetSnowflakeCount) {
             for (int i = snowflakes.size(); i < targetSnowflakeCount; i++) {
-                snowflakes.add(new Snowflake(screenWidth, snowflakes.get(0).getScreenHeight()));
+                snowflakes.add(createSnowflake(screenWidth, getScreenHeight()));
             }
         } else if (snowflakes.size() > targetSnowflakeCount) {
             snowflakes.subList(targetSnowflakeCount, snowflakes.size()).clear();
@@ -143,11 +145,40 @@ public class MixinLogoDrawer {
 
     @Unique
     private void renderEffects(DrawContext context, int screenWidth, int screenHeight) {
-        snowflakes.forEach(snowflake -> {
-            snowflake.update(screenWidth, screenHeight);
-            snowflake.draw(context);
-        });
-        handleLightning(context, screenWidth, screenHeight);
+        for (Map<String, Object> snowflake : snowflakes) {
+            updateSnowflake(snowflake, screenWidth, screenHeight);
+            drawSnowflake(snowflake, context);
+        }
+    }
+
+    @Unique
+    private void updateSnowflake(Map<String, Object> snowflake, int screenWidth, int screenHeight) {
+        float y = (float) snowflake.get("y") + (float) snowflake.get("speedY");
+        if (y > screenHeight || (float) snowflake.get("opacity") <= 0) {
+            snowflake.clear();
+            snowflake.putAll(createSnowflake(screenWidth, screenHeight));
+        } else {
+            snowflake.put("y", y);
+            snowflake.put("rotationAngle", (float) snowflake.get("rotationAngle") + (float) snowflake.get("rotationSpeed"));
+        }
+    }
+
+    @Unique
+    private void drawSnowflake(Map<String, Object> snowflake, DrawContext context) {
+        int alpha = (int) ((float) snowflake.get("opacity") * 0x80);
+        int size = (int) snowflake.get("size");
+        int color = (alpha << 24) | 0xFFFFFF;
+        float centerX = (float) snowflake.get("x") + size / 2f;
+        float centerY = (float) snowflake.get("y") + size / 2f;
+
+        // Draw Snowflake arms
+        for (int i = 0; i < 4; i++) {
+            double angle = Math.toRadians((float) snowflake.get("rotationAngle") + (i * 90));
+            float armLength = size / 2f;
+            float endX = centerX + (float) (armLength * Math.cos(angle));
+            float endY = centerY + (float) (armLength * Math.sin(angle));
+            context.fill((int) centerX, (int) centerY, (int) endX, (int) endY, color);
+        }
     }
 
     @Unique
@@ -159,30 +190,24 @@ public class MixinLogoDrawer {
             int startX = RANDOM.nextInt(screenWidth);
             drawLightning(context, startX, 0, screenHeight);
 
-            // Start Shake-Effekt
-            shakeEndTime = System.currentTimeMillis() + 200; // Shake für 200ms aktiv
+            // Shake effect
+            shakeEndTime = currentTime + 200;
         }
     }
 
     @Unique
     private void drawLightning(DrawContext context, int startX, int startY, int endY) {
         int boltWidth = 2;
-        int currentX = startX, currentY = startY;
-        int baseAlpha = 0x80; // Transparenter Blitz
-        int baseColor = 0xFFFFFF;
+        int currentX = startX;
+        int currentY = startY;
 
         while (currentY < endY) {
-            float alphaFactor = 0.8f - ((float) currentY / (endY * 1.2f));
-            int currentAlpha = (int) (baseAlpha * alphaFactor);
-            int color = (currentAlpha << 24) | baseColor;
-
             int nextX = Math.max(0, Math.min(currentX + RANDOM.nextInt(20) - 10, MinecraftClient.getInstance().getWindow().getScaledWidth()));
             int nextY = Math.min(currentY + RANDOM.nextInt(30), endY);
-
-            context.fill(currentX, currentY, nextX + boltWidth, nextY + boltWidth, color);
+            context.fill(currentX, currentY, nextX + boltWidth, nextY + boltWidth, 0x60FFFFFF);
 
             if (RANDOM.nextFloat() < 0.3) {
-                drawBranch(context, currentX, currentY, baseColor, baseAlpha, endY / 2);
+                drawBranch(context, currentX, currentY, endY / 2);
             }
 
             currentX = nextX;
@@ -191,19 +216,13 @@ public class MixinLogoDrawer {
     }
 
     @Unique
-    private void drawBranch(DrawContext context, int startX, int startY, int baseColor, int baseAlpha, int branchLength) {
-        int boltWidth = 1;
-        int currentX = startX, currentY = startY;
-
+    private void drawBranch(DrawContext context, int startX, int startY, int branchLength) {
+        int currentX = startX;
+        int currentY = startY;
         for (int i = 0; i < branchLength; i++) {
-            float alphaFactor = 0.7f - ((float) i / (branchLength * 1.3f));
-            int currentAlpha = (int) (baseAlpha * alphaFactor);
-            int color = (currentAlpha << 24) | baseColor;
-
             int nextX = Math.max(0, Math.min(currentX + RANDOM.nextInt(15) - 7, MinecraftClient.getInstance().getWindow().getScaledWidth()));
             int nextY = currentY + RANDOM.nextInt(15);
-
-            context.fill(currentX, currentY, nextX + boltWidth, nextY + boltWidth, color);
+            context.fill(currentX, currentY, nextX, nextY, 0x40FFFFFF);
 
             currentX = nextX;
             currentY = nextY;
@@ -214,56 +233,30 @@ public class MixinLogoDrawer {
         }
     }
 
-    private static class Snowflake {
-        private float x, y, speedY, rotationAngle, rotationSpeed, opacity;
-        private int baseSize, screenHeight;
-        private final Random random = new Random();
+    @Unique
+    private void drawText(DrawContext context, String text, int screenWidth) {
+        int x = 10;
+        int yPosition = 10;
+        int color = 0xFF808080;
 
-        public Snowflake(int screenWidth, int screenHeight) {
-            this.screenHeight = screenHeight;
-            reset(screenWidth);
+        for (int i = 0; i < text.length(); i++) {
+            int charX = x + MinecraftClient.getInstance().textRenderer.getWidth(text.substring(0, i));
+            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, String.valueOf(text.charAt(i)), charX, yPosition, color);
         }
 
-        public void update(int screenWidth, int screenHeight) {
-            this.screenHeight = screenHeight;
-            y += speedY;
-            rotationAngle += rotationSpeed;
+        long time = System.currentTimeMillis();
+        int charIndex = (int) ((time / 100) % text.length());
+        int glintColor = 0xFFFFFFFF;
 
-            if (y > screenHeight || opacity <= 0) {
-                reset(screenWidth);
-            }
+        for (int i = 0; i < 5; i++) {
+            int currentIndex = (charIndex + i) % text.length();
+            int glintCharX = x + MinecraftClient.getInstance().textRenderer.getWidth(text.substring(0, currentIndex));
+            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, String.valueOf(text.charAt(currentIndex)), glintCharX, yPosition, glintColor);
         }
+    }
 
-        public void draw(DrawContext context) {
-            int alpha = (int) (opacity * 0x80);
-            int size = baseSize;
-            int color = (alpha << 24) | 0xFFFFFF;
-
-            drawRotatingSnowflake(context, x + size / 2f, y + size / 2f, size, color);
-        }
-
-        private void drawRotatingSnowflake(DrawContext context, float centerX, float centerY, int size, int color) {
-            for (int i = 0; i < 4; i++) {
-                double angle = Math.toRadians(rotationAngle + (i * 90));
-                float armLength = size / 2f;
-                float endX = centerX + (float) (armLength * Math.cos(angle));
-                float endY = centerY + (float) (armLength * Math.sin(angle));
-                context.fill((int) centerX, (int) centerY, (int) endX, (int) endY, color);
-            }
-        }
-
-        private void reset(int screenWidth) {
-            x = random.nextInt(screenWidth);
-            y = -random.nextInt(50);
-            speedY = 0.5F + random.nextFloat() * 2;
-            baseSize = random.nextInt(3) + 2;
-            rotationAngle = random.nextFloat() * 360;
-            rotationSpeed = random.nextFloat() * 2 - 1;
-            opacity = 1.0F;
-        }
-
-        public int getScreenHeight() {
-            return screenHeight;
-        }
+    @Unique
+    private int getScreenHeight() {
+        return MinecraftClient.getInstance().getWindow().getScaledHeight();
     }
 }

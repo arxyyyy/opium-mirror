@@ -59,6 +59,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleGhastFarmer());
         this.register(new ModuleMiddleClick());
         this.register(new ModuleWelcomer());
+        this.register(new ModuleFakeDuelMessage());
 
         //Movement
         this.register(new InstantSpeed());

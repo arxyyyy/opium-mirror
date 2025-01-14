@@ -8,7 +8,7 @@ public class Component implements IMinecraft {
     private int offset;
     private final int width;
     private final int height;
-    private final Frame parent;
+    public final Frame parent;
 
     public Component(int offset, Frame parent) {
         this.offset = offset;

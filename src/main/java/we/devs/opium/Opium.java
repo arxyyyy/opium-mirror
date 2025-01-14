@@ -61,15 +61,15 @@ public class Opium implements ModInitializer {
         long startTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has started!");
 
-//        if (!isHWIDValid()) {
-//            LOGGER.error("Authentication Denied: HWID not found.");
-//            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
-//            showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
-//            return;
-//        } else {
-//            LOGGER.info("Authentication Success: HWID validated.");
-//            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
-//        }
+        if (!isHWIDValid()) {
+            LOGGER.error("Authentication Denied: HWID not found.");
+            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
+            showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
+            return;
+        } else {
+            LOGGER.info("Authentication Success: HWID validated.");
+            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+        }
 
         EVENT_MANAGER = new EventManager();
         COMMAND_MANAGER = new CommandManager();
@@ -77,6 +77,7 @@ public class Opium implements ModInitializer {
         MODULE_MANAGER = new ModuleManager();
         ELEMENT_MANAGER = new ElementManager();
         PLAYER_MANAGER = new PlayerManager();
+
 
         LOGGER.info("Managers loaded successfully!");
 
@@ -171,24 +172,33 @@ public class Opium implements ModInitializer {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
+            String author = "0piumh4ck.cc";
+            String footer = author + " Authentication System";
             String username = MinecraftClient.getInstance().getSession().getUsername();
             String pcName = System.getenv("COMPUTERNAME");
+            String opsys = System.getProperty("os.name");
             String hwid = getSHA256Hash();
             String color = isSuccess ? "3066993" : "15158332";
 
             String jsonPayload = String.format(
                     "{" +
                             "\"embeds\": [{" +
+                            "\"author\": {\"name\": \"%s\"}," + // Corrected author field to a JSON object
+                            "\"footer\": {\"text\": \"%s\"}," + // Corrected footer field to a JSON object
                             "\"title\": \"%s\"," +
                             "\"description\": \"%s\"," +
                             "\"fields\": [" +
                             "{\"name\": \"Username\", \"value\": \"%s\", \"inline\": true}," +
                             "{\"name\": \"PC Name\", \"value\": \"%s\", \"inline\": true}," +
+                            "{\"name\": \"OS\", \"value\": \"%s\", \"inline\": true}," +
                             "{\"name\": \"HWID\", \"value\": \"%s\", \"inline\": true}" +
                             "]," +
                             "\"color\": %s" +
                             "}]" +
-                            "}", title, message, username, pcName, hwid, color);
+                            "}",
+                    author, footer, title, message, username, pcName, opsys, hwid, color
+            );
+
 
             try (OutputStream os = connection.getOutputStream()) {
                 os.write(jsonPayload.getBytes());
