@@ -30,7 +30,12 @@ public abstract class TitleScreenMixin implements IMinecraft {
         // Prüfe, ob die benutzerdefinierte Musik bereits läuft
         if (!MusicStateManager.isPlayingCustomMusic()) {
             MusicStateManager.setPlayingCustomMusic(true); // Setze das Flag
-            SoundInstance musicInstance = PositionedSoundInstance.music(SoundEvent.of(CUSTOM_MUSIC));
+
+            // Wähle einen zufälligen Song aus
+            Identifier randomMusic = MusicStateManager.getRandomMusicTrack();
+
+            // Erstelle einen neuen Musik-Instanz mit dem zufälligen Track
+            SoundInstance musicInstance = PositionedSoundInstance.music(SoundEvent.of(randomMusic));
             mc.getSoundManager().play(musicInstance); // Spiele die benutzerdefinierte Musik ab
         }
     }

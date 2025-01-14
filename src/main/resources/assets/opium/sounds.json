@@ -2,7 +2,19 @@
   "custom_music": {
     "sounds": [
       {
-        "name": "opium:custom_music",
+        "name": "opium:kencarson_overseas",
+        "stream": true
+      },
+      {
+        "name": "opium:kencarson_ss",
+        "stream": true
+      },
+      {
+        "name": "opium:playboicarti_24songs",
+        "stream": true
+      },
+      {
+        "name": "opium:playboicarti_eviljordan",
         "stream": true
       }
     ]
