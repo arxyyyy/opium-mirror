@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CameraMixin",
-    "TitleScreenSplashMixin",
     "ChatHudMixin",
     "ClientConnectionMixin",
     "ClientPlayerEntityMixin",
@@ -16,10 +15,11 @@
     "InGameHudMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
+    "MixinLogoDrawer",
     "MixinSplashScreen",
     "TitleScreenMixin",
-    "WorldRendererMixin",
-    "MixinLogoDrawer"
+    "TitleScreenSplashMixin",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
