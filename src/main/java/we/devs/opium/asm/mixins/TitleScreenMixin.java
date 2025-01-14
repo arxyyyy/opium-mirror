@@ -15,18 +15,17 @@ import we.devs.opium.api.utilities.IMinecraft;
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin implements IMinecraft {
 
-    // Identifier for your custom music file
     private static final Identifier CUSTOM_MUSIC = Identifier.of("opium", "custom_music");
     private static boolean isPlayingCustomMusic = false;
 
     @Inject(method = "init()V", at = @At("TAIL"))
     void init(CallbackInfo ci) {
-        // Stop the default music system
+        // Stop die Minecraft-Standardmusik
         mc.getMusicTracker().stop();
 
-        // Ensure custom music is not already playing
+        // Prüfen, ob die eigene Musik bereits läuft
         if (!isPlayingCustomMusic) {
-            isPlayingCustomMusic = true; // Set flag to avoid multiple instances
+            isPlayingCustomMusic = true; // Flag setzen, um zu verhindern, dass die Musik mehrfach gestartet wird
             SoundInstance musicInstance = PositionedSoundInstance.music(SoundEvent.of(CUSTOM_MUSIC));
             mc.getSoundManager().play(musicInstance);
         }
@@ -34,13 +33,11 @@ public abstract class TitleScreenMixin implements IMinecraft {
 
     @Inject(method = "removed()V", at = @At("HEAD"))
     void removed(CallbackInfo ci) {
-        // Reset the flag when leaving the title screen
-        isPlayingCustomMusic = false;
+        // Musik nicht sofort stoppen, sondern Flag nicht zurücksetzen, es sei denn, dies ist absichtlich
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;renderPanoramaBackground(Lnet/minecraft/client/gui/DrawContext;F)V", shift = At.Shift.AFTER))
     public void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        // Custom background rendering
         context.drawTexture(
                 Identifier.of("opium", "textures/gayassbackground.png"),
                 0, 0, 0, 0,
