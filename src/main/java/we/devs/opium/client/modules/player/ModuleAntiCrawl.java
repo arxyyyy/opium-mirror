@@ -30,11 +30,11 @@ public class ModuleAntiCrawl extends Module {
 
     ValueCategory renderCategory = new ValueCategory("Render", "Render settings");
     ValueBoolean fill = new ValueBoolean("Fill", "Fill", "Show fill", true);
-    ValueColor miningFill = getSetting("MiningFill", new Color(250, 20, 20));
-    ValueColor finishedFill = getSetting("FinishedFill", new Color(20, 250, 20));
+    ValueColor miningFill = getSetting("MiningFill", new Color(250, 20, 20, 200));
+    ValueColor finishedFill = getSetting("FinishedFill", new Color(20, 250, 20, 200));
     ValueBoolean outline = new ValueBoolean("Outline", "Outline", "Show outline", true);
-    ValueColor miningOutline = getSetting("MiningOutline", new Color(250, 20, 20).darker());
-    ValueColor finishedOutline = getSetting("FinishedOutline", new Color(20, 250, 20).darker());
+    ValueColor miningOutline = getSetting("MiningOutline", new Color(250, 20, 20, 200).darker());
+    ValueColor finishedOutline = getSetting("FinishedOutline", new Color(20, 250, 20, 200).darker());
     ValueEnum easing = new ValueEnum("Easing", "Easing", "How to ease the progress rendering", renderCategory, Easing.EaseOutCircular);
 
     double progress = 0;
