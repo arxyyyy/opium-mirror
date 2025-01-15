@@ -31,7 +31,7 @@ public class MusicStateManager {
     );
     private static final Random RANDOM = new Random();
     private static SoundInstance currentSongInstance;
-    private static Identifier lastPlayedTrack = null; // Speichert den zuletzt gespielten Track
+    private static Identifier lastPlayedTrack = null; // Safes last played track
 
     public static boolean isPlayingCustomMusic() {
         return isPlayingCustomMusic;
@@ -44,12 +44,12 @@ public class MusicStateManager {
     public static Identifier getRandomMusicTrack() {
         Identifier nextTrack;
 
-        // Stelle sicher, dass der neue Track nicht gleich dem letzten ist
+        // Makes sure that the new song is different from the last played song
         do {
             nextTrack = CUSTOM_MUSIC_TRACKS.get(RANDOM.nextInt(CUSTOM_MUSIC_TRACKS.size()));
         } while (nextTrack.equals(lastPlayedTrack) && CUSTOM_MUSIC_TRACKS.size() > 1);
 
-        lastPlayedTrack = nextTrack; // Aktualisiere den zuletzt gespielten Track
+        lastPlayedTrack = nextTrack; // Update the last played track to the new one
 
         return nextTrack;
     }
