@@ -221,4 +221,6 @@ public class Opium implements ModInitializer {
         MinecraftClient.getInstance().scheduleStop();
         throw new RuntimeException(message);
     }
+
+
 }
