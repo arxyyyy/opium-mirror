@@ -3,6 +3,7 @@
   "package": "we.devs.opium.asm.mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "AbstractClientPlayerEntityMixin",
     "CameraMixin",
     "ChatHudMixin",
     "ClientConnectionMixin",
