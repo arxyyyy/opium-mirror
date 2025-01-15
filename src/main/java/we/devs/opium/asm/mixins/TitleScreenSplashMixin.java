@@ -26,7 +26,7 @@ public class TitleScreenSplashMixin {
                 "VoidMatter",
                 "Qweru",
                 "Helianthus",
-                "Goddanger",
+                "Godmodule",
                 "Tinkoprof",
                 "Crystal"
 
