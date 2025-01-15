@@ -22,7 +22,14 @@ public class TitleScreenSplashMixin {
                 "Cxiy",
                 "Heedi",
                 "Opium",
-                "" // Empty cz looks good ngl
+                "", // Empty cz looks good ngl
+                "VoidMatter",
+                "Qweru",
+                "Helianthus",
+                "Goddanger",
+                "Tinkoprof",
+                "Crystal"
+
         };
         splashText = new SplashTextRenderer(customSplashes[random.nextInt(customSplashes.length)]);
     }
