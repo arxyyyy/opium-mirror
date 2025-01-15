@@ -33,7 +33,6 @@ public class Frame implements IMinecraft {
 
     public Frame(Module.Category category, int x, int y) {
         this.tab = category.getName();
-        this.categoryIcon = Identifier.of("opium", "icons/" + tab.toLowerCase() + ".png");
         this.x = x;
         this.y = y;
         this.width = 100;
@@ -118,7 +117,6 @@ public class Frame implements IMinecraft {
         }
         if(ModuleGUI.INSTANCE.categoryIcons.getValue()) {
             float iconSize = 10.6666667f;
-            Renderer2d.renderTexture(context.getMatrices(), categoryIcon, this.x + 3, this.y + 1 - 0.35f, iconSize, iconSize);
             RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3 + iconSize + 1.5f, this.y + 1, -1);
         } else {
             RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3 ,this.y + 1, -1);
