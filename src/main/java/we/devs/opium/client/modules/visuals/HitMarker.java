@@ -37,5 +37,6 @@ public class HitMarker extends Module {
             ticks=0;
 
         }
+        
     }
 }
