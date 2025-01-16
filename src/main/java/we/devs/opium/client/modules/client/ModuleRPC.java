@@ -26,8 +26,8 @@ public class ModuleRPC extends Module {
     private final ValueEnum SmallImg = new ValueEnum("Small Image", "Small Image", "Sets The Small RPC Image", ImgE.KenCarson);
 
     private final ValueCategory CustomModeCategory = new ValueCategory("Custom Mode", "Custom Mode Catagory");
-    ValueString line1 = getSetting("Line 1", "Text For Line 1", "Owning With Opium");
-    ValueString line2 = getSetting("Line 2", "Text For Line 2", "-----------------");
+    ValueString line1 = getSetting("Line 1", "Text For Line 1", "..");
+    ValueString line2 = getSetting("Line 2", "Text For Line 2", "..");
     ValueString line3 = getSetting("Big Image Text", "Text For Big Image", ".");
     ValueString line4 = getSetting("Small Image Text", "Text For Small Image", "Cxiy");
 
