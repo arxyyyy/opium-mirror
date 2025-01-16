@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class UUIDManager {
 
-    // Änderbare Liste der Spieler-UUIDs, denen das Cape angezeigt werden soll
+    // Changeable List of The Players that are allowed to get the cape
     public static final List<UUID> ALLOWED_UUIDS = new ArrayList<>(List.of(
             UUID.fromString("31350a69-f9d9-4a55-bd9f-e037eb8d64e5"), // VoidMatterRules
             UUID.fromString("4054adb3-4515-4ecc-81c2-7617f64741c2"),  // heedii
@@ -20,12 +20,12 @@ public class UUIDManager {
             UUID.fromString("968f9b1f-a1f3-4b1d-be9d-9f18056d57a9") // RoboticModules
     ));
 
-    // Methode, um die Authentifizierung zu prüfen
+    // Method to check the authentication
     public static boolean isAdded(UUID uuid) {
         return ALLOWED_UUIDS.contains(uuid);
     }
 
-    // Methode, um automatisch UUIDs Hinzuzufügen
+    // Method to automatically add playeruuid to the list
     public static void addPlayerUUID(UUID playerUUID) {
         if (playerUUID != null && !ALLOWED_UUIDS.contains(playerUUID)) {
             ALLOWED_UUIDS.add(playerUUID);
