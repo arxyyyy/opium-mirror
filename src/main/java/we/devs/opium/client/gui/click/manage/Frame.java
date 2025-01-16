@@ -51,7 +51,6 @@ public class Frame implements IMinecraft {
 
     public Frame(int x, int y) {
         this.tab = "HUD";
-        this.categoryIcon = Identifier.of("opium", "icons/" + tab.toLowerCase() + ".png");
         this.x = x;
         this.y = y;
         this.width = 100;
@@ -177,7 +176,7 @@ public class Frame implements IMinecraft {
             for (Component valueComponent : moduleComponent.getComponents()) {
                 if (!valueComponent.isVisible()) continue;
                 valueComponent.setOffset(offset);
-                offset += valueComponent instanceof ColorComponentTest && ((ColorComponentTest)valueComponent).isOpen() ? 190 : 14;
+                offset += valueComponent instanceof ColorComponentTest && ((ColorComponentTest)valueComponent).isOpen() ? 190 : 15;
             }
         }
         this.setHeight(offset);
