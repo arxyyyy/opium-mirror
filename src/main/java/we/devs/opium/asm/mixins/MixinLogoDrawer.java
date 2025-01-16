@@ -235,7 +235,7 @@ public class MixinLogoDrawer {
 
     @Unique
     private void drawText(DrawContext context, String text, int screenWidth) {
-        int x = 10;
+        int x = 2;
         int yPosition = 10;
         int color = 0xFF808080;
 
