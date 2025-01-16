@@ -53,7 +53,6 @@ public class ModuleManager implements IMinecraft, EventListener {
 
         //Exploit
         this.register(new ModuleHitboxDesync());
-        this.register(new ModuleIPCheck());
 
         //Miscellaneous
         this.register(new ModuleFakePlayer());

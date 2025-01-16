@@ -125,16 +125,17 @@ public class Opium implements ModInitializer {
             }
         });
 
-        long endTime = System.currentTimeMillis();
-        LOGGER.info("Initialization process for Opium has finished! Took {} ms", endTime - startTime);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!iconSet && MinecraftClient.getInstance().getWindow() != null) {
                 setWindowIcon();
-                iconSet = true; // Avoid resetting the icon repeatedly
+                iconSet = true;
             }
         });
+
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("Initialization process for Opium has finished! Took {} ms", endTime - startTime);
+
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            // Ensure the player exists before sending a message
             if (client.player != null) {
                 CONFIG_MANAGER.load();
                 LOGGER.info("Player {} joined the game. -> Loaded Configs", client.player.getName().getString());
