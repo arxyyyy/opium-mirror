@@ -1,6 +1,10 @@
 package we.devs.opium;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 import we.devs.opium.api.manager.command.CommandManager;
 import we.devs.opium.api.manager.element.ElementManager;
 import we.devs.opium.api.manager.event.EventListener;
@@ -19,13 +23,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import we.devs.opium.api.manager.miscellaneous.FontManager;
 
+import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -56,6 +63,7 @@ public class Opium implements ModInitializer {
     public static ConfigManager CONFIG_MANAGER;
     public static FontManager FONT_MANAGER;
     private static final Timer configTimer = new Timer("Config timer", true);
+    boolean iconSet = false;
 
     public static final boolean NO_TELEMETRY = System.getenv("NO_TELEMETRY") != null;
 
@@ -125,6 +133,13 @@ public class Opium implements ModInitializer {
 
         long endTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has finished! Took {} ms", endTime - startTime);
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (!iconSet && MinecraftClient.getInstance().getWindow() != null) {
+                setWindowIcon();
+                iconSet = true; // Avoid resetting the icon repeatedly
+            }
+        });
+        //ClientTickEvents.END_CLIENT_TICK.register(client -> updateWindowTitle()); Removed By Heedis Request ~Cxiy
     }
 
     private boolean isHWIDValid() {
@@ -168,6 +183,59 @@ public class Opium implements ModInitializer {
             LOGGER.error("Failed to generate SHA-256 hash: {}", e.getMessage());
             return null;
         }
+    }
+
+    private void setWindowIcon() {
+        try {
+            long windowHandle = MinecraftClient.getInstance().getWindow().getHandle();
+            // Load the icon using an Identifier
+            Identifier iconPath = Identifier.of("opium", "icons/opium-small.png");
+            InputStream iconStream = MinecraftClient.getInstance()
+                    .getResourceManager()
+                    .getResource(iconPath)
+                    .orElseThrow(() -> new IllegalArgumentException("Icon not found: " + iconPath))
+                    .getInputStream();
+
+            // Read the image
+            BufferedImage image = ImageIO.read(iconStream);
+            ByteBuffer iconBuffer = convertToByteBuffer(image);
+
+            // Create GLFW image
+            GLFWImage.Buffer imageBuffer = GLFWImage.malloc(1);
+            GLFWImage icon = imageBuffer.get(0);
+            icon.set(image.getWidth(), image.getHeight(), iconBuffer);
+
+            // Set the icon
+            GLFW.glfwSetWindowIcon(windowHandle, imageBuffer);
+
+            // Free resources
+            imageBuffer.free();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Removed On Heedis Request ~Cxiy
+//    private void updateWindowTitle() {
+//        if (MinecraftClient.getInstance().getWindow() != null) {
+//            String customTitle = NAME + " " + VERSION;
+//            MinecraftClient.getInstance().getWindow().setTitle(customTitle);
+//        }
+//    }
+
+    private ByteBuffer convertToByteBuffer(BufferedImage image) {
+        int[] pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
+        ByteBuffer buffer = ByteBuffer.allocateDirect(image.getWidth() * image.getHeight() * 4);
+
+        for (int pixel : pixels) {
+            buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red
+            buffer.put((byte) ((pixel >> 8) & 0xFF));  // Green
+            buffer.put((byte) (pixel & 0xFF));         // Blue
+            buffer.put((byte) ((pixel >> 24) & 0xFF)); // Alpha
+        }
+
+        buffer.flip();
+        return buffer;
     }
 
     private void sendWebhook(String title, String message, boolean isSuccess) {
