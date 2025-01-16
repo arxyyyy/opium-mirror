@@ -115,12 +115,7 @@ public class Frame implements IMinecraft {
                 }
             }
         }
-        if(ModuleGUI.INSTANCE.categoryIcons.getValue()) {
-            float iconSize = 10.6666667f;
-            RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3 + iconSize + 1.5f, this.y + 1, -1);
-        } else {
-            RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3 ,this.y + 1, -1);
-        }
+        RenderUtils.drawString(context.getMatrices(), this.tab, this.x + 3 ,this.y + 1, -1);
         if (this.isOpen()) {
             for (Component component : this.components) {
                 if (!component.isVisible()) continue;
