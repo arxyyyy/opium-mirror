@@ -7,9 +7,11 @@ import net.minecraft.util.Formatting;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.element.Element;
 import we.devs.opium.api.manager.element.RegisterElement;
+import we.devs.opium.api.manager.miscellaneous.UUIDManager;
 import we.devs.opium.api.utilities.RenderUtils;
 import we.devs.opium.client.events.EventRender2D;
 import we.devs.opium.client.modules.client.ModuleColor;
+import we.devs.opium.client.values.impl.ValueBoolean;
 import we.devs.opium.client.values.impl.ValueNumber;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @RegisterElement(name="PlayerList", tag="Player List", description="Shows the players that are near")
 public class ElementPlayerList extends Element {
     ValueNumber maxPlayers = new ValueNumber("MaxPlayers", "Max Players", "Max players that can be shown in the player list.", 8, 3, 20);
+    ValueBoolean opiumCheck = new ValueBoolean("Show Opium", "Show Opium", "Shows Opium members that are added in the UUID Manager", true);
 
     @Override
     public void onRender2D(EventRender2D event) {
@@ -36,20 +39,36 @@ public class ElementPlayerList extends Element {
         int i = 0;
         for (PlayerEntity player : players.stream()
                 .sorted(Comparator.comparing(p -> mc.player.distanceTo(p)))
-                .collect(Collectors.toList())) {
+                .toList()) {
             if (i + 1 > this.maxPlayers.getValue().intValue()) continue;
-            RenderUtils.drawString(
-                    new MatrixStack(),
-                    this.getHealthColor(player).toString() +
-                            (int) (player.getHealth() + player.getAbsorptionAmount()) + " " +
-                            (Opium.FRIEND_MANAGER.isFriend(player.getName().getString()) ? Formatting.AQUA.toString() : Formatting.RESET.toString()) +
-                            player.getName().getString() + " " +
-                            this.getDistanceColor(player).toString() +
-                            (int) mc.player.distanceTo(player),
-                    (int) this.frame.getX(),
-                    (int) (this.frame.getY() + (float) (10 * i)),
-                    ModuleColor.getColor().getRGB()
-            );
+            if (opiumCheck.getValue() && UUIDManager.isAdded(player.getUuid())) {
+                RenderUtils.drawString(
+                        new MatrixStack(),
+                        Formatting.WHITE.toString() + "[Opium] " + Formatting.RESET.toString() + this.getHealthColor(player).toString() +
+                                (int) (player.getHealth() + player.getAbsorptionAmount()) + " " +
+                                (Opium.FRIEND_MANAGER.isFriend(player.getName().getString()) ? Formatting.AQUA.toString() : Formatting.RESET.toString()) +
+                                player.getName().getString() + " " +
+                                this.getDistanceColor(player).toString() +
+                                (int) mc.player.distanceTo(player),
+                        (int) this.frame.getX(),
+                        (int) (this.frame.getY() + (float) (10 * i)),
+                        ModuleColor.getColor().getRGB()
+                );
+            } else {
+                RenderUtils.drawString(
+                        new MatrixStack(),
+                        this.getHealthColor(player).toString() +
+                                (int) (player.getHealth() + player.getAbsorptionAmount()) + " " +
+                                (Opium.FRIEND_MANAGER.isFriend(player.getName().getString()) ? Formatting.AQUA.toString() : Formatting.RESET.toString()) +
+                                player.getName().getString() + " " +
+                                this.getDistanceColor(player).toString() +
+                                (int) mc.player.distanceTo(player),
+                        (int) this.frame.getX(),
+                        (int) (this.frame.getY() + (float) (10 * i)),
+                        ModuleColor.getColor().getRGB()
+                );
+            }
+
             ++i;
         }
 
