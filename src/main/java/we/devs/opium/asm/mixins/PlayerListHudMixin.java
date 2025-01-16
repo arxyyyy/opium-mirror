@@ -23,9 +23,6 @@ public class PlayerListHudMixin {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.player == null || client.world == null) return;
 
-        // Ensure the current player's UUID is in the list
-        UUIDManager.addPlayerUUID(client.player.getUuid());
-
         // Get the player list
         Collection<PlayerListEntry> playerListEntries = Objects.requireNonNull(client.getNetworkHandler()).getPlayerList();
 

@@ -28,6 +28,7 @@ public class CommandManager implements IMinecraft, EventListener {
         this.register(new CommandPrefix());
         this.register(new CommandTag());
         this.register(new CommandToggle());
+        this.register(new CommandOpium());
     }
 
     public void register(Command command) {

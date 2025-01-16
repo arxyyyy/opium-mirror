@@ -8,6 +8,7 @@ import we.devs.opium.api.manager.event.EventManager;
 import we.devs.opium.api.manager.friend.FriendManager;
 import we.devs.opium.api.manager.miscellaneous.ConfigManager;
 import we.devs.opium.api.manager.miscellaneous.PlayerManager;
+import we.devs.opium.api.manager.miscellaneous.UUIDManager;
 import we.devs.opium.api.manager.module.ModuleManager;
 import we.devs.opium.api.utilities.TPSUtils;
 import we.devs.opium.client.events.EventTick;
@@ -23,7 +24,6 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -31,6 +31,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
+
+import static we.devs.opium.api.utilities.IMinecraft.mc;
 
 public class Opium implements ModInitializer {
 
@@ -78,7 +81,6 @@ public class Opium implements ModInitializer {
         ELEMENT_MANAGER = new ElementManager();
         PLAYER_MANAGER = new PlayerManager();
 
-
         LOGGER.info("Managers loaded successfully!");
 
         CLICK_GUI = new ClickGuiScreen();
@@ -89,6 +91,12 @@ public class Opium implements ModInitializer {
         CONFIG_MANAGER = new ConfigManager();
         CONFIG_MANAGER.load();
         CONFIG_MANAGER.attach();
+
+
+        UUID uuid = MinecraftClient.getInstance().getSession().getUuidOrNull();
+        UUIDManager.addPlayerUUID(uuid);
+        LOGGER.info("mc.player UUID Added to list");
+
 
         LOGGER.info("Configuration manager initialized!");
 
