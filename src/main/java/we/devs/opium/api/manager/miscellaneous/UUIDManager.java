@@ -16,6 +16,7 @@ public class UUIDManager {
             UUID.fromString("272f076c-ac2d-41ed-bffe-da7c304ca6ac"), // FinalMemory
             UUID.fromString("ae48f6e1-a0a2-40d7-8824-7055a317339d"), // goddanger
             UUID.fromString("de829190-b3ef-47c3-ac51-655e7248d20e"), // ItsBookxYT
+            UUID.fromString("65c7ba69-5015-44a5-a31c-6684a641387f"), // godmoduleu (goddanger alt)
             UUID.fromString("0010dc04-70e8-4a4a-a8ab-b593fe518ff8"), // Op1umClientLLC
             UUID.fromString("968f9b1f-a1f3-4b1d-be9d-9f18056d57a9") // RoboticModules
     ));
