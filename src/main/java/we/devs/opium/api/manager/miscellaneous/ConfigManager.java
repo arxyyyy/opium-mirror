@@ -87,7 +87,10 @@ public class ConfigManager {
                 File file = new File("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
                 file.delete();
             }
-            Files.createFile(Paths.get("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json"));
+            Opium.LOGGER.atInfo().log("Start Saving module " + module.getName() + " to file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
+            File file = new File("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
+            if (file.createNewFile()) Opium.LOGGER.atInfo().log("Successfully created file " + file.getName());
+            else Opium.LOGGER.atError().log("Failed to create file " + file.getName());
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject moduleJson = new JsonObject();
             JsonObject valueJson = new JsonObject();
