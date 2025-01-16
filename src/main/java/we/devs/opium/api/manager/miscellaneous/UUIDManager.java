@@ -17,7 +17,7 @@ public class UUIDManager {
         return ALLOWED_UUIDS.contains(uuid);
     }
 
-    // Methode, um automatisch die UUID von mc.player hinzuzufügen
+    // Methode, um automatisch UUIDs Hinzuzufügen
     public static void addPlayerUUID(UUID playerUUID) {
         if (playerUUID != null && !ALLOWED_UUIDS.contains(playerUUID)) {
             ALLOWED_UUIDS.add(playerUUID);
