@@ -13,6 +13,7 @@ public class ElementFPS extends Element {
     @Override
     public void onRender2D(EventRender2D event) {
         super.onRender2D(event);
+        if(RenderUtils.getFontRenderer() == null) return;
         if(ModuleFont.INSTANCE.customFonts.getValue()) {
             this.frame.setWidth(RenderUtils.getFontRenderer().getStringWidth(getText()));
             this.frame.setHeight(RenderUtils.getFontRenderer().getStringHeight(getText()));

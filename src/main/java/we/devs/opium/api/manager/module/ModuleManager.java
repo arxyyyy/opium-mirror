@@ -39,6 +39,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleParticles());
         this.register(new ModuleRotations());
         this.register(new ModuleRPC());
+        this.register(new ModuleAutoConfigSaving());
 
         //Combat
         this.register(new ModuleAutoArmor());
@@ -56,7 +57,6 @@ public class ModuleManager implements IMinecraft, EventListener {
 
         //Miscellaneous
         this.register(new ModuleFakePlayer());
-        this.register(new ModuleGhastFarmer());
         this.register(new ModuleMiddleClick());
         this.register(new ModuleWelcomer());
         this.register(new ModuleFakeDuelMessage());

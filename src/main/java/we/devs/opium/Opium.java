@@ -1,6 +1,7 @@
 package we.devs.opium;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -22,6 +23,7 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import we.devs.opium.api.manager.miscellaneous.FontManager;
+import we.devs.opium.client.modules.client.ModuleAutoConfigSaving;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
@@ -97,7 +99,6 @@ public class Opium implements ModInitializer {
         LOGGER.info("GUI screens loaded successfully!");
 
         CONFIG_MANAGER = new ConfigManager();
-        CONFIG_MANAGER.load();
         CONFIG_MANAGER.attach();
 
 
@@ -107,13 +108,6 @@ public class Opium implements ModInitializer {
 
 
         LOGGER.info("Configuration manager initialized!");
-
-        configTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                CONFIG_MANAGER.save();
-            }
-        }, 30000, 30000);
 
         new TPSUtils();
 
@@ -139,7 +133,17 @@ public class Opium implements ModInitializer {
                 iconSet = true; // Avoid resetting the icon repeatedly
             }
         });
-        //ClientTickEvents.END_CLIENT_TICK.register(client -> updateWindowTitle()); Removed By Heedis Request ~Cxiy
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            // Ensure the player exists before sending a message
+            if (client.player != null) {
+                CONFIG_MANAGER.load();
+                LOGGER.info("Player {} joined the game. -> Loaded Configs", client.player.getName().getString());
+            }
+        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            CONFIG_MANAGER.save();
+            LOGGER.info("Player Quit {} {}. -> Saved Configs", NAME, VERSION);
+        }));
     }
 
     private boolean isHWIDValid() {

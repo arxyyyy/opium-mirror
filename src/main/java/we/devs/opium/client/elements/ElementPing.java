@@ -13,6 +13,7 @@ import we.devs.opium.client.modules.client.ModuleFont;
 public class ElementPing extends Element {
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         super.onRender2D(event);
         if(ModuleFont.INSTANCE.customFonts.getValue()) {
             this.frame.setWidth(RenderUtils.getFontRenderer().getStringWidth(getText()));

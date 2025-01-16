@@ -1,10 +1,12 @@
 package we.devs.opium.api.manager.miscellaneous;
 
 import com.google.gson.*;
+import me.x150.renderer.font.FontRenderer;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.element.Element;
 import we.devs.opium.api.manager.friend.Friend;
 import we.devs.opium.api.manager.module.Module;
+import we.devs.opium.api.utilities.RenderUtils;
 import we.devs.opium.client.values.Value;
 import we.devs.opium.client.values.impl.*;
 
@@ -78,10 +80,11 @@ public class ConfigManager {
                 continue;
             }
             if (moduleJson.get("Name") == null || moduleJson.get("Status") == null) continue;
+            Opium.LOGGER.atInfo().log(module.getName());
             if (moduleJson.get("Status").getAsBoolean()) {
                 module.enable(false);
-                Opium.LOGGER.atInfo().log("Module " + module.getName() + " Is " + moduleJson.get("Status").getAsBoolean());
-            }
+            } else module.disable(false);
+            Opium.LOGGER.atInfo().log(module.isToggled() + "");
             JsonObject valueJson = moduleJson.get("Values").getAsJsonObject();
             this.loadValues(valueJson, module.getValues());
             stream.close();
@@ -116,29 +119,34 @@ public class ConfigManager {
 
     public void loadElements() throws IOException {
         for (Element element : Opium.ELEMENT_MANAGER.getElements()) {
-            JsonObject elementJson;
-            if (!Files.exists(Paths.get("Opium/Elements/" + element.getName() + ".json"))) continue;
-            InputStream stream = Files.newInputStream(Paths.get("Opium/Elements/" + element.getName() + ".json"));
             try {
-                elementJson = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
-            } catch (IllegalStateException exception) {
-                exception.printStackTrace();
-                Opium.LOGGER.error(element.getName());
-                continue;
+                JsonObject elementJson;
+                if (!Files.exists(Paths.get("Opium/Elements/" + element.getName() + ".json"))) continue;
+                InputStream stream = Files.newInputStream(Paths.get("Opium/Elements/" + element.getName() + ".json"));
+                try {
+                    elementJson = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
+                } catch (IllegalStateException exception) {
+                    exception.printStackTrace();
+                    Opium.LOGGER.error(element.getName());
+                    continue;
+                }
+                if (elementJson.get("Name") == null || elementJson.get("Status") == null || elementJson.get("Positions") == null)
+                    continue;
+                if (elementJson.get("Status").getAsBoolean()) {
+                    element.enable(false);
+                } else element.disable(false);
+                JsonObject valueJson = elementJson.get("Values").getAsJsonObject();
+                JsonObject positionJson = elementJson.get("Positions").getAsJsonObject();
+                this.loadValues(valueJson, element.getValues());
+                if (positionJson.get("X") != null && positionJson.get("Y") != null) {
+                    element.frame.setX(positionJson.get("X").getAsFloat());
+                    element.frame.setY(positionJson.get("Y").getAsFloat());
+                }
+                stream.close();
+            } catch (IOException | JsonIOException | JsonSyntaxException e) {
+                Opium.LOGGER.error("Error In Element {} : {}", element.getName(), e);
+                throw new RuntimeException(e);
             }
-            if (elementJson.get("Name") == null || elementJson.get("Status") == null || elementJson.get("Positions") == null)
-                continue;
-            if (elementJson.get("Status").getAsBoolean()) {
-                element.enable(false);
-            }
-            JsonObject valueJson = elementJson.get("Values").getAsJsonObject();
-            JsonObject positionJson = elementJson.get("Positions").getAsJsonObject();
-            this.loadValues(valueJson, element.getValues());
-            if (positionJson.get("X") != null && positionJson.get("Y") != null) {
-                element.frame.setX(positionJson.get("X").getAsFloat());
-                element.frame.setY(positionJson.get("Y").getAsFloat());
-            }
-            stream.close();
         }
     }
 
