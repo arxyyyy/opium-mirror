@@ -12,6 +12,7 @@ import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -32,17 +33,22 @@ public class ConfigManager {
         if(saving) return;
         saving = true;
         try {
-            if (!Files.exists(Paths.get("Opium/"))) {
-                Files.createDirectories(Paths.get("Opium/"));
+            Path path = Paths.get("Opium/");
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+                Opium.LOGGER.atInfo().log("Created Opium directory");
             }
-            if (!Files.exists(Paths.get("Opium/Modules/"))) {
-                Files.createDirectories(Paths.get("Opium/Modules/"));
+            if (!Files.exists(Paths.get(path + "Modules/"))) {
+                Files.createDirectories(Paths.get(path + "/Modules/"));
+                Opium.LOGGER.atInfo().log("Created Modules directory");
             }
-            if (!Files.exists(Paths.get("Opium/Elements/"))) {
-                Files.createDirectories(Paths.get("Opium/Elements/"));
+            if (!Files.exists(Paths.get(path + "Elements/"))) {
+                Files.createDirectories(Paths.get(path + "/Elements/"));
+                Opium.LOGGER.atInfo().log("Created Elements directory");
             }
-            if (!Files.exists(Paths.get("Opium/Client/"))) {
-                Files.createDirectories(Paths.get("Opium/Client/"));
+            if (!Files.exists(Paths.get(path + "Client/"))) {
+                Files.createDirectories(Paths.get(path + "/Client/"));
+                Opium.LOGGER.atInfo().log("Created Client directory");
             }
             this.saveModules();
             this.saveElements();
@@ -74,6 +80,7 @@ public class ConfigManager {
             if (moduleJson.get("Name") == null || moduleJson.get("Status") == null) continue;
             if (moduleJson.get("Status").getAsBoolean()) {
                 module.enable(false);
+                Opium.LOGGER.atInfo().log("Module " + module.getName() + " Is " + moduleJson.get("Status").getAsBoolean());
             }
             JsonObject valueJson = moduleJson.get("Values").getAsJsonObject();
             this.loadValues(valueJson, module.getValues());
@@ -83,14 +90,16 @@ public class ConfigManager {
 
     public void saveModules() throws IOException {
         for (Module module : Opium.MODULE_MANAGER.getModules()) {
-            if (Files.exists(Paths.get("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json"))) {
-                File file = new File("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
-                file.delete();
+            if (!Files.exists(Paths.get("Opium/Modules/" + module.getCategory().getName()))) {
+                Files.createDirectories(Paths.get("Opium/Modules/" + module.getCategory().getName()));
+            } else {
+                Files.deleteIfExists(Paths.get("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json"));
+                Opium.LOGGER.atInfo().log("Deleted module " + module.getName() + " from file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
             }
+            Files.createFile(Paths.get("Opium/Modules/"+ module.getCategory().getName() + "/" + module.getName() + ".json"));
+            Opium.LOGGER.atInfo().log("Created module " + module.getName() + " file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
+
             Opium.LOGGER.atInfo().log("Start Saving module " + module.getName() + " to file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
-            File file = new File("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
-            if (file.createNewFile()) Opium.LOGGER.atInfo().log("Successfully created file " + file.getName());
-            else Opium.LOGGER.atError().log("Failed to create file " + file.getName());
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject moduleJson = new JsonObject();
             JsonObject valueJson = new JsonObject();
@@ -101,6 +110,7 @@ public class ConfigManager {
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json"), StandardCharsets.UTF_8);
             writer.write(gson.toJson(new JsonParser().parse(moduleJson.toString())));
             writer.close();
+            Opium.LOGGER.atInfo().log("Successfully saved module " + module.getName() + " to file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
         }
     }
 
@@ -138,7 +148,6 @@ public class ConfigManager {
                 File file = new File("Opium/Elements/" + element.getName() + ".json");
                 file.delete();
             }
-            Files.createFile(Paths.get("Opium/Elements/" + element.getName() + ".json"));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject elementJson = new JsonObject();
             JsonObject valueJson = new JsonObject();
