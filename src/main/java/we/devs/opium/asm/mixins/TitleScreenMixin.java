@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.sound.MusicTracker;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -52,29 +53,37 @@ public abstract class TitleScreenMixin implements IMinecraft {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;renderPanoramaBackground(Lnet/minecraft/client/gui/DrawContext;F)V", shift = At.Shift.AFTER))
     public void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         // check if the current song is still playing
+        float musicVolume = mc.options.getSoundVolume(SoundCategory.MUSIC);
+        float masterVolume = mc.options.getSoundVolume(SoundCategory.MASTER);
         SoundInstance currentSong = MusicStateManager.getCurrentSongInstance();
         if (currentSong != null && !mc.getSoundManager().isPlaying(currentSong)) {
             playNextTrack(); // Start the next track
         }
+        int screenWidth = mc.getWindow().getScaledWidth();
+        int screenHeight = mc.getWindow().getScaledHeight();
+        int x = 2; // left lower corner
+        int y = screenHeight - 20;
+        String baseText = "Playing: ";
+        assert currentSong != null;
+        String trackName = currentSong.getId().getPath().replaceAll("_", " ");
+        String fullText = baseText + trackName; // Whole Text "Playing: <Trackname>"
 
         // Draw the current track information on the left lower corner
-        if (currentSong != null) {
-            String baseText = "Playing: ";
-            String trackName = currentSong.getId().getPath().replaceAll("_", " ");
-            String fullText = baseText + trackName; // Whole Text "Playing: <Trackname>"
-            int screenWidth = mc.getWindow().getScaledWidth();
-            int screenHeight = mc.getWindow().getScaledHeight();
-            int x = 2; // left lower corner
-            int y = screenHeight - 20;
+        if (musicVolume > 0.0F && masterVolume > 0.0F) {
 
             // Draw the base text
             context.drawTextWithShadow(mc.textRenderer, fullText, x, y, 0xFF808080);
 
-            // add Glint effect to the text
+        } else {
+            context.drawTextWithShadow(mc.textRenderer, "Not Playing Music At The Moment", x, y, 0xFF808080);
+        }
+
+        // omg fixed a bug here ~cxiy
+
+        if (musicVolume > 0.0F && masterVolume > 0.0F) {
             long time = System.currentTimeMillis();
             int charIndex = (int) ((time / 100) % fullText.length());
             int glintColor = 0xFFFFFF;
-
             for (int i = 0; i < 4; i++) { // highlight 4 characters
                 int currentIndex = (charIndex + i) % fullText.length();
                 int glintCharX = x + mc.textRenderer.getWidth(fullText.substring(0, currentIndex));
