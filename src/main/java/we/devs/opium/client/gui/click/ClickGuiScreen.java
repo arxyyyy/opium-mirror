@@ -36,28 +36,38 @@ public class ClickGuiScreen extends Screen implements EventListener {
         context.getMatrices().push();
         context.getMatrices().translate(0, 0, 0.1);
         RenderUtils.setDrawContext(context);
+
         for (Frame frame : this.frames) {
             frame.render(context, mouseX, mouseY, delta);
         }
+
+        String moduleDescription = null;
+
         for (Frame frame : this.frames) {
             for (Component c : frame.getComponents()) {
                 if (c instanceof ModuleComponent component) {
                     if (component.isHovering(mouseX, mouseY) && frame.isOpen() && !component.getModule().getDescription().isEmpty()) {
-                        context.getMatrices().translate(0, 0, -0.1);
-                        RenderUtils.drawRect(context.getMatrices(), mouseX + 5, mouseY - 2,
-                                mouseX + MinecraftClient.getInstance().textRenderer.getWidth(component.getModule().getDescription()) + 7.0f,
-                                mouseY + 11, new Color(40, 40, 40));
-                        RenderUtils.drawOutline(context.getMatrices(), mouseX + 5, mouseY - 2,
-                                mouseX + MinecraftClient.getInstance().textRenderer.getWidth(component.getModule().getDescription()) + 7.0f,
-                                mouseY + 11, 1.0f, ModuleColor.getColor());
-
-                        RenderUtils.drawString(context.getMatrices(),
-                                component.getModule().getDescription(), mouseX + 7, mouseY, -1);
-                        context.getMatrices().translate(0, 0, 0.1);
+                        moduleDescription = component.getModule().getDescription();
                     }
                 }
             }
         }
+
+        if (moduleDescription != null) {
+            int windowWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
+            int windowHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
+            int textWidth = MinecraftClient.getInstance().textRenderer.getWidth(moduleDescription);
+
+            // Set the description position to bottom-left
+            int x = 5; // Margin from the left
+            int y = windowHeight - 15; // Margin from bottom
+
+            RenderUtils.drawRect(context.getMatrices(), x - 2, y - 2, x + textWidth + 5, y + 10, new Color(40, 40, 40));
+            RenderUtils.drawOutline(context.getMatrices(), x - 2, y - 2, x + textWidth + 5, y + 10, 1.0f, ModuleColor.getColor());
+
+            RenderUtils.drawString(context.getMatrices(), moduleDescription, x, y, -1);
+        }
+
         context.getMatrices().translate(0, 0, -0.1);
         context.getMatrices().pop();
     }
