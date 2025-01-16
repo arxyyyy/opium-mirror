@@ -30,7 +30,7 @@ public abstract class AbstractClientPlayerEntityMixin {
 
     @ModifyReturnValue(method = "getSkinTextures", at = @At(value = "RETURN"))
     SkinTextures getSkinTextures(SkinTextures original) {
-        if(this.getPlayerListEntry() != null && (UUIDManager.hasCustomCape(this.getPlayerListEntry().getProfile().getId()) || this.equals(mc.player))) {
+        if(this.getPlayerListEntry() != null && (UUIDManager.isAdded(this.getPlayerListEntry().getProfile().getId()) || this.equals(mc.player))) {
             return getModifiedSkinTexture(original, CAPE);
         }
         return original;

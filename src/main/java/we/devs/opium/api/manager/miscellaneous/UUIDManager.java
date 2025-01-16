@@ -13,7 +13,7 @@ public class UUIDManager {
     ));
 
     // Methode, um die Authentifizierung zu prüfen
-    public static boolean hasCustomCape(UUID uuid) {
+    public static boolean isAdded(UUID uuid) {
         return ALLOWED_UUIDS.contains(uuid);
     }
 
@@ -23,4 +23,5 @@ public class UUIDManager {
             ALLOWED_UUIDS.add(playerUUID);
         }
     }
+
 }

@@ -20,6 +20,7 @@
     "MixinLogoDrawer",
     "MixinSplashScreen",
     "MusicTickerMixin",
+    "PlayerListHudMixin",
     "TitleScreenMixin",
     "TitleScreenSplashMixin",
     "WorldRendererMixin"
