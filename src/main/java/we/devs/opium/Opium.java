@@ -100,6 +100,7 @@ public class Opium implements ModInitializer {
         MODULE_MANAGER = new ModuleManager();
         ELEMENT_MANAGER = new ElementManager();
         PLAYER_MANAGER = new PlayerManager();
+        CONFIG_MANAGER = new ConfigManager();
 
         LOGGER.info("Managers loaded successfully!");
 
@@ -108,15 +109,8 @@ public class Opium implements ModInitializer {
 
         LOGGER.info("GUI screens loaded successfully!");
 
-        CONFIG_MANAGER = new ConfigManager();
-
-
-        UUID uuid = MinecraftClient.getInstance().getSession().getUuidOrNull();
-        UUIDManager.addPlayerUUID(uuid);
-        LOGGER.info("mc.player UUID Added to list");
-
-
-        LOGGER.info("Configuration manager initialized!");
+        UUIDManager.updateUUID();
+        LOGGER.info("Updated uuids!");
 
         new TPSUtils();
 
