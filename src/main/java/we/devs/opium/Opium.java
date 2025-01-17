@@ -17,6 +17,7 @@ import we.devs.opium.api.manager.miscellaneous.PlayerManager;
 import we.devs.opium.api.manager.miscellaneous.UUIDManager;
 import we.devs.opium.api.manager.module.ModuleManager;
 import we.devs.opium.api.utilities.TPSUtils;
+import we.devs.opium.api.utilities.dump.AntiDump;
 import we.devs.opium.client.events.EventTick;
 import we.devs.opium.client.gui.click.ClickGuiScreen;
 import we.devs.opium.client.gui.hud.HudEditorScreen;
@@ -24,7 +25,6 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import we.devs.opium.api.manager.miscellaneous.FontManager;
-import we.devs.opium.client.modules.client.ModuleAutoConfigSaving;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
@@ -34,14 +34,10 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
 
 import static we.devs.opium.api.utilities.IMinecraft.mc;
 
@@ -65,7 +61,7 @@ public class Opium implements ModInitializer {
     public static HudEditorScreen HUD_EDITOR;
     public static ConfigManager CONFIG_MANAGER;
     public static FontManager FONT_MANAGER;
-    private static final Timer configTimer = new Timer("Config timer", true);
+    public static final Timer TIMER = new Timer("Timer", true);
     boolean iconSet = false;
 
     public static final boolean NO_TELEMETRY = System.getenv("NO_TELEMETRY") != null;
@@ -132,6 +128,8 @@ public class Opium implements ModInitializer {
                 }
             }
         });
+
+        TIMER.scheduleAtFixedRate(AntiDump.get(), 50, 50);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!iconSet && MinecraftClient.getInstance().getWindow() != null) {
@@ -315,6 +313,4 @@ public class Opium implements ModInitializer {
         MinecraftClient.getInstance().scheduleStop();
         throw new RuntimeException(message);
     }
-
-
 }
