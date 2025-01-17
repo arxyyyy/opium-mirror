@@ -5,17 +5,36 @@ import we.devs.opium.api.manager.command.Command;
 import we.devs.opium.api.manager.command.RegisterCommand;
 import we.devs.opium.api.utilities.ChatUtils;
 
-@RegisterCommand(name="config", description="Let's you save or load your configuration without restarting the game.", syntax="config <save|load>", aliases={"configuration", "cfg"})
+import java.io.IOException;
+
+@RegisterCommand(name="config", description="Let's you save or load your configuration without restarting the game.", syntax="config <save|load|delete> <name>", aliases={"configuration", "cfg"})
 public class CommandConfig extends Command {
     @Override
     public void onCommand(String[] args) {
-        if (args.length == 1) {
+        if (args.length == 2) {
             if (args[0].equalsIgnoreCase("load")) {
-                Opium.CONFIG_MANAGER.load();
-                ChatUtils.sendMessage("Successfully loaded configuration.", "Config");
+                if (Opium.CONFIG_MANAGER.getAvailableConfigs().contains(args[1])) {
+                    try {
+                        Opium.CONFIG_MANAGER.loadConfig(args[1]);
+                        ChatUtils.sendMessage("Successfully loaded configuration [" + args[1] + "]!", "Config");
+                    } catch (IOException e) {
+                        ChatUtils.sendMessage("Could not load configuration [" + args[1] + "] :(", "Config");
+                    }
+                } else {
+                    ChatUtils.sendMessage("Could not find configuration file [" + args[1] + "] :(", "Config");
+                }
             } else if (args[0].equalsIgnoreCase("save")) {
-                Opium.CONFIG_MANAGER.save();
-                ChatUtils.sendMessage("Successfully saved configuration.", "Config");
+                try {
+                    Opium.CONFIG_MANAGER.saveConfig(args[1]);
+                    ChatUtils.sendMessage("Successfully saved configuration " + args[1] + "!", "Config");
+                } catch (IOException e) {
+                    ChatUtils.sendMessage("Could not save configuration [" + args[1] + "] :(", "Config");
+                }
+            } else if (args[0].equalsIgnoreCase("delete")) {
+                if (Opium.CONFIG_MANAGER.getAvailableConfigs().contains(args[1])) {
+                    Opium.CONFIG_MANAGER.delete(args[1]);
+                    ChatUtils.sendMessage("Successfully Deleted " + args[1] + "!", "Config");
+                } else ChatUtils.sendMessage("Could not find configuration file [" + args[1] + "] :(", "Config");
             } else {
                 this.sendSyntax();
             }

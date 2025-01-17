@@ -1,12 +1,10 @@
 package we.devs.opium.api.manager.miscellaneous;
 
 import com.google.gson.*;
-import me.x150.renderer.font.FontRenderer;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.element.Element;
 import we.devs.opium.api.manager.friend.Friend;
 import we.devs.opium.api.manager.module.Module;
-import we.devs.opium.api.utilities.RenderUtils;
 import we.devs.opium.client.values.Value;
 import we.devs.opium.client.values.impl.*;
 
@@ -17,161 +15,262 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Optional;
 
 public class ConfigManager {
-    public void load() {
+    private static final String CONFIG_DIRECTORY = "Opium/Configs/";
+
+
+    public void load(String name) {
         try {
-            this.loadModules();
-            this.loadElements();
-            this.loadPrefix();
-            this.loadFriends();
+            this.loadConfig(name);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
 
+    public void delete(String name) {
+        try {
+            Files.deleteIfExists(Paths.get(CONFIG_DIRECTORY, name + ".json"));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public ArrayList<Object> getAvailableConfigs() {
+        ArrayList<Object> configNames = new ArrayList<>();
+
+        // Define the directory where configs are stored
+        File configDirectory = new File(CONFIG_DIRECTORY);
+
+        // Check if the directory exists and is a directory
+        if (configDirectory.exists() && configDirectory.isDirectory()) {
+            // Get all files in the directory
+            File[] files = configDirectory.listFiles((dir, name) -> name.endsWith(".json"));
+
+            if (files != null) {
+                // Loop through all files and add their names (without the ".json" extension)
+                for (File file : files) {
+                    String fileName = file.getName();
+                    // Remove the ".json" extension
+                    String configName = fileName.substring(0, fileName.lastIndexOf("."));
+                    configNames.add(configName);
+                }
+            }
+        } else {
+            Opium.LOGGER.error("Config directory does not exist: " + CONFIG_DIRECTORY);
+        }
+
+        return configNames;
+    }
+
     boolean saving = false;
-    public void save() {
+    public void save(String name) {
         if(saving) return;
         saving = true;
         try {
-            Path path = Paths.get("Opium/");
+            Path path = Path.of(CONFIG_DIRECTORY);
             if (!Files.exists(path)) {
                 Files.createDirectories(path);
                 Opium.LOGGER.atInfo().log("Created Opium directory");
             }
-            if (!Files.exists(Paths.get(path + "Modules/"))) {
-                Files.createDirectories(Paths.get(path + "/Modules/"));
-                Opium.LOGGER.atInfo().log("Created Modules directory");
-            }
-            if (!Files.exists(Paths.get(path + "Elements/"))) {
-                Files.createDirectories(Paths.get(path + "/Elements/"));
-                Opium.LOGGER.atInfo().log("Created Elements directory");
-            }
-            if (!Files.exists(Paths.get(path + "Client/"))) {
-                Files.createDirectories(Paths.get(path + "/Client/"));
-                Opium.LOGGER.atInfo().log("Created Client directory");
-            }
-            this.saveModules();
-            this.saveElements();
-            this.savePrefix();
-            this.saveFriends();
+            this.saveConfig(name);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
         saving = false;
     }
 
-    public void attach() {
-        Runtime.getRuntime().addShutdownHook(new SaveThread());
+
+    private Optional<Module> findModuleByName(String moduleName) {
+        // Directly call stream() on the List
+        return Opium.MODULE_MANAGER.getModules()
+                .stream()
+                .filter(module -> module.getName().equalsIgnoreCase(moduleName))
+                .findFirst();
     }
 
-    public void loadModules() throws IOException {
-        for (Module module : Opium.MODULE_MANAGER.getModules()) {
-            JsonObject moduleJson;
-            if (!Files.exists(Paths.get("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json")))
-                continue;
-            InputStream stream = Files.newInputStream(Paths.get("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json"));
-            try {
-                moduleJson = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
-            } catch (IllegalStateException exception) {
-                exception.printStackTrace();
-                Opium.LOGGER.error(module.getName());
-                continue;
-            }
-            if (moduleJson.get("Name") == null || moduleJson.get("Status") == null) continue;
-            Opium.LOGGER.atInfo().log(module.getName());
-            if (moduleJson.get("Status").getAsBoolean()) {
-                module.enable(false);
-            } else module.disable(false);
-            Opium.LOGGER.atInfo().log(module.isToggled() + "");
-            JsonObject valueJson = moduleJson.get("Values").getAsJsonObject();
-            this.loadValues(valueJson, module.getValues());
-            stream.close();
+    public void saveConfig(String configName) throws IOException {
+        if (configName == null || configName.isEmpty()) {
+            throw new IllegalArgumentException("Config name cannot be null or empty!");
         }
-    }
 
-    public void saveModules() throws IOException {
+        // Ensure the config directory exists
+        Files.createDirectories(Paths.get(CONFIG_DIRECTORY));
+
+        // Construct the file path
+        Path configFilePath = Paths.get(CONFIG_DIRECTORY, configName + ".json");
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonObject rootJson = new JsonObject();
+
+        // Save Modules
+        JsonObject modulesJson = new JsonObject();
         for (Module module : Opium.MODULE_MANAGER.getModules()) {
-            if (!Files.exists(Paths.get("Opium/Modules/" + module.getCategory().getName()))) {
-                Files.createDirectories(Paths.get("Opium/Modules/" + module.getCategory().getName()));
-            } else {
-                Files.deleteIfExists(Paths.get("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json"));
-                Opium.LOGGER.atInfo().log("Deleted module " + module.getName() + " from file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
-            }
-            Files.createFile(Paths.get("Opium/Modules/"+ module.getCategory().getName() + "/" + module.getName() + ".json"));
-            Opium.LOGGER.atInfo().log("Created module " + module.getName() + " file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
-
-            Opium.LOGGER.atInfo().log("Start Saving module " + module.getName() + " to file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject moduleJson = new JsonObject();
             JsonObject valueJson = new JsonObject();
-            moduleJson.add("Name", new JsonPrimitive(module.getName()));
-            moduleJson.add("Status", new JsonPrimitive(module.isToggled()));
-            this.saveValues(valueJson, module.getValues());
+
+            moduleJson.addProperty("Name", module.getName());
+            moduleJson.addProperty("Status", module.isToggled());
+            this.saveValues(valueJson, module.getValues());  // Using your existing saveValues
             moduleJson.add("Values", valueJson);
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json"), StandardCharsets.UTF_8);
-            writer.write(gson.toJson(new JsonParser().parse(moduleJson.toString())));
-            writer.close();
-            Opium.LOGGER.atInfo().log("Successfully saved module " + module.getName() + " to file at " + "Opium/Modules/" + module.getCategory().getName() + "/" + module.getName() + ".json");
-        }
-    }
 
-    public void loadElements() throws IOException {
-        for (Element element : Opium.ELEMENT_MANAGER.getElements()) {
-            try {
-                JsonObject elementJson;
-                if (!Files.exists(Paths.get("Opium/Elements/" + element.getName() + ".json"))) continue;
-                InputStream stream = Files.newInputStream(Paths.get("Opium/Elements/" + element.getName() + ".json"));
-                try {
-                    elementJson = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
-                } catch (IllegalStateException exception) {
-                    exception.printStackTrace();
-                    Opium.LOGGER.error(element.getName());
-                    continue;
-                }
-                if (elementJson.get("Name") == null || elementJson.get("Status") == null || elementJson.get("Positions") == null)
-                    continue;
-                if (elementJson.get("Status").getAsBoolean()) {
-                    element.enable(false);
-                } else element.disable(false);
-                JsonObject valueJson = elementJson.get("Values").getAsJsonObject();
-                JsonObject positionJson = elementJson.get("Positions").getAsJsonObject();
-                this.loadValues(valueJson, element.getValues());
-                if (positionJson.get("X") != null && positionJson.get("Y") != null) {
-                    element.frame.setX(positionJson.get("X").getAsFloat());
-                    element.frame.setY(positionJson.get("Y").getAsFloat());
-                }
-                stream.close();
-            } catch (IOException | JsonIOException | JsonSyntaxException e) {
-                Opium.LOGGER.error("Error In Element {} : {}", element.getName(), e);
-                throw new RuntimeException(e);
-            }
+            modulesJson.add(module.getName(), moduleJson);
         }
-    }
+        rootJson.add("Modules", modulesJson);
 
-    public void saveElements() throws IOException {
+        // Save Elements
+        JsonObject elementsJson = new JsonObject();
         for (Element element : Opium.ELEMENT_MANAGER.getElements()) {
-            if (Files.exists(Paths.get("Opium/Elements/" + element.getName() + ".json"))) {
-                File file = new File("Opium/Elements/" + element.getName() + ".json");
-                file.delete();
-            }
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonObject elementJson = new JsonObject();
             JsonObject valueJson = new JsonObject();
             JsonObject positionJson = new JsonObject();
-            elementJson.add("Name", new JsonPrimitive(element.getName()));
-            elementJson.add("Status", new JsonPrimitive(element.isToggled()));
-            this.saveValues(valueJson, element.getValues());
-            positionJson.add("X", new JsonPrimitive(element.frame.getX()));
-            positionJson.add("Y", new JsonPrimitive(element.frame.getY()));
+
+            elementJson.addProperty("Name", element.getName());
+            elementJson.addProperty("Status", element.isToggled());
+            this.saveValues(valueJson, element.getValues());  // Using your existing saveValues
+
+            positionJson.addProperty("X", element.frame.getX());
+            positionJson.addProperty("Y", element.frame.getY());
             elementJson.add("Values", valueJson);
             elementJson.add("Positions", positionJson);
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("Opium/Elements/" + element.getName() + ".json"), StandardCharsets.UTF_8);
-            writer.write(gson.toJson(new JsonParser().parse(elementJson.toString())));
-            writer.close();
+
+            elementsJson.add(element.getName(), elementJson);
         }
+        rootJson.add("Elements", elementsJson);
+
+        // Save Client Data
+        JsonObject clientJson = new JsonObject();
+        clientJson.addProperty("Prefix", Opium.COMMAND_MANAGER.getPrefix());
+
+        JsonArray friendArray = new JsonArray();
+        for (Friend friend : Opium.FRIEND_MANAGER.getFriends()) {
+            friendArray.add(friend.getName());
+        }
+        clientJson.add("Friends", friendArray);
+
+        rootJson.add("Client", clientJson);
+
+        // Write to the file
+        try (Writer writer = new OutputStreamWriter(Files.newOutputStream(configFilePath), StandardCharsets.UTF_8)) {
+            writer.write(gson.toJson(rootJson));
+        }
+
+        Opium.LOGGER.info("Config saved as: " + configName);
     }
+
+
+    public void loadConfig(String configName) throws IOException {
+        if (configName == null || configName.isEmpty()) {
+            throw new IllegalArgumentException("Config name cannot be null or empty!");
+        }
+
+        Path configFilePath = Paths.get(CONFIG_DIRECTORY, configName + ".json");
+
+        if (!Files.exists(configFilePath)) {
+            Opium.LOGGER.error("Config not found: " + configName);
+            return;
+        }
+
+        JsonObject rootJson;
+        try (InputStream stream = Files.newInputStream(configFilePath);
+             InputStreamReader reader = new InputStreamReader(stream)) {
+            rootJson = JsonParser.parseReader(reader).getAsJsonObject();
+        } catch (IllegalStateException | JsonSyntaxException exception) {
+            exception.printStackTrace();
+            Opium.LOGGER.error("Failed to load config: " + configName);
+            return;
+        }
+
+        // Load Modules
+        if (rootJson.has("Modules")) {
+            JsonObject modulesJson = rootJson.getAsJsonObject("Modules");
+            for (Map.Entry<String, JsonElement> entry : modulesJson.entrySet()) {
+                String moduleName = entry.getKey();
+                JsonObject moduleJson = entry.getValue().getAsJsonObject();
+
+                Optional<Module> optionalModule = findModuleByName(moduleName);
+                if (optionalModule.isPresent()) {
+                    Module module = optionalModule.get();
+                    if (moduleJson.has("Status")) {
+                        boolean status = moduleJson.get("Status").getAsBoolean();
+                        if (status) {
+                            module.enable(false);
+                        } else {
+                            module.disable(false);
+                        }
+                    }
+                    if (moduleJson.has("Values")) {
+                        JsonObject valueJson = moduleJson.getAsJsonObject("Values");
+                        this.loadValues(valueJson, module.getValues());  // Using your existing loadValues
+                    }
+                }
+            }
+        }
+
+        // Load Elements
+        if (rootJson.has("Elements")) {
+            JsonObject elementsJson = rootJson.getAsJsonObject("Elements");
+            for (Map.Entry<String, JsonElement> entry : elementsJson.entrySet()) {
+                String elementName = entry.getKey();
+                JsonObject elementJson = entry.getValue().getAsJsonObject();
+
+                Optional<Element> optionalElement = findElementByName(elementName);
+                if (optionalElement.isPresent()) {
+                    Element element = optionalElement.get();
+                    if (elementJson.has("Status")) {
+                        boolean status = elementJson.get("Status").getAsBoolean();
+                        if (status) {
+                            element.enable(false);
+                        } else {
+                            element.disable(false);
+                        }
+                    }
+                    if (elementJson.has("Values")) {
+                        JsonObject valueJson = elementJson.getAsJsonObject("Values");
+                        this.loadValues(valueJson, element.getValues());  // Using your existing loadValues
+                    }
+                    if (elementJson.has("Positions")) {
+                        JsonObject positionJson = elementJson.getAsJsonObject("Positions");
+                        if (positionJson.has("X") && positionJson.has("Y")) {
+                            element.frame.setX(positionJson.get("X").getAsFloat());
+                            element.frame.setY(positionJson.get("Y").getAsFloat());
+                        }
+                    }
+                }
+            }
+        }
+
+        // Load Client Data
+        if (rootJson.has("Client")) {
+            JsonObject clientJson = rootJson.getAsJsonObject("Client");
+
+            // Load Prefix
+            if (clientJson.has("Prefix")) {
+                Opium.COMMAND_MANAGER.setPrefix(clientJson.get("Prefix").getAsString());
+            }
+
+            // Load Friends
+            if (clientJson.has("Friends")) {
+                JsonArray friendArray = clientJson.getAsJsonArray("Friends");
+                friendArray.forEach(friend -> Opium.FRIEND_MANAGER.addFriend(friend.getAsString()));
+            }
+        }
+
+        Opium.LOGGER.info("Config loaded: " + configName);
+    }
+
+
+
+    private Optional<Element> findElementByName(String elementName) {
+        // Directly use the stream() method if getElements() returns a List or ArrayList
+        return Opium.ELEMENT_MANAGER.getElements()
+                .stream()
+                .filter(element -> element.getName().equalsIgnoreCase(elementName))
+                .findFirst();
+    }
+
 
     private void loadValues(JsonObject valueJson, ArrayList<Value> values) {
         for (Value value : values) {
@@ -249,70 +348,4 @@ public class ConfigManager {
         }
     }
 
-    public void loadPrefix() throws IOException {
-        if (!Files.exists(Paths.get("Opium/Client/Prefix.json"))) {
-            return;
-        }
-        InputStream stream = Files.newInputStream(Paths.get("Opium/Client/Prefix.json"));
-        JsonObject prefixJson = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
-        if (prefixJson.get("Prefix") == null) {
-            return;
-        }
-        Opium.COMMAND_MANAGER.setPrefix(prefixJson.get("Prefix").getAsString());
-        stream.close();
-    }
-
-    public void savePrefix() throws IOException {
-        if (Files.exists(Paths.get("Opium/Client/Prefix.json"))) {
-            File file = new File("Opium/Client/Prefix.json");
-            file.delete();
-        }
-        Files.createFile(Paths.get("Opium/Client/Prefix.json"));
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonObject prefixJson = new JsonObject();
-        prefixJson.add("Prefix", new JsonPrimitive(Opium.COMMAND_MANAGER.getPrefix()));
-        OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("Opium/Client/Prefix.json"), StandardCharsets.UTF_8);
-        writer.write(gson.toJson(new JsonParser().parse(prefixJson.toString())));
-        writer.close();
-    }
-
-    public void loadFriends() throws IOException {
-        if (!Files.exists(Paths.get("Opium/Client/Friends.json"))) {
-            return;
-        }
-        InputStream stream = Files.newInputStream(Paths.get("Opium/Client/Friends.json"));
-        JsonObject mainObject = new JsonParser().parse(new InputStreamReader(stream)).getAsJsonObject();
-        if (mainObject.get("Friends") == null) {
-            return;
-        }
-        JsonArray friendArray = mainObject.get("Friends").getAsJsonArray();
-        friendArray.forEach(friend -> Opium.FRIEND_MANAGER.addFriend(friend.getAsString()));
-        stream.close();
-    }
-
-    public void saveFriends() throws IOException {
-        if (Files.exists(Paths.get("Opium/Client/Friends.json"))) {
-            File file = new File("Opium/Client/Friends.json");
-            file.delete();
-        }
-        Files.createFile(Paths.get("Opium/Client/Friends.json"));
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonObject mainObject = new JsonObject();
-        JsonArray friendArray = new JsonArray();
-        for (Friend friend : Opium.FRIEND_MANAGER.getFriends()) {
-            friendArray.add(friend.getName());
-        }
-        mainObject.add("Friends", friendArray);
-        OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream("Opium/Client/Friends.json"), StandardCharsets.UTF_8);
-        writer.write(gson.toJson(new JsonParser().parse(mainObject.toString())));
-        writer.close();
-    }
-
-    public static class SaveThread
-            extends Thread {
-        @Override
-        public void run() {
-            Opium.CONFIG_MANAGER.save();
-        }
-    }
 }

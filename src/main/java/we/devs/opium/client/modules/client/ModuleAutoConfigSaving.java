@@ -10,6 +10,7 @@ import static we.devs.opium.Opium.CONFIG_MANAGER;
 @RegisterModule(name = "Config Auto Save", description = "Auto Saves Your Configs Based On A Delay", category = Module.Category.CLIENT)
 public class ModuleAutoConfigSaving extends Module {
     ValueNumber delayV = new ValueNumber("Delay", "Delay", "Delay Between Automatic Config Saving", 120, 1, 30000);
+    ValueString cfg = new ValueString("Save To Config", "Save To Config", "Which Config to save to", "OpiumCfg");
     int delay = 0;
     @Override
     public void onEnable() {
@@ -26,7 +27,7 @@ public class ModuleAutoConfigSaving extends Module {
         super.onTick();
         delay++;
         if (delay > delayV.getValue().intValue()) {
-            CONFIG_MANAGER.save();
+            CONFIG_MANAGER.save(cfg.getValue());
             delay = 0;
             ChatUtils.sendMessage("Automatically Saved Config", "Auto Config Save");
         }

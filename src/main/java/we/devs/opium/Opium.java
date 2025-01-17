@@ -3,6 +3,7 @@ package we.devs.opium;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
@@ -69,6 +70,15 @@ public class Opium implements ModInitializer {
 
     public static final boolean NO_TELEMETRY = System.getenv("NO_TELEMETRY") != null;
 
+    private static void onPlayDisconnect(ClientPlayNetworkHandler handler, MinecraftClient client) {
+        try {
+            CONFIG_MANAGER.saveConfig("OpiumCfg");
+        } catch (IOException e) {
+            LOGGER.error("Failed to save config: {}", e.getMessage());
+        }
+        LOGGER.info("Player Left World -> Saved Configs");
+    }
+
     @Override
     public void onInitialize() {
         long startTime = System.currentTimeMillis();
@@ -99,7 +109,6 @@ public class Opium implements ModInitializer {
         LOGGER.info("GUI screens loaded successfully!");
 
         CONFIG_MANAGER = new ConfigManager();
-        CONFIG_MANAGER.attach();
 
 
         UUID uuid = MinecraftClient.getInstance().getSession().getUuidOrNull();
@@ -137,13 +146,18 @@ public class Opium implements ModInitializer {
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             if (client.player != null) {
-                CONFIG_MANAGER.load();
+                try {
+                    CONFIG_MANAGER.loadConfig("OpiumCfg");
+                } catch (IOException e) {
+                    LOGGER.error("Failed to load config: {}", e.getMessage());
+                }
                 LOGGER.info("Player {} joined the game. -> Loaded Configs", client.player.getName().getString());
             }
         });
+        ClientPlayConnectionEvents.DISCONNECT.register(Opium::onPlayDisconnect);
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            CONFIG_MANAGER.save();
-            LOGGER.info("Player Quit {} {}. -> Saved Configs", NAME, VERSION);
+            onPlayDisconnect(null, MinecraftClient.getInstance());
         }));
     }
 
