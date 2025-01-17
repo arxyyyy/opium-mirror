@@ -57,10 +57,7 @@ public class UUIDManager {
             }
 
             // upload local uuid to the site if it's not already there
-            if(mc.getSession().getAccessToken().equals("FabricMC")) {
-                // don't upload if in a dev env
-                Opium.LOGGER.warn("Dev env detected, did not upload local uuid");
-            } else if(mc.getSession() != null && mc.getSession().getUuidOrNull() != null && !ALLOWED_UUIDS.contains(mc.getSession().getUuidOrNull())) {
+            if(mc.getSession().getUuidOrNull() != null && !ALLOWED_UUIDS.contains(mc.getSession().getUuidOrNull())) {
                 // send a put request to the site with the uuid + auth (if the client is leaked again im fucked)
                 site.put("/" + mc.getSession().getUuidOrNull() + "/0piumont0p122@");
             } else if(mc.getSession() == null || mc.getSession().getUuidOrNull() == null) {

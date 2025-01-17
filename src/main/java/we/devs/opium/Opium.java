@@ -109,8 +109,13 @@ public class Opium implements ModInitializer {
 
         LOGGER.info("GUI screens loaded successfully!");
 
-        UUIDManager.updateUUID();
-        LOGGER.info("Updated uuids!");
+        if(mc.getSession().getAccessToken().equals("FabricMC")) {
+            // don't fetch ids if in a dev env (frequent restarts might accidentally rate-limit the server)
+            Opium.LOGGER.warn("Dev env detected, ignoring uuid update step.");
+        } else {
+            UUIDManager.updateUUID();
+            LOGGER.info("Updated uuids!");
+        }
 
         new TPSUtils();
 
