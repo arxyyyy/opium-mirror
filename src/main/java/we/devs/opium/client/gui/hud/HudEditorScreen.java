@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class HudEditorScreen extends Screen {
     private final ArrayList<ElementFrame> elementFrames = new ArrayList<>();
     private final Frame frame = new Frame(20, 20);
+    private ElementFrame draggingElement = null;
 
     public HudEditorScreen() {
         super(Text.literal(""));
@@ -33,21 +34,40 @@ public class HudEditorScreen extends Screen {
         }
     }
 
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.frame.mouseClicked((int) mouseX, (int) mouseY, button);
-        for (ElementFrame frame : this.elementFrames) {
-            frame.mouseClicked((int) mouseX, (int) mouseY, button);
+
+        if (draggingElement == null) { // Nur ein Element darf gezogen werden
+            for (ElementFrame frame : this.elementFrames) {
+                frame.mouseClicked((int) mouseX, (int) mouseY, button);
+                if (frame.isDragging()) {
+                    draggingElement = frame; // Setze das aktive Dragging-Element
+                    break;
+                }
+            }
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+
+    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int state) {
         this.frame.mouseReleased((int) mouseX, (int) mouseY, state);
+
+        if (draggingElement != null) {
+            draggingElement.mouseReleased((int) mouseX, (int) mouseY, state);
+            draggingElement = null; // Zurücksetzen des Dragging-Elements
+        }
+
         for (ElementFrame frame : this.elementFrames) {
-            frame.mouseReleased((int) mouseX, (int) mouseY, state);
+            if (frame != draggingElement) {
+                frame.mouseReleased((int) mouseX, (int) mouseY, state);
+            }
         }
         return super.mouseReleased(mouseX, mouseY, state);
     }
+
 
     public Frame getFrame() {
         return this.frame;

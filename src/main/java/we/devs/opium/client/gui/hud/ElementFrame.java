@@ -62,12 +62,13 @@ public class ElementFrame implements IMinecraft {
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && this.isHovering(mouseX, mouseY)) {
-            this.dragX = this.x - (float)mouseX;
-            this.dragY = this.y - (float)mouseY;
-            this.dragging = true;
+        if (mouseButton == 0 && this.isHovering(mouseX, mouseY) && !this.dragging) {
+            this.dragX = this.x - (float) mouseX;
+            this.dragY = this.y - (float) mouseY;
+            this.dragging = true; // Setze den Dragging-Status
         }
     }
+
 
     public void mouseReleased(int mouseX, int mouseY, int state) {
         this.dragging = false;
