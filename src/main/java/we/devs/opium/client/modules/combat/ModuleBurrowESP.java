@@ -34,6 +34,7 @@ public class ModuleBurrowESP extends Module {
     @Override
     public void onRender2D(EventRender2D context) {
         float tickDelta = mc.getRenderTickCounter().getTickDelta(true);
+        assert mc.world != null;
         for (PlayerEntity ent : mc.world.getPlayers()) {
             if (ent == mc.player && mc.options.getPerspective().isFirstPerson()) continue;
             if(mc.world.getBlockState(ent.getBlockPos()).isReplaceable()) continue;

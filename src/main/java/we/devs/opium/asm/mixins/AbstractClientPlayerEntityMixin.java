@@ -21,8 +21,8 @@ public abstract class AbstractClientPlayerEntityMixin {
     @Shadow @Nullable protected abstract PlayerListEntry getPlayerListEntry();
 
     @Unique
-    private static @NotNull SkinTextures getModifiedSkinTexture(SkinTextures original, Identifier newCape) {
-        return new SkinTextures(original.texture(), original.textureUrl(), newCape, original.elytraTexture(), original.model(), original.secure());
+    private static @NotNull SkinTextures getModifiedSkinTexture(SkinTextures original) {
+        return new SkinTextures(original.texture(), original.textureUrl(), AbstractClientPlayerEntityMixin.CAPE, original.elytraTexture(), original.model(), original.secure());
     }
 
     @Unique
@@ -31,7 +31,7 @@ public abstract class AbstractClientPlayerEntityMixin {
     @ModifyReturnValue(method = "getSkinTextures", at = @At(value = "RETURN"))
     SkinTextures getSkinTextures(SkinTextures original) {
         if(this.getPlayerListEntry() != null && (UUIDManager.isAdded(this.getPlayerListEntry().getProfile().getId()))) {
-            return getModifiedSkinTexture(original, CAPE);
+            return getModifiedSkinTexture(original);
         }
         return original;
     }
