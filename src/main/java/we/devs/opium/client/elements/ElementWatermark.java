@@ -20,6 +20,7 @@ public class ElementWatermark extends Element {
 
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         super.onRender2D(event);
         this.frame.setWidth(mc.textRenderer.getWidth(this.getText()));
         this.frame.setHeight(mc.textRenderer.fontHeight);

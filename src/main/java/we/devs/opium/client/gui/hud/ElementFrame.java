@@ -10,18 +10,15 @@ import net.minecraft.client.gui.DrawContext;
 import java.awt.*;
 
 public class ElementFrame implements IMinecraft {
-    private final Element element;
-    private float x;
-    private float y;
-    private float width;
-    private float height;
-    private float dragX;
-    private float dragY;
-    private boolean dragging;
-    private boolean visible;
-    private HudEditorScreen parent;
+    private final Element element; // Associated element
+    private float x, y; // Position of the frame
+    private float width, height; // Size of the frame
+    private float dragX, dragY; // Drag offsets for smooth dragging
+    private boolean dragging; // Whether the frame is being dragged
+    private boolean visible; // Visibility of the frame
+    private HudEditorScreen parent; // Parent screen reference
 
-    public Color color = Color.BLACK;
+    public Color color = Color.BLACK; // Frame color
 
     public ElementFrame(Element element, float x, float y, float width, float height, HudEditorScreen parent) {
         this.element = element;
@@ -31,106 +28,69 @@ public class ElementFrame implements IMinecraft {
         this.height = height;
         this.parent = parent;
         this.dragging = false;
-        this.visible = true;
     }
 
+    // Render method with detailed debug logging to check bounds
     public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
         if (this.element != null && Opium.ELEMENT_MANAGER.isElementEnabled(this.element.getName()) && mc.getWindow() != null) {
+            // If dragging, update position based on mouse movement
             if (this.dragging) {
-                this.x = this.dragX + (float)mouseX;
-                this.y = this.dragY + (float)mouseY;
-                if ((double)this.x < 0.0) {
-                    this.x = 0.0f;
-                }
-                if ((double)this.y < 0.0) {
-                    this.y = 0.0f;
-                }
-                if (this.x > (float)mc.getWindow().getScaledWidth() - this.width) {
-                    this.x = (float)mc.getWindow().getScaledWidth() - this.width;
-                }
-                if (this.y > (float)mc.getWindow().getScaledHeight() - this.height) {
-                    this.y = (float)mc.getWindow().getScaledHeight() - this.height;
-                }
+                this.x = this.dragX + (float) mouseX;
+                this.y = this.dragY + (float) mouseY;
+                this.x = Math.max(0, Math.min(mc.getWindow().getScaledWidth() - this.width, this.x));
+                this.y = Math.max(0, Math.min(mc.getWindow().getScaledHeight() - this.height, this.y));
             }
-            if (this.dragging) {
-                RenderUtils.drawRect(context.getMatrices(), this.x, this.y, this.x + this.width, this.y + this.height, new Color(Color.DARK_GRAY.getRed(), Color.DARK_GRAY.getGreen(), Color.DARK_GRAY.getBlue(), 100));
-            } else {
-                RenderUtils.drawRect(context.getMatrices(), this.x, this.y, this.x + this.width, this.y + this.height, new Color(color.getRed(), color.getGreen(), color.getBlue(), 100));
-            }
+
+            // Render the frame with background color
+            Color bgColor = this.dragging ? new Color(100, 100, 100, 100) : new Color(color.getRed(), color.getGreen(), color.getBlue(), 100);
+            RenderUtils.drawRect(context.getMatrices(), this.x, this.y, this.x + this.width, this.y + this.height, bgColor);
+
+            // Render the element content
             this.element.onRender2D(new EventRender2D(partialTicks, context));
         }
     }
 
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && this.isHovering(mouseX, mouseY) && !this.dragging) {
-            this.dragX = this.x - (float) mouseX;
-            this.dragY = this.y - (float) mouseY;
-            this.dragging = true; // Setze den Dragging-Status
+    // Handle click to start dragging the frame
+    public void mouseClicked(int mouseX, int mouseY, int button) {
+        if (button == 0 && this.isHovering(mouseX, mouseY)) {
+            this.dragX = this.x - mouseX;
+            this.dragY = this.y - mouseY;
+            this.dragging = true;
         }
     }
 
-
-    public void mouseReleased(int mouseX, int mouseY, int state) {
+    // Handle mouse release to stop dragging
+    public void mouseReleased(int mouseX, int mouseY, int button) {
         this.dragging = false;
     }
 
-    public boolean isHovering(int mouseX, int mouseY) {
-        return (float)mouseX >= this.x && (float)mouseX <= this.x + this.width && (float)mouseY >= this.y && (float)mouseY <= this.y + this.height;
+    // Check if the mouse is hovering over the frame
+    public boolean isHovering(double mouseX, double mouseY) {
+        return mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
     }
 
-    public Element getElement() {
-        return this.element;
+    // Implement the mouseDragged method
+    public void mouseDragged(int mouseX, int mouseY, int button, double deltaX, double deltaY) {
+        if (this.dragging) {
+            // Update position when dragging
+            this.x += deltaX;
+            this.y += deltaY;
+        }
     }
 
-    public HudEditorScreen getParent() {
-        return this.parent;
-    }
-
-    public float getX() {
-        return this.x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return this.y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getWidth() {
-        return this.width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return this.height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
-    }
-
-    public boolean isDragging() {
-        return this.dragging;
-    }
-
-    public void setDragging(boolean dragging) {
-        this.dragging = dragging;
-    }
-
-    public boolean isVisible() {
-        return this.visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
+    // Getters and setters for element properties
+    public Element getElement() { return this.element; }
+    public HudEditorScreen getParent() { return this.parent; }
+    public float getX() { return this.x; }
+    public void setX(float x) { this.x = x; }
+    public float getY() { return this.y; }
+    public void setY(float y) { this.y = y; }
+    public float getWidth() { return this.width; }
+    public void setWidth(float width) { this.width = width; }
+    public float getHeight() { return this.height; }
+    public void setHeight(float height) { this.height = height; }
+    public boolean isDragging() { return this.dragging; }
+    public void setDragging(boolean dragging) { this.dragging = dragging; }
+    public boolean isVisible() { return this.visible; }
+    public void setVisible(boolean visible) { this.visible = visible; }
 }

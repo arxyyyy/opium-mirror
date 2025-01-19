@@ -4,6 +4,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import we.devs.opium.api.manager.element.Element;
 import we.devs.opium.api.manager.element.RegisterElement;
 import we.devs.opium.api.utilities.RenderUtils;
+import we.devs.opium.api.utilities.TPSUtils;
 import we.devs.opium.client.events.EventRender2D;
 import we.devs.opium.client.modules.client.ModuleColor;
 import we.devs.opium.client.modules.client.ModuleFont;
@@ -12,6 +13,7 @@ import we.devs.opium.client.modules.client.ModuleFont;
 public class ElementTPS extends Element {
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         super.onRender2D(event);
         if(ModuleFont.INSTANCE.customFonts.getValue()) {
             this.frame.setWidth(RenderUtils.getFontRenderer().getStringWidth(getText()));
@@ -24,6 +26,6 @@ public class ElementTPS extends Element {
     }
 
     String getText() {
-        return "TPS: " + mc.getCurrentFps();
+        return "TPS: " + Math.round(TPSUtils.getTickRate());
     }
 }

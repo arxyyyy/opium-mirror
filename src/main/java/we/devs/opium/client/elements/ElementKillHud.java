@@ -19,6 +19,7 @@ import we.devs.opium.client.values.impl.ValueString;
 @RegisterElement(name="Kill HUD", description="Show a message on kill")
 public class ElementKillHud extends Element {
 
+
     static String[] list = {
         "LOL dumbass nn %s died to Opium Client",
         "fn %s explodes due to OpiumClient.vip",
@@ -36,6 +37,7 @@ public class ElementKillHud extends Element {
     String text = "";
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         super.onRender2D(event);
         boolean show = false;
         for (AbstractClientPlayerEntity player : mc.world.getPlayers()) {

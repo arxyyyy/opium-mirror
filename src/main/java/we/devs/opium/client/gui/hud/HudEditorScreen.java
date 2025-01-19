@@ -2,6 +2,7 @@ package we.devs.opium.client.gui.hud;
 
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.element.Element;
+import we.devs.opium.api.utilities.RenderUtils;
 import we.devs.opium.client.gui.click.manage.Frame;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class HudEditorScreen extends Screen {
     private final ArrayList<ElementFrame> elementFrames = new ArrayList<>();
     private final Frame frame = new Frame(20, 20);
-    private ElementFrame draggingElement = null;
+    private ElementFrame draggingElement = null; // Track the element being dragged
 
     public HudEditorScreen() {
         super(Text.literal(""));
@@ -34,49 +35,48 @@ public class HudEditorScreen extends Screen {
         }
     }
 
-    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // If a new element is clicked, start dragging it and stop dragging the previous one
         this.frame.mouseClicked((int) mouseX, (int) mouseY, button);
-
-        if (draggingElement == null) { // Nur ein Element darf gezogen werden
-            for (ElementFrame frame : this.elementFrames) {
-                frame.mouseClicked((int) mouseX, (int) mouseY, button);
-                if (frame.isDragging()) {
-                    draggingElement = frame; // Setze das aktive Dragging-Element
-                    break;
+        for (ElementFrame frame : this.elementFrames) {
+            if (frame.isHovering(mouseX, mouseY)) {
+                if (draggingElement != null) {
+                    draggingElement.mouseReleased((int) mouseX, (int) mouseY, button); // Stop dragging the previous element
                 }
+                draggingElement = frame; // Start dragging the clicked element
+                frame.mouseClicked((int) mouseX, (int) mouseY, button);
+                return true;
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-
-    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int state) {
+        // Stop dragging the current element
         this.frame.mouseReleased((int) mouseX, (int) mouseY, state);
-
         if (draggingElement != null) {
             draggingElement.mouseReleased((int) mouseX, (int) mouseY, state);
-            draggingElement = null; // Zurücksetzen des Dragging-Elements
-        }
-
-        for (ElementFrame frame : this.elementFrames) {
-            if (frame != draggingElement) {
-                frame.mouseReleased((int) mouseX, (int) mouseY, state);
-            }
+            draggingElement = null; // Reset dragging state
+            return true;
         }
         return super.mouseReleased(mouseX, mouseY, state);
     }
 
-
-    public Frame getFrame() {
-        return this.frame;
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        // Only drag if an element is being dragged
+        if (draggingElement != null) {
+            draggingElement.mouseDragged((int) mouseX, (int) mouseY, button, deltaX, deltaY);
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
+    // Getter for element frames
     public ElementFrame getFrame(Element element) {
-        for (ElementFrame frame : this.elementFrames) {
-            if (!frame.getElement().equals(element)) continue;
-            return frame;
+        for (ElementFrame ef : this.elementFrames) {
+            if (ef.getElement().equals(element)) {
+                return ef;
+            }
         }
         return null;
     }

@@ -25,6 +25,7 @@ public class ElementPlayerList extends Element {
 
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         super.onRender2D(event);
         if (this.nullCheck()) {
             return;

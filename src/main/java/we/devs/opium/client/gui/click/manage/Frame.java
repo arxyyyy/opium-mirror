@@ -14,7 +14,6 @@ import we.devs.opium.client.gui.click.components.StringComponent;
 import we.devs.opium.client.modules.client.ModuleGUI;
 import we.devs.opium.client.modules.client.ModuleOutline;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Frame implements IMinecraft {
@@ -123,7 +122,7 @@ public class Frame implements IMinecraft {
         }
     }
 
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseX >= this.getX() - 4 && mouseX <= this.getX() + this.getWidth() + 4 && mouseY >= this.getY() - 3 && mouseY <= this.getY() + 13) {
             if (mouseButton == 0) {
                 this.setDragging(true);
@@ -139,6 +138,7 @@ public class Frame implements IMinecraft {
                 component.mouseClicked(mouseX, mouseY, mouseButton);
             }
         }
+        return false;
     }
 
     public void mouseReleased(int mouseX, int mouseY, int state) {
