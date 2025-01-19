@@ -8,6 +8,7 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffects;
@@ -56,7 +57,7 @@ import static we.devs.opium.client.modules.visuals.ModuleNametags.Armor.OnlyArmo
 public class ModuleNametags extends Module {
     public static ModuleNametags INSTANCE;
     private final ValueNumber scale = new ValueNumber("Scale","Scale","Scale", 0.68f, 0.1f, 2f);
-    private final ValueNumber minScale = new ValueNumber("MinScale","MinScale","MinScale", 0.2f, 0.1f, 1f);
+    private final ValueNumber minScale = new ValueNumber("MinScale","MinScale","MinScale", 1f, 0.1f, 1f);
     private final ValueNumber scaled = new ValueNumber("Scaled","Scaled","Scaled", 1, 0, 2);
     private final ValueNumber offset = new ValueNumber("Offset","Offset","Offset", 0.315f, 0.001f, 1f);
     private final ValueNumber height = new ValueNumber("Height","Height","Height", 0, -3, 3);
