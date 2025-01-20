@@ -1,29 +1,20 @@
-package we.devs.opium.client.modules.combat;
+package we.devs.opium.client.modules.visuals;
 
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector4d;
-import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
-import we.devs.opium.api.utilities.FindItemResult;
-import we.devs.opium.api.utilities.InventoryUtil;
 import we.devs.opium.client.events.EventRender2D;
-import we.devs.opium.client.events.EventRender3D;
 import we.devs.opium.client.values.impl.ValueColor;
 import we.devs.opium.client.values.impl.ValueNumber;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 import static me.x150.renderer.util.RendererUtils.worldSpaceToScreenSpace;
 
-@RegisterModule(name = "BurrowESP", description = "Display if a player is burrowed", tag = "BurrowESP", category = Module.Category.COMBAT)
+@RegisterModule(name = "BurrowESP", description = "Display if a player is burrowed", tag = "BurrowESP", category = Module.Category.VISUALS)
 public class ModuleBurrowESP extends Module {
 
     private final ValueNumber scale = new ValueNumber("Scale","Scale","Scale", 0.68f, 0.1f, 2f);
