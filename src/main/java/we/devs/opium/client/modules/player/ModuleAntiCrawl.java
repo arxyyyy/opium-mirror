@@ -23,6 +23,7 @@ import java.awt.*;
 @RegisterModule(name = "AntiCrawl", description = "Mines Blocks above or below you to get you out of a crawl state.", category = Module.Category.PLAYER)
 public class ModuleAntiCrawl extends Module {
     //ValueEnum autoSwitch = new ValueEnum("AutoSwitch", "Auto Switch", "Automatically switches to your Pickaxe.", AutoSwitch.None);
+    ValueBoolean strictSwitch = new ValueBoolean("StrictSwitch", "Strict Switch", "Switches to Pickaxe at the end of the mining process.", false);
 
     ValueColor getSetting(String name, Color defaultC) {
         return new ValueColor(name, name, name, renderCategory, defaultC);
@@ -30,11 +31,11 @@ public class ModuleAntiCrawl extends Module {
 
     ValueCategory renderCategory = new ValueCategory("Render", "Render settings");
     ValueBoolean fill = new ValueBoolean("Fill", "Fill", "Show fill", true);
-    ValueColor miningFill = getSetting("MiningFill", new Color(250, 20, 20, 200));
-    ValueColor finishedFill = getSetting("FinishedFill", new Color(20, 250, 20, 200));
+    ValueColor miningFill = getSetting("MiningFill", new Color(250, 20, 20, 150));
+    ValueColor finishedFill = getSetting("FinishedFill", new Color(20, 250, 20, 150));
     ValueBoolean outline = new ValueBoolean("Outline", "Outline", "Show outline", true);
-    ValueColor miningOutline = getSetting("MiningOutline", new Color(250, 20, 20, 200).darker());
-    ValueColor finishedOutline = getSetting("FinishedOutline", new Color(20, 250, 20, 200).darker());
+    ValueColor miningOutline = getSetting("MiningOutline", new Color(250, 20, 20, 150).darker());
+    ValueColor finishedOutline = getSetting("FinishedOutline", new Color(20, 250, 20, 150).darker());
     ValueEnum easing = new ValueEnum("Easing", "Easing", "How to ease the progress rendering", renderCategory, Easing.EaseOutCircular);
 
     double progress = 0;
@@ -111,7 +112,11 @@ public class ModuleAntiCrawl extends Module {
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos, Direction.UP));
         }
         if (progress > 1.0) {
-            InventoryUtils.switchSlot(slot, true);
+            if (!strictSwitch.getValue()) {
+                InventoryUtils.switchSlot(slot, true);
+            } else {
+                InventoryUtils.switchSlot(slot, false);
+            }
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos, Direction.UP));
             progress = 0;
             status = -2;
