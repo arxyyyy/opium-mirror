@@ -217,8 +217,10 @@ public class MixinLogoDrawer {
     @Unique
     private void drawGlowEffect(DrawContext context, int screenWidth, int screenHeight) {
         // Define the gradient colors for the glow effect (lighter at the top and darker towards the middle)
-        int topColor = 0x33FFFFFF; // Semi-transparent white
-        int bottomColor = 0x00FFFFFF; // Fully transparent white
+        int topColor = 0x33808080; // Semi-transparent gray
+        int bottomColor = 0x00808080; // More transparent gray
+
+
 
         // Draw the gradient rectangle at the top of the screen
         context.fillGradient(0, 0, screenWidth, screenHeight, topColor, bottomColor); // Height of glow can be adjusted
