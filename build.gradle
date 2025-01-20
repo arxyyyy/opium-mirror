@@ -1,9 +1,11 @@
 buildscript {
 	repositories {
 		gradlePluginPortal()
+		mavenCentral()
 	}
 	dependencies {
 		classpath 'com.gradleup.shadow:shadow-gradle-plugin:9.0.0-beta4'
+		classpath 'de.undercouch:gradle-download-task:5.4.0'
 	}
 }
 
@@ -91,3 +93,63 @@ publishing {
 		// Add repositories to publish to here if needed
 	}
 }
+
+// Grunt configuration
+def gruntUrl = 'https://github.com/SpartanB312/Grunt/releases/download/2.4.4.241224/grunt-main.jar' // Corrected URL for Grunt
+def gruntJar = file("$buildDir/tools/grunt.jar") // Path where grunt.jar will be downloaded
+def inputJar = file("$buildDir/libs/${project.archives_base_name}-${project.version}.jar") // Your built mod
+def outputJar = file("$buildDir/libs/${project.archives_base_name}-${project.version}-obfuscated.jar") // Obfuscated mod output
+
+// Task to download Grunt
+tasks.register('downloadGrunt', de.undercouch.gradle.tasks.download.Download) {
+	src gruntUrl
+	dest gruntJar
+	onlyIf { !gruntJar.exists() } // Skip download if already exists
+}
+
+// Grunt config file path
+def gruntConfigFile = file("$projectDir/grunt-config/opium-grunt.json")
+
+// Task to update grunt-config.json based on the version in gradle.properties
+tasks.register('updateGruntConfig') {
+	doLast {
+		def version = project.version // Get version from gradle.properties or build.gradle
+
+		if (gruntConfigFile.exists()) {
+			// Load the config JSON file as a map
+			def jsonSlurper = new groovy.json.JsonSlurper()
+			def config = jsonSlurper.parse(gruntConfigFile)
+
+			// Update the Input and Output paths with the current version
+			config.Settings.Input = "build/libs/opium-${version}.jar"
+			config.Settings.Output = "build/libs/opium-${version}-obf.jar"
+
+			// Save the modified config back to the file
+			def jsonBuilder = new groovy.json.JsonBuilder(config)
+			gruntConfigFile.text = jsonBuilder.toPrettyString()
+
+			println "Updated grunt-config.json with version ${version}"
+		} else {
+			throw new GradleException("grunt-config.json not found at ${gruntConfigFile}")
+		}
+	}
+}
+
+// Task to obfuscate the mod
+tasks.register('obfuscateMod', Exec) {
+	dependsOn build, downloadGrunt, updateGruntConfig // Ensure mod is built, Grunt is downloaded, and config is updated
+
+	commandLine 'java', '-jar', gruntJar,
+			'--input', inputJar,
+			'--output', outputJar,
+			'--config', gruntConfigFile
+
+	doLast {
+		println "Obfuscated mod saved to: $outputJar"
+	}
+}
+
+apply plugin: 'de.undercouch.download'
+
+// Ensure obfuscation happens after building
+build.finalizedBy obfuscateMod
