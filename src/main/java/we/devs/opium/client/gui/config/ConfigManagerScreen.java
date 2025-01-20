@@ -1,5 +1,6 @@
 package we.devs.opium.client.gui.config;
 
+import me.x150.renderer.render.Renderer2d;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -66,9 +67,13 @@ public class ConfigManagerScreen extends Screen {
         // Draw the title bar
         context.fill(windowX, windowY, windowX + windowWidth, windowY + TITLE_BAR_HEIGHT, 0xFF444444);
 
-        // Draw the Config Manager text at the top-left corner
+        // Draw the Config Manager text
         int textX = windowX + 10;
         int textY = windowY + 5;
+        int closeButtonX = windowX + windowWidth - CLOSE_BUTTON_SIZE - 5;
+        int closeButtonY = windowY + (TITLE_BAR_HEIGHT - CLOSE_BUTTON_SIZE) / 2;
+
+        RenderUtils.drawString(context.getMatrices(), "X", closeButtonX + 5, closeButtonY + 3, 0xFFFFFFFF); // White "X"
         RenderUtils.drawString(context.getMatrices(), "Config Manager", textX, textY, 0xFFFFFFFF);
 
         // Calculate the starting Y position for the config list
@@ -80,23 +85,26 @@ public class ConfigManagerScreen extends Screen {
             int boxWidth = 200;  // Width of each config box
             int boxHeight = 30;  // Height of each config box
             int boxX = windowX + 10;  // Start drawing from left of window
-            RenderUtils.drawRect(context.getMatrices(), boxX, itemY, boxX + boxWidth, itemY + boxHeight, Color.white);
-            //context.fill(boxX, itemY, boxX + boxWidth, itemY + boxHeight, 0xFF444444);  // Draw background
+            Renderer2d.renderRoundedOutline(context.getMatrices(), Color.GRAY, boxX, itemY, boxX + windowWidth - 20, itemY + boxHeight,10,1,100);
+            RenderUtils.drawCircle(boxX, (float) itemY + 5, 5, Color.WHITE);
+
 
             // Draw the config file name
-            RenderUtils.drawString(context.getMatrices(), configFile, boxX + 10, itemY + 7, 0xFFFFFF);
+            RenderUtils.drawString(context.getMatrices(), "Config: " + configFile, boxX + 5, itemY + 3, 0xFFFFFFFF);
 
-            // Draw the buttons (Edit, Delete)
-            int buttonWidth = 50;
-            int buttonHeight = 20;
-            // Edit Button
-            //RenderUtils.drawOutline(context.getMatrices(), boxX + boxWidth + 10, itemY + 5, boxX + boxWidth + 10, itemY + 5 + buttonHeight, 10, Color.WHITE);
-            context.fill(boxX + boxWidth + 10, itemY + 5, boxX + boxWidth + 10 + buttonWidth, itemY + 5 + buttonHeight, 0xFF00FF00);
-            RenderUtils.drawString(context.getMatrices(), "Edit", boxX + boxWidth + 15, itemY + 10, 0xFFFFFF);
 
-            // Delete Button
-            context.fill(boxX + boxWidth + 70, itemY + 5, boxX + boxWidth + 70 + buttonWidth, itemY + 5 + buttonHeight, 0xFFFF0000);
-            RenderUtils.drawString(context.getMatrices(), "Delete", boxX + boxWidth + 75, itemY + 10, 0xFFFFFF);
+
+//            // Draw the buttons (Edit, Delete)
+//            int buttonWidth = 50;
+//            int buttonHeight = 20;
+//            // Edit Button
+//            //RenderUtils.drawOutline(context.getMatrices(), boxX + boxWidth + 10, itemY + 5, boxX + boxWidth + 10, itemY + 5 + buttonHeight, 10, Color.WHITE);
+//            context.fill(boxX + boxWidth + 10, itemY + 5, boxX + boxWidth + 10 + buttonWidth, itemY + 5 + buttonHeight, 0xFF00FF00);
+//            RenderUtils.drawString(context.getMatrices(), "Edit", boxX + boxWidth + 15, itemY + 10, 0xFFFFFF);
+//
+//            // Delete Button
+//            context.fill(boxX + boxWidth + 70, itemY + 5, boxX + boxWidth + 70 + buttonWidth, itemY + 5 + buttonHeight, 0xFFFF0000);
+//            RenderUtils.drawString(context.getMatrices(), "Delete", boxX + boxWidth + 75, itemY + 10, 0xFFFFFF);
 
             // Move to the next row
             itemY += boxHeight + 10;  // Add space between boxes
