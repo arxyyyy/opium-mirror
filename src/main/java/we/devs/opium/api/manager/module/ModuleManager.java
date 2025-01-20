@@ -40,6 +40,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleRotations());
         this.register(new ModuleRPC());
         this.register(new ModuleAutoConfigSaving());
+        this.register(new ModuleConfigEditor());
 
         //Combat
         this.register(new ModuleAutoArmor());

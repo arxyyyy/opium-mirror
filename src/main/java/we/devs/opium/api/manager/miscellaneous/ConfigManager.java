@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ConfigManager {
-    private static final String CONFIG_DIRECTORY = "Opium/Configs/";
+    public static final String CONFIG_DIRECTORY = "Opium/Configs/";
 
 
     public void load(String name) {

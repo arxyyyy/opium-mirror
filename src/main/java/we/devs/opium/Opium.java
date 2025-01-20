@@ -21,6 +21,7 @@ import we.devs.opium.api.utilities.TPSUtils;
 import we.devs.opium.api.utilities.dump.AntiDump;
 import we.devs.opium.client.events.EventTick;
 import we.devs.opium.client.gui.click.ClickGuiScreen;
+import we.devs.opium.client.gui.config.ConfigManagerScreen;
 import we.devs.opium.client.gui.hud.HudEditorScreen;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -56,6 +57,7 @@ public class Opium implements ModInitializer {
     public static PlayerManager PLAYER_MANAGER;
     public static ClickGuiScreen CLICK_GUI;
     public static HudEditorScreen HUD_EDITOR;
+    public static ConfigManagerScreen CONFIG_MANAGER_SCREEN;
     public static ConfigManager CONFIG_MANAGER;
     public static FontManager FONT_MANAGER;
     public static final Timer TIMER = new Timer("Timer", true);
@@ -99,6 +101,7 @@ public class Opium implements ModInitializer {
 
         CLICK_GUI = new ClickGuiScreen();
         HUD_EDITOR = new HudEditorScreen();
+        CONFIG_MANAGER_SCREEN = new ConfigManagerScreen();
 
         LOGGER.info("GUI screens loaded successfully!");
 
