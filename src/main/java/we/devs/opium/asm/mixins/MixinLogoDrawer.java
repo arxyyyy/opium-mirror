@@ -83,6 +83,8 @@ public class MixinLogoDrawer {
             resizeSnowflakesIfNecessary(screenWidth);
         }
 
+        //drawGlowEffect(context, screenWidth, screenHeight); // makes the screen to light ngl // Comunity Vote Said No
+
         // Handle lightning effect (random time and screen shake)
         handleLightning(context, screenWidth, screenHeight);
 
@@ -211,6 +213,15 @@ public class MixinLogoDrawer {
             snowflake.put("y", y); // Update Y position
             snowflake.put("rotationAngle", (float) snowflake.get("rotationAngle") + (float) snowflake.get("rotationSpeed")); // Update rotation angle
         }
+    }
+
+    @Unique
+    private void drawGlowEffect(DrawContext context, int screenWidth, int screenHeight) {
+        // Define the gradient colors for the glow effect (lighter at the top and darker towards the middle)
+        int topColor = 0x33808080; // Semi-transparent gray
+        int bottomColor = 0x00808080; // More transparent gray
+        // Draw the gradient rectangle at the top of the screen
+        context.fillGradient(0, 0, screenWidth, screenHeight, topColor, bottomColor); // Height of glow can be adjusted
     }
 
     /**
