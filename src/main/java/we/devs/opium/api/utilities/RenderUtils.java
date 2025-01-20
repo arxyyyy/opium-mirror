@@ -110,6 +110,22 @@ public class RenderUtils implements IMinecraft {
         RenderSystem.disableBlend();
     }
 
+    public static void drawCenteredString(MatrixStack matrixStack, String text, float centerX, float centerY, int color) {
+        FontRenderer fontRenderer = getFontRenderer();
+        if (fontRenderer == null) return;
+
+        // Calculate the width and height of the text
+        int textWidth = (int) fontRenderer.getStringWidth(text);
+        int textHeight = (int) fontRenderer.getStringHeight(text);
+
+        // Calculate top-left coordinates to center the text
+        float x = centerX - (textWidth / 2.0f);
+        float y = centerY - (textHeight / 2.0f);
+
+        // Draw the text at the calculated position
+        drawString(matrixStack, text, x, y, color);
+    }
+
     public static void drawBlock(BlockPos position, Color color) {
         RenderUtils.drawBlock(RenderUtils.getRenderBB(position), color);
     }
