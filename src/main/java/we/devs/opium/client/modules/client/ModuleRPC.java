@@ -4,6 +4,9 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerServerListWidget;
+import net.minecraft.client.network.ServerInfo;
+import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.ChatUtils;
@@ -61,9 +64,18 @@ public class ModuleRPC extends Module {
         if (isRpcRunning) {
             if (ModuleRPC.INSTANCE.ModeES.getValue().equals(modeE.CustomText)) updateRPC(line1.getValue(), line2.getValue(), line3.getValue(), line4.getValue());
             else {
-                if (mc.player == null || mc.world == null) updateRPC("In Main Menu", "", "","");
-                else if (ShowServer.getValue()) updateRPC("Playing On " + Objects.requireNonNull(mc.getNetworkHandler()).getConnection().getAddress(), "", "", "");
-                else updateRPC("No Peeking", "", "", "");
+                try {
+                    ServerInfo serverEntry = mc.getCurrentServerEntry();
+                    String serverName = "";
+                    if (serverEntry == null) {
+                        serverName = "Singleplayer";
+                    } else serverName = serverEntry.name;
+                    if (mc.player == null || mc.world == null) updateRPC("In Main Menu", "Using " + Opium.NAME + " " + Opium.VERSION, "","");
+                    else if (ShowServer.getValue()) updateRPC("Playing On " + serverName, "Using " + Opium.NAME + " " + Opium.VERSION, "", "");
+                    else updateRPC("No Peeking", "", "", "");
+                } catch (Exception e) {
+                    Opium.LOGGER.error("RPC Error - ", e);
+                }
             }
         }
     }

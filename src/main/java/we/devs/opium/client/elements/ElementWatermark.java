@@ -1,6 +1,7 @@
 package we.devs.opium.client.elements;
 
 import net.minecraft.client.util.math.MatrixStack;
+import we.devs.opium.Opium;
 import we.devs.opium.api.manager.element.Element;
 import we.devs.opium.api.manager.element.RegisterElement;
 import we.devs.opium.api.utilities.RenderUtils;
@@ -28,7 +29,7 @@ public class ElementWatermark extends Element {
     }
 
     private String getText() {
-        return (this.mode.getValue().equals(Modes.Custom) ? this.customValue.getValue() : "Opium") + (!this.version.getValue().equals(Versions.None) ? " " + (this.version.getValue().equals(Versions.Normal) ? "v" : "") + "1.4.1 - Developer Build" : "");
+        return (this.mode.getValue().equals(Modes.Custom) ? this.customValue.getValue() : Opium.NAME) + (!this.version.getValue().equals(Versions.None) ? " " + (this.version.getValue().equals(Versions.Normal) ? "v" : "") + Opium.VERSION : "");
     }
 
     public enum Versions {
