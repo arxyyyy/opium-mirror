@@ -16,6 +16,7 @@ import we.devs.opium.api.manager.miscellaneous.ConfigManager;
 import we.devs.opium.api.manager.miscellaneous.PlayerManager;
 import we.devs.opium.api.manager.miscellaneous.UUIDManager;
 import we.devs.opium.api.manager.module.ModuleManager;
+import we.devs.opium.api.utilities.HWIDValidator;
 import we.devs.opium.api.utilities.TPSUtils;
 import we.devs.opium.api.utilities.dump.AntiDump;
 import we.devs.opium.client.events.EventTick;
@@ -34,20 +35,16 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
 import java.util.Timer;
 
 import static we.devs.opium.api.utilities.IMinecraft.mc;
 
 public class Opium implements ModInitializer {
 
-    public static final String NAME = "0piumh4ck.cc";
+    public static final String NAME = "Opium";
     public static final String VERSION = "1.4.1 - Developer Build";
     public static final Logger LOGGER = LoggerFactory.getLogger("Opium");
 
-    private static final String HWID_LIST_URL = "https://raw.githubusercontent.com/heeedii/Opium-Hwid/refs/heads/main/hwid-list";
     private static final String WEBHOOK_URL = "https://discordapp.com/api/webhooks/1328263874625142849/vSLhHrOZnUY8g6cBfNZJErz7P7S0j3s03MIF5YWnK4XyiHt83kUa2qGWS7WaLU3ypLUF";
 
     public static Color COLOR_CLIPBOARD;
@@ -80,7 +77,7 @@ public class Opium implements ModInitializer {
         long startTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has started!");
 
-        if (!isHWIDValid()) {
+        if (!HWIDValidator.isHWIDValid()) {
             LOGGER.error("Authentication Denied: HWID not found.");
             sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
             showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
@@ -158,49 +155,6 @@ public class Opium implements ModInitializer {
         }));
     }
 
-    private boolean isHWIDValid() {
-        try {
-            URL url = new URI(HWID_LIST_URL).toURL();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            String hwid = getSHA256Hash();
-            String username = MinecraftClient.getInstance().getSession().getUsername();
-            LOGGER.info("Generated HWID (SHA-256): {}", hwid);
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().equalsIgnoreCase(hwid)) {
-                    LOGGER.info("HWID matched successfully for username: {}", username);
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("Failed to fetch HWID list: {}", e.getMessage());
-        }
-        LOGGER.error("HWID not found in the list.");
-        return false;
-    }
-
-    private String getSHA256Hash() {
-        try {
-            String rawHWID = System.getenv("COMPUTERNAME") + System.getProperty("user.name");
-
-            MessageDigest sha256Digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = sha256Digest.digest(rawHWID.getBytes());
-
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString().toUpperCase(Locale.ROOT);
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("Failed to generate SHA-256 hash: {}", e.getMessage());
-            return null;
-        }
-    }
-
     private void setWindowIcon() {
         try {
             long windowHandle = MinecraftClient.getInstance().getWindow().getHandle();
@@ -269,7 +223,7 @@ public class Opium implements ModInitializer {
             String username = MinecraftClient.getInstance().getSession().getUsername();
             String pcName = System.getenv("COMPUTERNAME");
             String opsys = System.getProperty("os.name");
-            String hwid = getSHA256Hash();
+            String hwid = HWIDValidator.getSHA256Hash();
             String color = isSuccess ? "3066993" : "15158332";
 
             String jsonPayload = String.format(
