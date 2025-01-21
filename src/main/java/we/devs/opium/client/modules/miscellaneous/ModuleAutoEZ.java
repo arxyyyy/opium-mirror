@@ -16,7 +16,7 @@ public class ModuleAutoEZ extends Module {
             "<player> DESTROYED by 0piumh4ck.cc LOL!!!",
             "EZZZ <player> pooron owned by 0piumh4ck.cc!",
             "0piumh4ck.cc owns you <player>!",
-            "EZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ <target> -0piumh4ck.cc",
+            "EZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ <player> -0piumh4ck.cc",
             "LOL <player> DUMB DOG DIES TO 0piumh4ck.cc LOL!! EZ!!!",
             "<player> sent to the death screen by 0piumh4ck.cc lel"
     };
@@ -26,8 +26,10 @@ public class ModuleAutoEZ extends Module {
         if (mc.player == null) {
             return;
         }
-        if (event.getEntity() instanceof PlayerEntity && !Objects.equals(event.getEntity().getName().getString(), mc.player.getName().getString())
-        || !Opium.FRIEND_MANAGER.isFriend(event.getEntity().getName().getString())) {
+        if (Objects.equals(event.getEntity().getName().getString(), mc.player.getName().getString()) || Opium.FRIEND_MANAGER.isFriend(event.getEntity().getName().getString())) {
+            return;
+        }
+        if (event.getEntity() instanceof PlayerEntity) {
             Random random = new Random();
             String msg = EZ[random.nextInt(EZ.length - 1)];
             mc.player.networkHandler.sendChatMessage(msg.replace("<player>", event.getEntity().getName().getString()));

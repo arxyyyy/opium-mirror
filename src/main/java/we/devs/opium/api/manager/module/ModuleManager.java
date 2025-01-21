@@ -70,6 +70,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleSprint());
         this.register(new ModuleVelocity());
         this.register(new ModuleStep());
+        this.register(new ModuleNoSlow());
 
         //Player
         this.register(new ModuleMultiTask());
@@ -88,6 +89,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleFullBright());
         this.register(new ModuleNoRender());
         this.register(new ModuleDeathEffects());
+        this.register(new ModuleCustomFOV());
 
         this.modules.sort(Comparator.comparing(Module::getName));
     }
