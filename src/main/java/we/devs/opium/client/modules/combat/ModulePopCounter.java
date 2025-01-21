@@ -23,24 +23,24 @@ public class ModulePopCounter extends Module {
         }
         if (event.getPacket() instanceof EntityStatusS2CPacket && (packet = (EntityStatusS2CPacket) event.getPacket()).getStatus() == 35) {
             Entity entity = packet.getEntity(mc.world);
-            if (entity == null) {
-                return;
-            }
+            if(!(entity instanceof PlayerEntity pl)) return;
             int count = 1;
-            if (popCount.containsKey(entity.getName().getString())) {
-                count = popCount.get(entity.getName().getString());
-                popCount.put(entity.getName().getString(), ++count);
+            String user = pl.getGameProfile().getName();
+            if (popCount.containsKey(user)) {
+                count = popCount.get(user) + 1;
+                popCount.put(user, count);
             } else {
-                popCount.put(entity.getName().getString(), count);
+                popCount.put(user, count);
             }
+            String text = "" + ModuleCommands.getFirstColor();
             if (entity == mc.player) {
-                return;
+                text += "You";
+            } else text += user;
+            text += " popped " + ModuleCommands.getSecondColor() + count + ModuleCommands.getFirstColor() + " totems!";
+            if (Opium.FRIEND_MANAGER.isFriend(user) && entity != mc.player) {
+                text += " you should go help them";
             }
-            if (Opium.FRIEND_MANAGER.isFriend(entity.getName().getString())) {
-                ChatUtils.sendMessage(ModuleCommands.getFirstColor() + entity.getName().getString() + " popped " + ModuleCommands.getSecondColor() + count + ModuleCommands.getFirstColor() + " totems! you should go help them");
-            } else {
-                ChatUtils.sendMessage(ModuleCommands.getFirstColor() + entity.getName().getString() + " popped " + ModuleCommands.getSecondColor() + count + ModuleCommands.getFirstColor() + " totems!");
-            }
+            ChatUtils.sendMessage(text);
         }
     }
 
@@ -51,9 +51,7 @@ public class ModulePopCounter extends Module {
             return;
         }
         for (PlayerEntity player : mc.world.getPlayers()) {
-            if (!popCount.containsKey(player.getName().getString()) || player.isDead() && !(player.getHealth() <= 0.0f)) continue;
-            int count = popCount.get(player.getName().getString());
-            popCount.remove(player.getName().getString());
+            if (player.isDead() || player.getHealth() <= 0.0f) popCount.remove(player.getGameProfile().getName());
         }
     }
 }
