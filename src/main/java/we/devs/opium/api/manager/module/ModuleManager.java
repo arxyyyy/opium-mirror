@@ -47,7 +47,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleHoleFill());
         this.register(new ModuleOffhand());
         this.register(new ModulePopCounter());
-        this.register(new ModuleSurround());
+        this.register(new ModuleAutoFeetTrap());
         this.register(new ModuleTriggerBot());
         this.register(new ModulePacketExp());
         this.register(new ModuleAntiCrawl());
