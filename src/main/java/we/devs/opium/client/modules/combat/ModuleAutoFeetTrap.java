@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@RegisterModule(name="Surround", description="Places blocks around your feet to protect you from crystals.", category=Module.Category.COMBAT)
-public class ModuleSurround extends Module {
+@RegisterModule(name="AutoFeetTrap", description="Places blocks around your feet to protect you from crystals.", category=Module.Category.COMBAT)
+public class ModuleAutoFeetTrap extends Module {
     private final ValueEnum mode = new ValueEnum("Mode", "Mode", "The mode for the Surround.", Modes.Normal);
     private final ValueEnum autoSwitch = new ValueEnum("Switch", "Switch", "The mode for Switching.", InventoryUtils.SwitchModes.Normal);
     private final ValueEnum itemSwitch = new ValueEnum("Item", "Item", "The item to place the blocks with.", InventoryUtils.ItemModes.Obsidian);

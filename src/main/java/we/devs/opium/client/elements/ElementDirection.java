@@ -15,6 +15,7 @@ import java.text.DecimalFormat;
 public class ElementDirection extends Element {
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         super.onRender2D(event);
         if(ModuleFont.INSTANCE.customFonts.getValue()) {
             this.frame.setWidth(RenderUtils.getFontRenderer().getStringWidth(getText()));

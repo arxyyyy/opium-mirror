@@ -64,6 +64,20 @@ public class InventoryUtils implements IMinecraft {
         return bestSlot;
     }
 
+
+    public static int getSlotByClass(Class<?> clss) {
+        int itemSlot = -1;
+
+        for (int i = 45; i > 0; --i) {
+            if (mc.player.getInventory().getStack(i).getItem().getClass() == clss) {
+                itemSlot = i;
+                break;
+            }
+        }
+
+        return itemSlot;
+    }
+
     public static ItemStack get(int slot) {
         if (slot == -2) {
             return mc.player.getInventory().getStack(mc.player.getInventory().selectedSlot);

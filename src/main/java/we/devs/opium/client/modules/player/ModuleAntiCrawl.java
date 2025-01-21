@@ -1,28 +1,24 @@
 package we.devs.opium.client.modules.player;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.math.Direction;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket.Action;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import we.devs.opium.Opium;
 import we.devs.opium.api.utilities.*;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.client.events.EventRender3D;
-import we.devs.opium.client.values.impl.ValueBoolean;
-import we.devs.opium.client.values.impl.ValueCategory;
-import we.devs.opium.client.values.impl.ValueColor;
-import we.devs.opium.client.values.impl.ValueEnum;
+import we.devs.opium.client.values.impl.*;
 
 import java.awt.*;
 
 @RegisterModule(name = "AntiCrawl", description = "Mines Blocks above or below you to get you out of a crawl state.", category = Module.Category.PLAYER)
 public class ModuleAntiCrawl extends Module {
-    //ValueEnum autoSwitch = new ValueEnum("AutoSwitch", "Auto Switch", "Automatically switches to your Pickaxe.", AutoSwitch.None);
+    ValueBoolean strictSwitch = new ValueBoolean("StrictSwitch", "Strict Switch", "Switches to Pickaxe at the end of the mining process.", false);
+    ValueNumber breakSpeed = new ValueNumber("BreakSpeed", "Break Speed", "The Amount of Progress needs to be made to mine the Block", 1.0, 0.5, 1.0);
 
     ValueColor getSetting(String name, Color defaultC) {
         return new ValueColor(name, name, name, renderCategory, defaultC);
@@ -30,11 +26,11 @@ public class ModuleAntiCrawl extends Module {
 
     ValueCategory renderCategory = new ValueCategory("Render", "Render settings");
     ValueBoolean fill = new ValueBoolean("Fill", "Fill", "Show fill", true);
-    ValueColor miningFill = getSetting("MiningFill", new Color(250, 20, 20, 200));
-    ValueColor finishedFill = getSetting("FinishedFill", new Color(20, 250, 20, 200));
+    ValueColor miningFill = getSetting("MiningFill", new Color(250, 20, 20, 150));
+    ValueColor finishedFill = getSetting("FinishedFill", new Color(20, 250, 20, 150));
     ValueBoolean outline = new ValueBoolean("Outline", "Outline", "Show outline", true);
-    ValueColor miningOutline = getSetting("MiningOutline", new Color(250, 20, 20, 200).darker());
-    ValueColor finishedOutline = getSetting("FinishedOutline", new Color(20, 250, 20, 200).darker());
+    ValueColor miningOutline = getSetting("MiningOutline", new Color(250, 20, 20, 150).darker());
+    ValueColor finishedOutline = getSetting("FinishedOutline", new Color(20, 250, 20, 150).darker());
     ValueEnum easing = new ValueEnum("Easing", "Easing", "How to ease the progress rendering", renderCategory, Easing.EaseOutCircular);
 
     double progress = 0;
@@ -110,8 +106,8 @@ public class ModuleAntiCrawl extends Module {
         if (progress <= 0.2) {
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos, Direction.UP));
         }
-        if (progress > 1.0) {
-            InventoryUtils.switchSlot(slot, true);
+        if (progress >= this.breakSpeed.getValue().doubleValue()) {
+            InventoryUtils.switchSlot(slot, strictSwitch.getValue());
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos, Direction.UP));
             progress = 0;
             status = -2;
@@ -159,12 +155,6 @@ public class ModuleAntiCrawl extends Module {
 
     static double easeOutCirc(double n) {
         return Math.sqrt(1 - Math.pow(n - 1, 2));
-    }
-
-    public enum AutoSwitch {
-        None,
-        Continously,
-        OnBreak
     }
 
     public enum Easing {

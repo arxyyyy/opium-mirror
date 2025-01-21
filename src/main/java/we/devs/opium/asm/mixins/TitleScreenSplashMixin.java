@@ -21,6 +21,7 @@ public class TitleScreenSplashMixin {
         String[] customSplashes = {
                 "Cxiy",
                 "Heedi",
+                "cpv",
                 "Opium",
                 "", // Empty cz looks good ngl
                 "VoidMatter",

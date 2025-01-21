@@ -152,6 +152,7 @@ public class ModuleComponent extends Component {
                 bindKey = (!this.module.isToggled() ? Formatting.GRAY : "") + "[" + Keys.getFallbackKeyName(this.module.getBind()) + "]";
             }
 
+            if(RenderUtils.getFontRenderer() == null) return;
             int paddingRight = 4;
             int bindKeyWidth = ModuleFont.INSTANCE.customFonts.getValue()
                     ? (int) FontRenderers.fontRenderer.getStringWidth(bindKey)

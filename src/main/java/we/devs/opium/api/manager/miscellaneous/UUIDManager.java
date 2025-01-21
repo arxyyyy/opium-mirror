@@ -65,7 +65,7 @@ public class UUIDManager {
                 Opium.LOGGER.warn("Session or ID is null, could not upload user id!");
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Opium.LOGGER.error("[UUIDManager] Failed to upload user uuid!", e);
         }
     }
 

@@ -40,16 +40,20 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleRotations());
         this.register(new ModuleRPC());
         this.register(new ModuleAutoConfigSaving());
+        this.register(new ModuleConfigEditor());
+        this.register(new ModuleAutoTrap());
 
         //Combat
         this.register(new ModuleAutoArmor());
         this.register(new ModuleHoleFill());
         this.register(new ModuleOffhand());
         this.register(new ModulePopCounter());
-        this.register(new ModuleSurround());
+        this.register(new ModuleAutoFeetTrap());
         this.register(new ModuleTriggerBot());
         this.register(new ModulePacketExp());
         this.register(new ModuleAntiCrawl());
+        this.register(new ModuleAura());
+        this.register(new ModuleCriticals());
 
         //Exploit
         this.register(new ModuleHitboxDesync());
@@ -59,6 +63,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleMiddleClick());
         this.register(new ModuleWelcomer());
         this.register(new ModuleFakeDuelMessage());
+        this.register(new ModuleAutoEZ());
 
         //Movement
         this.register(new InstantSpeed());
@@ -67,12 +72,14 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleSprint());
         this.register(new ModuleVelocity());
         this.register(new ModuleStep());
+        this.register(new ModuleNoSlow());
 
         //Player
         this.register(new ModuleMultiTask());
         this.register(new ModuleElytraSwap());
         this.register(new ModuleFastPlace());
 //        this.register(new CxMine());
+        this.register(new ModulePacketMine());
 
         //Visuals
         this.register(new ModuleCrosshair());
@@ -81,6 +88,10 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleHoleESP());
         this.register(new ModuleNametags());
         this.register(new ModuleBurrowESP());
+        this.register(new ModuleFullBright());
+        this.register(new ModuleNoRender());
+        this.register(new ModuleDeathEffects());
+        this.register(new ModuleCustomFOV());
 
         this.modules.sort(Comparator.comparing(Module::getName));
     }

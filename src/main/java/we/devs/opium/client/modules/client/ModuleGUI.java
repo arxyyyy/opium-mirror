@@ -14,6 +14,7 @@ import java.awt.*;
 @RegisterModule(name="GUI", description="The client's GUI interface for interacting with modules and settings.", category=Module.Category.CLIENT, bind= GLFW.GLFW_KEY_RIGHT_SHIFT)
 public class ModuleGUI extends Module {
     public static ModuleGUI INSTANCE;
+    public ValueBoolean snow = new ValueBoolean("Snow", "Snow", "Let It Snow (wierdly broken)", false);
     public final ValueColor categoryColor = new ValueColor("CategoryColor", "Category Color", "Color of the category panes.", new Color(29, 29, 29,255));
     public final ValueColor categoryTitleColor = new ValueColor("CategoryTitleColor", "Category Title Color", "Color of the category title.", ModuleColor.getColor());
     public ValueBoolean roundedCorners = new ValueBoolean("RoundedCorners", "Rounded Categories", "Make the category panes rounded.", true);

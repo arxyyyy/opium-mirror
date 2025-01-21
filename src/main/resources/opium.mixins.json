@@ -8,9 +8,12 @@
     "ChatHudMixin",
     "ClientConnectionMixin",
     "ClientPlayerEntityMixin",
+    "ClientPlayerInteractionManagerMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityRendererMixin",
     "GameMenuScreenMixin",
+    "GameOptionsMixin",
+    "GameOverlayRendererMixin",
     "IClientPlayerEntity",
     "IEntityVelocityUpdateS2CPacket",
     "IExplosionS2CPacket",
@@ -21,6 +24,7 @@
     "MixinSplashScreen",
     "MusicTickerMixin",
     "PlayerListHudMixin",
+    "SimpleOptionMixin",
     "TitleScreenMixin",
     "TitleScreenSplashMixin",
     "WorldRendererMixin"
@@ -29,6 +33,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "LimbAnimatorMixin"
+    "EntityMixin",
+    "LimbAnimatorMixin",
+    "LivingEntityMixin"
   ]
 }

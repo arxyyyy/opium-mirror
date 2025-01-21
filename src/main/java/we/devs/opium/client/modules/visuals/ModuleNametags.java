@@ -8,6 +8,7 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffects;
@@ -49,14 +50,12 @@ import static me.x150.renderer.util.RendererUtils.*;
 import static we.devs.opium.client.modules.visuals.ModuleNametags.Armor.Durability;
 import static we.devs.opium.client.modules.visuals.ModuleNametags.Armor.OnlyArmor;
 
-/**
- * credit to alien client * FUCK ALIEN CLIENT - heedi
- */
 @RegisterModule(name = "Nametags", description = "Nametags", tag = "Nametags", category = Module.Category.VISUALS)
 public class ModuleNametags extends Module {
     public static ModuleNametags INSTANCE;
+    private final ValueBoolean self = new ValueBoolean("Self","Self","self asf", false);
     private final ValueNumber scale = new ValueNumber("Scale","Scale","Scale", 0.68f, 0.1f, 2f);
-    private final ValueNumber minScale = new ValueNumber("MinScale","MinScale","MinScale", 0.2f, 0.1f, 1f);
+    private final ValueNumber minScale = new ValueNumber("MinScale","MinScale","MinScale", 1f, 0.1f, 1f);
     private final ValueNumber scaled = new ValueNumber("Scaled","Scaled","Scaled", 1, 0, 2);
     private final ValueNumber offset = new ValueNumber("Offset","Offset","Offset", 0.315f, 0.001f, 1f);
     private final ValueNumber height = new ValueNumber("Height","Height","Height", 0, -3, 3);
@@ -83,7 +82,7 @@ public class ModuleNametags extends Module {
     public void onRender2D(EventRender2D context) {
         float tickDelta = mc.getRenderTickCounter().getTickDelta(true);
         for (PlayerEntity ent : mc.world.getPlayers()) {
-            if (ent == mc.player && mc.options.getPerspective().isFirstPerson()) continue;
+            if (ent == mc.player && (mc.options.getPerspective().isFirstPerson() || !self.getValue())) continue;
             double x = ent.prevX + (ent.getX() - ent.prevX) * mc.getRenderTickCounter().getTickDelta(true);
             double y = ent.prevY + (ent.getY() - ent.prevY) * mc.getRenderTickCounter().getTickDelta(true);
             double z = ent.prevZ + (ent.getZ() - ent.prevZ) * mc.getRenderTickCounter().getTickDelta(true);

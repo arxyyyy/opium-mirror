@@ -1,12 +1,14 @@
-package we.devs.opium.api.events;
+package we.devs.opium.client.events;
 
 import net.minecraft.entity.LivingEntity;
 import we.devs.opium.api.manager.event.Event;
+import we.devs.opium.api.manager.event.EventArgument;
+import we.devs.opium.api.manager.event.EventListener;
 
 /**
  * Represents an event triggered when a living entity dies.
  */
-public class DeathEvent extends Event {
+public class DeathEvent extends EventArgument {
     private final LivingEntity entity;
 
     /**
@@ -25,5 +27,10 @@ public class DeathEvent extends Event {
      */
     public LivingEntity getEntity() {
         return entity;
+    }
+
+    @Override
+    public void call(EventListener listener) {
+        listener.onDeath(this);
     }
 }

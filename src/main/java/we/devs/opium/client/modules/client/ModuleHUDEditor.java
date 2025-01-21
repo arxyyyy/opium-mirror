@@ -4,6 +4,8 @@ import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import net.minecraft.util.Formatting;
+import we.devs.opium.client.gui.hud.ElementFrame;
+import we.devs.opium.client.gui.hud.HudEditorScreen;
 
 @RegisterModule(name="HUDEditor", tag="HUD Editor", description="The client's HUD Editor.", category=Module.Category.CLIENT)
 public class ModuleHUDEditor extends Module {

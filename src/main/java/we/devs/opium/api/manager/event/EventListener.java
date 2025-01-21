@@ -39,4 +39,10 @@ public interface EventListener {
 
     default void onTick(EventTick event) {
     }
+
+    default void onDeath(DeathEvent event) {
+    }
+
+    default void onDamageBlock(DamageBlockEvent event) {
+    }
 }

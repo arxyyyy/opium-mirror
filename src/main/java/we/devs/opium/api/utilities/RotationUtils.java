@@ -12,6 +12,18 @@ public class RotationUtils implements IMinecraft {
     private static float c;
     private static float b;
 
+    public static float[] getRotationsToOpp(Entity entity) {
+        double locationMath = 1.3;
+        assert mc.player != null;
+        double positionX = entity.getX() - mc.player.getX();
+        double positionZ = entity.getZ() - mc.player.getZ();
+        double positionY = entity.getY() + entity.getEyeHeight(entity.getPose()) / locationMath - (mc.player.getY() + mc.player.getEyeHeight(mc.player.getPose()));
+        double positions = MathHelper.sqrt((float) (positionX * positionX + positionZ * positionZ));
+        float yaw = (float) ((Math.atan2(positionZ, positionX) * 180.0 / Math.PI) - 90.0f);
+        float pitch = (float) -(Math.atan2(positionY, positions) * 180.0 / Math.PI);
+        return new float[]{yaw, pitch};
+    }
+
     public static float[] getRotations(double posX, double posY, double posZ) {
         PlayerEntity player = mc.player;
         double x = posX - player.getX();

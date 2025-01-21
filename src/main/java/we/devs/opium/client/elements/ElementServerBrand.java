@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 public class ElementServerBrand extends Element {
     @Override
     public void onRender2D(EventRender2D event) {
+        if(RenderUtils.getFontRenderer() == null) return;
         super.onRender2D(event);
         if(RenderUtils.getFontRenderer() == null) return;
         if(ModuleFont.INSTANCE.customFonts.getValue()) {

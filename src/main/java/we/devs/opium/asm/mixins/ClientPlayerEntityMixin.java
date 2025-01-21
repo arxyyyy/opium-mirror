@@ -1,6 +1,7 @@
 package we.devs.opium.asm.mixins;
 
 import com.mojang.authlib.GameProfile;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import we.devs.opium.Opium;
 import we.devs.opium.api.utilities.IMinecraft;
 import we.devs.opium.client.events.EventMotion;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import we.devs.opium.client.modules.movement.ModuleNoSlow;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implements IMinecraft {
@@ -128,5 +130,14 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Redirect(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z"), require = 0)
+    private boolean onTickMovement(ClientPlayerEntity player) {
+        if (ModuleNoSlow.INSTANCE.getItems()) {
+            return false;
+        }
+
+        return player.isUsingItem();
     }
 }

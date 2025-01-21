@@ -133,7 +133,7 @@ public class HoleUtils implements IMinecraft {
         boolean retVal = false;
         BlockPos pos = BlockPos.ofFloored(player.getPos());
         assert mc.world != null;
-        if (mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.down()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.east()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.west()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.south()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.north()).getBlock().equals(Blocks.AIR)) {
+        if (mc.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) && !mc.world.getBlockState(pos.down()).getBlock().equals(Blocks.AIR) && mc.player.isSwimming()) {
             retVal = true;
         }
         return retVal;

@@ -1,11 +1,10 @@
 package we.devs.opium.client.modules.visuals;
 
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
-import we.devs.opium.api.events.DeathEvent;
+import we.devs.opium.client.events.DeathEvent;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.client.values.impl.ValueBoolean;
@@ -14,7 +13,7 @@ import we.devs.opium.client.values.impl.ValueBoolean;
 public class ModuleDeathEffects extends Module {
     ValueBoolean sound = new ValueBoolean("Sound", "Sound", "Plays a thunder sound when a player dies.", false);
 
-    @Subscribe
+    @Override
     public void onDeath(DeathEvent event) {
         if (event.getEntity() instanceof PlayerEntity player) {
             // Spawn a lightning bolt at the player's location
