@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class ModuleAutoTrap extends Module {
     ValueEnum itemSwitch = new ValueEnum("Item", "Item", "The item to place the blocks with.", InventoryUtils.ItemModes.Obsidian);
     ValueEnum autoSwitch = new ValueEnum("Switch", "Switch", "The mode for Switching.", InventoryUtils.SwitchModes.Silent);
-    ValueNumber oppRange = new ValueNumber("TargetRange", "Target Range", "The max range to an enemy Player", 5.0f, 0.0f, 6.0f);
+    ValueNumber targetRange = new ValueNumber("TargetRange", "Target Range", "The max range to an enemy Player", 5.0f, 0.0f, 6.0f);
     ValueNumber placeRange = new ValueNumber("PlaceRange", "Place Range", "The range for placing.", 5.0, 0.0, 6.0);
     ValueNumber delay = new ValueNumber("Delay", "Delay", "max lvl delay", 50L, 0L, 1000L);
     ValueBoolean render = new ValueBoolean("Render", "Render", "Render.", true);
@@ -34,7 +34,7 @@ public class ModuleAutoTrap extends Module {
             new BlockPos(0, 1, 0)
     };
     List<BlockPos> renderPos = new ArrayList<>();
-    private PlayerEntity opp;
+    private PlayerEntity target;
 
     @Override
     public void onMotion(EventMotion event) {
@@ -49,12 +49,12 @@ public class ModuleAutoTrap extends Module {
             disable(false);
         }
 
-        this.opp = TargetUtils.getTarget(oppRange.getValue().floatValue());
+        this.target = TargetUtils.getTarget(targetRange.getValue().floatValue());
         //Makes Sure that the Target Variable is not empty
-        if (this.opp == null) {
+        if (this.target == null) {
             return;
         }
-        BlockPos pos = this.opp.getBlockPos().up();
+        BlockPos pos = this.target.getBlockPos().up();
 
         InventoryUtils.switchSlot(slot, this.autoSwitch.getValue().equals(InventoryUtils.SwitchModes.Silent));
         for (BlockPos off : OFFSETS) {
