@@ -17,13 +17,14 @@ import we.devs.opium.client.values.impl.ValueNumber;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-@RegisterModule(name="AutoTrap", description="mcswag.", category=Module.Category.COMBAT)
+@RegisterModule(name="AutoTrap", description="Automatically Traps a Player in Obsidian or Ender Chests.", category=Module.Category.COMBAT)
 public class ModuleAutoTrap extends Module {
     ValueEnum itemSwitch = new ValueEnum("Item", "Item", "The item to place the blocks with.", InventoryUtils.ItemModes.Obsidian);
-    ValueEnum autoSwitch = new ValueEnum("Switch", "Switch", "The mode for Switching.", InventoryUtils.SwitchModes.Normal);
-    ValueNumber oppRange = new ValueNumber("OppRange", "OppRange", "The range for the opps.", 6.0f, 0.0f, 10.0f);
-    ValueNumber placeRange = new ValueNumber("PlaceRange", "PlaceRange", "The range for placing.", 5.0, 0.0, 10.0);
+    ValueEnum autoSwitch = new ValueEnum("Switch", "Switch", "The mode for Switching.", InventoryUtils.SwitchModes.Silent);
+    ValueNumber oppRange = new ValueNumber("OppRange", "OppRange", "The max range to an enemy Player", 5.0f, 0.0f, 6.0f);
+    ValueNumber placeRange = new ValueNumber("PlaceRange", "PlaceRange", "The range for placing.", 5.0, 0.0, 6.0);
     ValueNumber delay = new ValueNumber("Delay", "Delay", "max lvl delay", 50L, 0L, 1000L);
     ValueBoolean render = new ValueBoolean("Render", "Render", "Render.", true);
     ValueColor color = new ValueColor("Color", "Color", "", new Color(255, 0, 213, 120));
@@ -44,7 +45,7 @@ public class ModuleAutoTrap extends Module {
         int slot = InventoryUtils.getTargetSlot(itemSwitch.getValue().toString());
         int lastSlot = mc.player.getInventory().selectedSlot;
         if (slot == -1) {
-            ChatUtils.sendMessage("You have no blocks lel nice iq. Disabling");
+            ChatUtils.sendMessage("Out of Blocks!");
             disable(false);
         }
 
@@ -63,6 +64,12 @@ public class ModuleAutoTrap extends Module {
             RotationUtils.rotate(event, RotationUtils.getRotationsTo(newPos.toCenterPos()));
             BlockUtils.placeBlock(event, newPos, Hand.MAIN_HAND);
             renderPos.add(newPos);
+
+            try {
+                TimeUnit.MILLISECONDS.sleep(delay.getValue().longValue());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         InventoryUtils.switchSlot(lastSlot, this.autoSwitch.getValue().equals(InventoryUtils.SwitchModes.Silent));
     }
