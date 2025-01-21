@@ -65,14 +65,14 @@ public class ModuleNametags extends Module {
     private final ValueBoolean health = new ValueBoolean("Health","Health","Health", true);
     private final ValueBoolean distance = new ValueBoolean("Distance","Distance","Distance", true);
     private final ValueBoolean pops = new ValueBoolean("TotemPops","TotemPops","TotemPops", true);
-//    private final ValueBoolean enchants = new ValueBoolean("Enchants","Enchants","Enchants", true);
+    private final ValueBoolean enchants = new ValueBoolean("Enchants","Enchants","Enchants", true);
     private final ValueColor friendColor = new ValueColor("FriendColor","FriendColor","FriendColor", new Color(0xFF1DFF1D, true));
     private final ValueColor color = new ValueColor("Color","Color","Color", new Color(0xFFFFFFFF, true));
 
 //    public final ValueEnum font = new ValueEnum("FontMode","FontMode","FontMode", Font.Fast);
-//    private final ValueNumber armorHeight = new ValueNumber("ArmorHeight","ArmorHeight","ArmorHeight", 0.3f, -10, 10f);
-//    private final ValueNumber armorScale = new ValueNumber("ArmorScale","ArmorScale","ArmorScale", 0.9f, 0.1f, 2f);
-//    private final ValueEnum armorMode = new ValueEnum("ArmorMode","ArmorMode","ArmorMode", Armor.Full);
+    private final ValueNumber armorHeight = new ValueNumber("ArmorHeight","ArmorHeight","ArmorHeight", 0.3f, -10, 10f);
+    private final ValueNumber armorScale = new ValueNumber("ArmorScale","ArmorScale","ArmorScale", 0.9f, 0.1f, 2f);
+    private final ValueEnum armorMode = new ValueEnum("ArmorMode","ArmorMode","ArmorMode", Armor.Full);
 
     public ModuleNametags() {
         INSTANCE = this;
@@ -133,12 +133,12 @@ public class ModuleNametags extends Module {
 
                 ArrayList<ItemStack> stacks = new ArrayList<>();
 
-                ent.getMainHandStack();
-                ent.getInventory().armor.get(3);
-                ent.getInventory().armor.get(2);
-                ent.getInventory().armor.get(1);
-                ent.getInventory().armor.get(0);
-                ent.getOffHandStack();
+                stacks.add(ent.getMainHandStack());
+                stacks.add(ent.getInventory().armor.get(3));
+                stacks.add(ent.getInventory().armor.get(2));
+                stacks.add(ent.getInventory().armor.get(1));
+                stacks.add(ent.getInventory().armor.get(0));
+                stacks.add(ent.getOffHandStack());
 
                 context.getContext().getMatrices().push();
                 context.getContext().getMatrices().translate(tagX - 2 + (textWidth + 4) / 2f, (float) (posY - 13f) + 6.5f, 0);
@@ -148,116 +148,104 @@ public class ModuleNametags extends Module {
                 context.getContext().getMatrices().translate(-(tagX - 2 + (textWidth + 4) / 2f), -(float) ((posY - 13f) + 6.5f), 0);
 
                 float item_offset = 0;
-//                if (armorMode.getValue() != Armor.None) {
-//                    int count = 0;
-//                    for (ItemStack armorComponent : stacks) {
-//                        count++;
-//                        if (!armorComponent.isEmpty()) {
-//                            context.getContext().getMatrices().push();
-//                            context.getContext().getMatrices().translate(tagX - 2 + (textWidth + 4) / 2f, (float) (posY - 13f) + 6.5f, 0);
-//                            context.getContext().getMatrices().scale(armorScale.getValue().floatValue(), armorScale.getValue().floatValue(), 1f);
-//                            context.getContext().getMatrices().translate(-(tagX - 2 + (textWidth + 4) / 2f), -(float) ((posY - 13f) + 6.5f), 0);
-//                            context.getContext().getMatrices().translate(posX - 52.5 + item_offset, (float) (posY - 29f) + armorHeight.getValue().floatValue(), 0);
-//                            float durability = armorComponent.getMaxDamage() - armorComponent.getDamage();
-//                            int percent = (int) ((durability / (float) armorComponent.getMaxDamage()) * 100F);
-//                            Color color;
-//                            if (percent <= 33) {
-//                                color = Color.RED;
-//                            } else if (percent <= 66) {
-//                                color = Color.ORANGE;
-//                            } else {
-//                                color = Color.GREEN;
-//                            }
-//                            switch (armorMode.getValue()) {
-//                                case OnlyArmor -> {
-//                                    if (count > 1 && count < 6) {
-//                                        DiffuseLighting.disableGuiDepthLighting();
-//                                        context.getContext().drawItem(armorComponent, 0, 0);
-//                                        context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
-//                                    }
-//                                }
-//                                case Armor.Item -> {
-//                                    DiffuseLighting.disableGuiDepthLighting();
-//                                    context.getContext().drawItem(armorComponent, 0, 0);
-//                                    context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
-//                                }
-//                                case Armor.Full -> {
-//                                    DiffuseLighting.disableGuiDepthLighting();
-//                                    context.getContext().drawItem(armorComponent, 0, 0);
-//                                    context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
-//                                    if (armorComponent.getMaxDamage() > 0) {
-//                                        if (font.getValue() == Font.Fancy) {
-//                                            RenderUtils.getFontRenderer().drawString(context.getContext().getMatrices(), String.valueOf(percent), 9 - RenderUtils.getFontRenderer().getStringWidth(String.valueOf(percent)) / 2, -RenderUtils.getFontRenderer().getStringHeight(String.valueOf(percent)) + 3, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-//                                        } else {
-//                                            context.getContext().drawText(mc.textRenderer, String.valueOf(percent), 9 - mc.textRenderer.getWidth(String.valueOf(percent)) / 2, -mc.textRenderer.fontHeight + 1, color.getRGB(), true);
-//                                        }
-//                                    }
-//                                }
-//                                case Durability -> {
-//                                    context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
-//                                    if (armorComponent.getMaxDamage() > 0) {
-//                                        if (!armorComponent.isItemBarVisible()) {
-//                                            int i = armorComponent.getItemBarStep();
-//                                            int j = armorComponent.getItemBarColor();
-//                                            int k = 2;
-//                                            int l = 13;
-//                                            context.getContext().fill(RenderLayer.getGuiOverlay(), k, l, k + 13, l + 2, -16777216);
-//                                            context.getContext().fill(RenderLayer.getGuiOverlay(), k, l, k + i, l + 1, j | -16777216);
-//                                        }
-//                                        if (font.getValue() == Font.Fancy) {
-//                                            RenderUtils.getFontRenderer().drawString(context.getContext().getMatrices(), String.valueOf(percent), 9 - RenderUtils.getFontRenderer().getStringWidth(String.valueOf(percent)) / 2, 7, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-//                                        } else {
-//                                            context.getContext().drawText(mc.textRenderer, String.valueOf(percent), 9 - mc.textRenderer.getWidth(String.valueOf(percent)) / 2, 5, color.getRGB(), true);
-//                                        }
-//                                    }
-//                                }
-//                                default -> throw new IllegalStateException("Unexpected value: " + armorMode.getValue());
-//                            }
-//                            context.getContext().getMatrices().pop();
-//
-//                            if (this.enchants.getValue()) {
-//                                AtomicReference<Float> enchantmentY = new AtomicReference<>((float) 0);
-//                                Object2IntMap<RegistryEntry<Enchantment>> enchantments = new Object2IntArrayMap<>();
-//                                getEnchantments(armorComponent, enchantments);
-//                                float finalItem_offset = item_offset;
-//                                enchantments.forEach((enchantmentRegistryEntry, i) -> {
-//                                    String id = enchantmentRegistryEntry.getIdAsString();
-//                                    int level = i;
-//                                    String encName;
-//                                    switch (id) {
-//                                        case "minecraft:blast_protection" -> encName = "B" + level;
-//                                        case "minecraft:protection" -> encName = "P" + level;
-//                                        case "minecraft:thorns" -> encName = "T" + level;
-//                                        case "minecraft:sharpness" -> encName = "S" + level;
-//                                        case "minecraft:efficiency" -> encName = "E" + level;
-//                                        case "minecraft:unbreaking" -> encName = "U" + level;
-//                                        case "minecraft:power" -> encName = "PO" + level;
-//                                        default -> {
-//                                            return;
-//                                        }
-//                                    }
-//
-//                                    if (font.getValue() == Font.Fancy) {
-//                                        RenderUtils.getFontRenderer().drawString(context.getContext().getMatrices(), encName, (float) (posX - 50 + finalItem_offset), (float) posY - 45 + enchantmentY.get(), 255, 255, 255, 255);
-//                                    } else {
-//                                        context.getContext().getMatrices().push();
-//                                        context.getContext().getMatrices().translate((posX - 50f + finalItem_offset), (posY - 45f + enchantmentY.get()), 0);
-//                                        context.getContext().drawText(mc.textRenderer, encName, 0, 0, -1, true);
-//                                        context.getContext().getMatrices().pop();
-//                                    }
-//                                    enchantmentY.updateAndGet(v -> v - 8);
-//                                });
-//                            }
-//                        }
-//                        item_offset += 18f;
-//                    }
-//                    // broken
-////                    Renderer2d.renderQuad(context.getContext().getMatrices(), rect.getValue(), tagX - 2, (float) (posY - 14f), textWidth + 4, 13);
-////                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(),tagX - 3, (float) (posY - 14f), textWidth + 6, 1);
-////                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(), tagX - 3, (float) (posY - 2f), textWidth + 6, 1);
-////                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(), tagX - 3, (float) (posY - 14f), 1, 12);
-////                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(), tagX + textWidth + 2, (float) (posY - 14f), 1, 12);
-//                }
+                if (armorMode.getValue() != Armor.None) {
+                    int count = 0;
+                    for (ItemStack armorComponent : stacks) {
+                        count++;
+                        if (!armorComponent.isEmpty()) {
+                            context.getContext().getMatrices().push();
+                            context.getContext().getMatrices().translate(tagX - 2 + (textWidth + 4) / 2f, (float) (posY - 13f) + 6.5f, 0);
+                            context.getContext().getMatrices().scale(armorScale.getValue().floatValue(), armorScale.getValue().floatValue(), 1f);
+                            context.getContext().getMatrices().translate(-(tagX - 2 + (textWidth + 4) / 2f), -(float) ((posY - 13f) + 6.5f), 0);
+                            context.getContext().getMatrices().translate(posX - 52.5 + item_offset, (float) (posY - 29f) + armorHeight.getValue().floatValue(), 0);
+                            float durability = armorComponent.getMaxDamage() - armorComponent.getDamage();
+                            int percent = (int) ((durability / (float) armorComponent.getMaxDamage()) * 100F);
+                            Color color;
+                            if (percent <= 33) {
+                                color = Color.RED;
+                            } else if (percent <= 66) {
+                                color = Color.ORANGE;
+                            } else {
+                                color = Color.GREEN;
+                            }
+                            switch (armorMode.getValue()) {
+                                case OnlyArmor -> {
+                                    if (count > 1 && count < 6) {
+                                        DiffuseLighting.disableGuiDepthLighting();
+                                        context.getContext().drawItem(armorComponent, 0, 0);
+                                        context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
+                                    }
+                                }
+                                case Armor.Item -> {
+                                    DiffuseLighting.disableGuiDepthLighting();
+                                    context.getContext().drawItem(armorComponent, 0, 0);
+                                    context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
+                                }
+                                case Armor.Full -> {
+                                    DiffuseLighting.disableGuiDepthLighting();
+                                    context.getContext().drawItem(armorComponent, 0, 0);
+                                    context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
+                                    if (armorComponent.getMaxDamage() > 0) {
+                                        context.getContext().drawText(mc.textRenderer, String.valueOf(percent), 9 - mc.textRenderer.getWidth(String.valueOf(percent)) / 2, -mc.textRenderer.fontHeight + 1, color.getRGB(), true);
+                                    }
+                                }
+                                case Durability -> {
+                                    context.getContext().drawItemInSlot(mc.textRenderer, armorComponent, 0, 0);
+                                    if (armorComponent.getMaxDamage() > 0) {
+                                        if (!armorComponent.isItemBarVisible()) {
+                                            int i = armorComponent.getItemBarStep();
+                                            int j = armorComponent.getItemBarColor();
+                                            int k = 2;
+                                            int l = 13;
+                                            context.getContext().fill(RenderLayer.getGuiOverlay(), k, l, k + 13, l + 2, -16777216);
+                                            context.getContext().fill(RenderLayer.getGuiOverlay(), k, l, k + i, l + 1, j | -16777216);
+                                        }
+                                        context.getContext().drawText(mc.textRenderer, String.valueOf(percent), 9 - mc.textRenderer.getWidth(String.valueOf(percent)) / 2, 5, color.getRGB(), true);
+                                    }
+                                }
+                                default -> throw new IllegalStateException("Unexpected value: " + armorMode.getValue());
+                            }
+                            context.getContext().getMatrices().pop();
+
+                            if (this.enchants.getValue()) {
+                                AtomicReference<Float> enchantmentY = new AtomicReference<>((float) 0);
+                                Object2IntMap<RegistryEntry<Enchantment>> enchantments = new Object2IntArrayMap<>();
+                                getEnchantments(armorComponent, enchantments);
+                                float finalItem_offset = item_offset;
+                                enchantments.forEach((enchantmentRegistryEntry, i) -> {
+                                    String id = enchantmentRegistryEntry.getIdAsString();
+                                    int level = i;
+                                    String encName;
+                                    switch (id) {
+                                        case "minecraft:blast_protection" -> encName = "B" + level;
+                                        case "minecraft:protection" -> encName = "P" + level;
+                                        case "minecraft:thorns" -> encName = "T" + level;
+                                        case "minecraft:sharpness" -> encName = "S" + level;
+                                        case "minecraft:efficiency" -> encName = "E" + level;
+                                        case "minecraft:unbreaking" -> encName = "U" + level;
+                                        case "minecraft:power" -> encName = "PO" + level;
+                                        default -> {
+                                            return;
+                                        }
+                                    }
+
+                                    context.getContext().getMatrices().push();
+                                    context.getContext().getMatrices().translate((posX - 50f + finalItem_offset), (posY - 45f + enchantmentY.get()), 0);
+                                    context.getContext().drawText(mc.textRenderer, encName, 0, 0, -1, true);
+                                    context.getContext().getMatrices().pop();
+                                    enchantmentY.updateAndGet(v -> v - 8);
+                                });
+                            }
+                        }
+                        item_offset += 18f;
+                    }
+                    // broken
+//                    Renderer2d.renderQuad(context.getContext().getMatrices(), rect.getValue(), tagX - 2, (float) (posY - 14f), textWidth + 4, 13);
+//                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(),tagX - 3, (float) (posY - 14f), textWidth + 6, 1);
+//                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(), tagX - 3, (float) (posY - 2f), textWidth + 6, 1);
+//                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(), tagX - 3, (float) (posY - 14f), 1, 12);
+//                    Renderer2d.renderQuad(context.getContext().getMatrices(), outline.getValue(), tagX + textWidth + 2, (float) (posY - 14f), 1, 12);
+                }
 //                if (font.getValue() == Font.Fancy) {
 //                    Color c = Opium.FRIEND_MANAGER.isFriend(ent.getGameProfile().getName()) ? friendColor.getValue() : this.color.getValue();
 //                    RenderUtils.getFontRenderer().drawString(context.getContext().getMatrices(), final_string, tagX, (float) posY - 10, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
