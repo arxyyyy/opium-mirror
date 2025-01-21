@@ -1,14 +1,12 @@
 package we.devs.opium.client.modules.player;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.math.Direction;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket.Action;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import we.devs.opium.Opium;
 import we.devs.opium.api.utilities.*;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
