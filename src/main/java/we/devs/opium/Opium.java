@@ -43,7 +43,7 @@ import static we.devs.opium.api.utilities.IMinecraft.mc;
 public class Opium implements ModInitializer {
 
     public static final String NAME = "Opium";
-    public static final String VERSION = "1.4.1 - Developer Build";
+    public static final String VERSION = "1.4.2-Beta";
     public static final Logger LOGGER = LoggerFactory.getLogger("Opium");
 
     private static final String WEBHOOK_URL = "https://discordapp.com/api/webhooks/1328263874625142849/vSLhHrOZnUY8g6cBfNZJErz7P7S0j3s03MIF5YWnK4XyiHt83kUa2qGWS7WaLU3ypLUF";
