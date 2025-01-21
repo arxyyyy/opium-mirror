@@ -102,4 +102,9 @@ public class ClickGuiScreen extends Screen implements EventListener {
     public Color getCategoryColor() {
         return new Color(ModuleGUI.INSTANCE.categoryColor.getValue().getRed(), ModuleGUI.INSTANCE.categoryColor.getValue().getGreen(),ModuleGUI.INSTANCE.categoryColor.getValue().getBlue(), ModuleGUI.INSTANCE.categoryColor.getValue().getAlpha());
     }
+
+    @Override
+    public boolean shouldPause() {
+        return false;
+    }
 }

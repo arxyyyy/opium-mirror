@@ -21,6 +21,7 @@
     "MixinSplashScreen",
     "MusicTickerMixin",
     "PlayerListHudMixin",
+    "SimpleOptionMixin",
     "TitleScreenMixin",
     "TitleScreenSplashMixin",
     "WorldRendererMixin"
@@ -29,6 +30,7 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "LimbAnimatorMixin"
+    "LimbAnimatorMixin",
+    "LivingEntityMixin"
   ]
 }

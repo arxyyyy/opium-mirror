@@ -50,9 +50,6 @@ import static me.x150.renderer.util.RendererUtils.*;
 import static we.devs.opium.client.modules.visuals.ModuleNametags.Armor.Durability;
 import static we.devs.opium.client.modules.visuals.ModuleNametags.Armor.OnlyArmor;
 
-/**
- * credit to alien client * FUCK ALIEN CLIENT - heedi
- */
 @RegisterModule(name = "Nametags", description = "Nametags", tag = "Nametags", category = Module.Category.VISUALS)
 public class ModuleNametags extends Module {
     public static ModuleNametags INSTANCE;

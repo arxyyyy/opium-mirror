@@ -1,0 +1,78 @@
+package we.devs.opium.client.modules.combat;
+
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import we.devs.opium.api.manager.module.Module;
+import we.devs.opium.api.manager.module.RegisterModule;
+import we.devs.opium.api.utilities.*;
+import we.devs.opium.client.events.EventMotion;
+import we.devs.opium.client.events.EventRender3D;
+import we.devs.opium.client.values.impl.ValueBoolean;
+import we.devs.opium.client.values.impl.ValueColor;
+import we.devs.opium.client.values.impl.ValueEnum;
+import we.devs.opium.client.values.impl.ValueNumber;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@RegisterModule(name="AutoTrap", description="mcswag.", category=Module.Category.COMBAT)
+public class ModuleAutoTrap extends Module {
+    ValueEnum itemSwitch = new ValueEnum("Item", "Item", "The item to place the blocks with.", InventoryUtils.ItemModes.Obsidian);
+    ValueEnum autoSwitch = new ValueEnum("Switch", "Switch", "The mode for Switching.", InventoryUtils.SwitchModes.Normal);
+    ValueNumber oppRange = new ValueNumber("OppRange", "OppRange", "The range for the opps.", 6.0f, 0.0f, 10.0f);
+    ValueNumber placeRange = new ValueNumber("PlaceRange", "PlaceRange", "The range for placing.", 5.0, 0.0, 10.0);
+    ValueNumber delay = new ValueNumber("Delay", "Delay", "max lvl delay", 50L, 0L, 1000L);
+    ValueBoolean render = new ValueBoolean("Render", "Render", "Render.", true);
+    ValueColor color = new ValueColor("Color", "Color", "", new Color(255, 0, 213, 120));
+    PlayerEntity opp;
+    BlockPos[] OFFSETS = new BlockPos[] {
+            new BlockPos(1, 0, 0),
+            new BlockPos(0, 0, 1),
+            new BlockPos(0, 1, 0)
+    };
+    List<BlockPos> renderPos = new ArrayList<>();
+
+    @Override
+    public void onMotion(EventMotion event) {
+        if (mc.world == null || mc.player == null) {
+            return;
+        }
+
+        int slot = InventoryUtils.getTargetSlot(itemSwitch.getValue().toString());
+        int lastSlot = mc.player.getInventory().selectedSlot;
+        if (slot == -1) {
+            ChatUtils.sendMessage("You have no blocks lel nice iq. Disabling");
+            disable(false);
+        }
+
+        opp = TargetUtils.getTarget(oppRange.getValue().floatValue());
+        BlockPos pos = opp.getBlockPos().up();
+
+        InventoryUtils.switchSlot(slot, this.autoSwitch.getValue().equals(InventoryUtils.SwitchModes.Silent));
+        for (BlockPos off : OFFSETS) {
+            BlockPos newPos = pos.add(off);
+            if (!mc.world.isAir(off)) {
+                continue;
+            }
+            if (mc.player.getEyePos().distanceTo(newPos.toCenterPos()) > placeRange.getValue().doubleValue()) {
+                continue;
+            }
+            RotationUtils.rotate(event, RotationUtils.getRotationsTo(newPos.toCenterPos()));
+            BlockUtils.placeBlock(event, newPos, Hand.MAIN_HAND);
+            renderPos.add(newPos);
+        }
+        InventoryUtils.switchSlot(lastSlot, this.autoSwitch.getValue().equals(InventoryUtils.SwitchModes.Silent));
+    }
+
+    @Override
+    public void onRender3D(EventRender3D event) {
+        if (render.getValue()) {
+            for (BlockPos pos : renderPos) {
+                Renderer3d.renderEdged(event.getMatrices(), color.getValue(), color.getValue(), Vec3d.of(pos), new Vec3d(1, 1, 1));
+            }
+        }
+    }
+}

@@ -146,7 +146,7 @@ public class ModuleHUD extends Module {
             int[] potCount = new int[]{0};
             try {
                 mc.player.getActiveStatusEffects().forEach((effect, instance) -> {
-                    String name = Text.translatable(effect.getType().name()).getString();
+                    String name = effect.getType().name();
                     int duration = instance.getDuration();
                     int amplifier = instance.getAmplifier() + 1;
                     int potionColor = effect.value().getColor();
