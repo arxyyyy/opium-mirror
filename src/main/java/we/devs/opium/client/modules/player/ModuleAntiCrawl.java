@@ -11,16 +11,14 @@ import we.devs.opium.api.utilities.*;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.client.events.EventRender3D;
-import we.devs.opium.client.values.impl.ValueBoolean;
-import we.devs.opium.client.values.impl.ValueCategory;
-import we.devs.opium.client.values.impl.ValueColor;
-import we.devs.opium.client.values.impl.ValueEnum;
+import we.devs.opium.client.values.impl.*;
 
 import java.awt.*;
 
 @RegisterModule(name = "AntiCrawl", description = "Mines Blocks above or below you to get you out of a crawl state.", category = Module.Category.PLAYER)
 public class ModuleAntiCrawl extends Module {
     ValueBoolean strictSwitch = new ValueBoolean("StrictSwitch", "Strict Switch", "Switches to Pickaxe at the end of the mining process.", false);
+    ValueNumber breakSpeed = new ValueNumber("BreakSpeed", "Break Speed", "The Amount of Progress needs to be made to mine the Block", 1.0, 0.5, 1.0);
 
     ValueColor getSetting(String name, Color defaultC) {
         return new ValueColor(name, name, name, renderCategory, defaultC);
@@ -108,7 +106,7 @@ public class ModuleAntiCrawl extends Module {
         if (progress <= 0.2) {
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos, Direction.UP));
         }
-        if (progress > 1.0) {
+        if (progress >= this.breakSpeed.getValue().doubleValue()) {
             InventoryUtils.switchSlot(slot, strictSwitch.getValue());
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos, Direction.UP));
             progress = 0;
