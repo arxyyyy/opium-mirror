@@ -76,6 +76,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleElytraSwap());
         this.register(new ModuleFastPlace());
 //        this.register(new CxMine());
+        this.register(new ModulePacketMine());
 
         //Visuals
         this.register(new ModuleCrosshair());

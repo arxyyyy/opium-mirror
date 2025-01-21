@@ -1,5 +1,7 @@
 package we.devs.opium.api.manager.miscellaneous;
 
+import com.google.common.eventbus.Subscribe;
+import net.minecraft.entity.player.BlockBreakingInfo;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.event.EventListener;
 import we.devs.opium.api.utilities.IMinecraft;
@@ -13,6 +15,7 @@ public class PlayerManager implements IMinecraft, EventListener {
     private int slot;
     private int sentPackets;
     private int receivedPackets;
+    private int startBlockBreaking;
 
     public PlayerManager() {
         Opium.EVENT_MANAGER.register(this);
@@ -29,6 +32,15 @@ public class PlayerManager implements IMinecraft, EventListener {
         }
         if (event.getPacket() instanceof UpdateSelectedSlotC2SPacket b) {
             this.slot = b.getSelectedSlot();
+        }
+    }
+
+    @Subscribe
+    public int onStartBlockBreaking(BlockBreakingInfo event) {
+        if (event.getStage() != 0) {
+        return this.startBlockBreaking = event.getStage();
+        } else {
+            return this.startBlockBreaking = 0;
         }
     }
 
