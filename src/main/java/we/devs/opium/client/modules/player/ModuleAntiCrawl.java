@@ -22,7 +22,6 @@ import java.awt.*;
 
 @RegisterModule(name = "AntiCrawl", description = "Mines Blocks above or below you to get you out of a crawl state.", category = Module.Category.PLAYER)
 public class ModuleAntiCrawl extends Module {
-    //ValueEnum autoSwitch = new ValueEnum("AutoSwitch", "Auto Switch", "Automatically switches to your Pickaxe.", AutoSwitch.None);
     ValueBoolean strictSwitch = new ValueBoolean("StrictSwitch", "Strict Switch", "Switches to Pickaxe at the end of the mining process.", false);
 
     ValueColor getSetting(String name, Color defaultC) {
@@ -112,11 +111,7 @@ public class ModuleAntiCrawl extends Module {
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.START_DESTROY_BLOCK, pos, Direction.UP));
         }
         if (progress > 1.0) {
-            if (!strictSwitch.getValue()) {
-                InventoryUtils.switchSlot(slot, true);
-            } else {
-                InventoryUtils.switchSlot(slot, false);
-            }
+            InventoryUtils.switchSlot(slot, strictSwitch.getValue());
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(Action.STOP_DESTROY_BLOCK, pos, Direction.UP));
             progress = 0;
             status = -2;
@@ -164,12 +159,6 @@ public class ModuleAntiCrawl extends Module {
 
     static double easeOutCirc(double n) {
         return Math.sqrt(1 - Math.pow(n - 1, 2));
-    }
-
-    public enum AutoSwitch {
-        None,
-        Continously,
-        OnBreak
     }
 
     public enum Easing {
