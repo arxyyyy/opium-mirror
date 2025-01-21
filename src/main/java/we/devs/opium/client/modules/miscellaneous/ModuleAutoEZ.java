@@ -7,10 +7,8 @@ import we.devs.opium.api.manager.module.RegisterModule;
 
 import java.util.Random;
 
-/**
- * @author cpv
- */
-@RegisterModule(name = "AutoEZ", description = "LEL", category = Module.Category.MISCELLANEOUS)
+
+@RegisterModule(name = "AutoEZ", description = "Gives out Messages to the Chat on a Player Kill.", category = Module.Category.MISCELLANEOUS)
 public class ModuleAutoEZ extends Module {
     private final String[] EZ = new String[] {
             "<player> dumped on by OpiumHack lel pooron!",
@@ -28,6 +26,6 @@ public class ModuleAutoEZ extends Module {
         }
         Random random = new Random();
         String msg = EZ[random.nextInt(EZ.length - 1)];
-        mc.player.networkHandler.sendChatMessage(msg.replace("<opp>", event.getEntity().getName().getString()));
+        mc.player.networkHandler.sendChatMessage(msg.replace("<player>", event.getEntity().getName().getString()));
     }
 }
