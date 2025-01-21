@@ -11,6 +11,7 @@
     "ClientPlayNetworkHandlerMixin",
     "EntityRendererMixin",
     "GameMenuScreenMixin",
+    "GameOverlayRendererMixin",
     "IClientPlayerEntity",
     "IEntityVelocityUpdateS2CPacket",
     "IExplosionS2CPacket",
