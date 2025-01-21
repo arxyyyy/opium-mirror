@@ -3,7 +3,7 @@ package we.devs.opium.api.manager.event;
 import we.devs.opium.client.events.*;
 
 public interface EventListener {
-    // write listeners here
+    // write listeners here ** why nigga wtf is wrong with u wtf is this ew niggaaaaa -cpv
     default void onChatSend(EventChatSend event) {
     }
 
@@ -38,5 +38,8 @@ public interface EventListener {
     }
 
     default void onTick(EventTick event) {
+    }
+
+    default void onDeath(DeathEvent event) {
     }
 }

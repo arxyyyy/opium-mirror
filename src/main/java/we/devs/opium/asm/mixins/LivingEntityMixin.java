@@ -9,10 +9,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import we.devs.opium.Opium;
-import we.devs.opium.api.events.DeathEvent;
+import we.devs.opium.client.events.DeathEvent;
+import we.devs.opium.api.utilities.IMinecraft;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin {
+public class LivingEntityMixin extends EntityMixin implements IMinecraft {
 
     @Shadow
     @Final
@@ -20,9 +21,9 @@ public class LivingEntityMixin {
 
     @Inject(method = "onTrackedDataSet", at = @At("RETURN"))
     public void onTrackedDataSet(TrackedData<?> data, CallbackInfo ci) {
-        /*if (key.equals(HEALTH) && this.dataTracker.get(HEALTH) <= 0.0 && mc.world != null && mc.world.isClient()) {
+        if (data.equals(HEALTH) && this.dataTracker.get(HEALTH) <= 0.0 && mc.world != null && mc.world.isClient()) {
             DeathEvent deathEvent = new DeathEvent(LivingEntity.class.cast(this));
             Opium.EVENT_MANAGER.call(deathEvent);
-        }*/
+        }
     }
 }

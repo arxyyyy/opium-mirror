@@ -1,31 +1,36 @@
 package we.devs.opium.client.modules.miscellaneous;
 
-import com.google.common.eventbus.Subscribe;
-import we.devs.opium.api.events.DeathEvent;
+import net.minecraft.entity.player.PlayerEntity;
+import we.devs.opium.Opium;
+import we.devs.opium.client.events.DeathEvent;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
 
+import java.util.Objects;
 import java.util.Random;
-
 
 @RegisterModule(name = "AutoEZ", description = "Gives out Messages to the Chat on a Player Kill.", category = Module.Category.MISCELLANEOUS)
 public class ModuleAutoEZ extends Module {
     private final String[] EZ = new String[] {
-            "<player> dumped on by OpiumHack lel pooron!",
-            "<player> DESTROYED by OpiumHack LOL!!!",
-            "EZZZ <player> pooron owned by OpiumHack!",
-            "OpiumHack owns you <player>!",
-            "EZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ <player> -OpiumHack",
-            "LOL <player> DUMB DOG DIES TO OPIUMHACK LOL!! EZ!!!"
+            "<opp> dumped on by 0piumh4ck.cc lel pooron!",
+            "<opp> DESTROYED by 0piumh4ck.cc LOL!!!",
+            "EZZZ <opp> pooron owned by 0piumh4ck.cc!",
+            "0piumh4ck.cc owns you <opp>!",
+            "EZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ <opp> -0piumh4ck.cc",
+            "LOL <opp> DUMB DOG DIES TO 0piumh4ck.cc LOL!! EZ!!!",
+            "<opp> sent to the death screen by 0piumh4ck.cc lel"
     };
 
-    @Subscribe
+    @Override
     public void onDeath(DeathEvent event) {
         if (mc.player == null) {
             return;
         }
-        Random random = new Random();
-        String msg = EZ[random.nextInt(EZ.length - 1)];
-        mc.player.networkHandler.sendChatMessage(msg.replace("<player>", event.getEntity().getName().getString()));
+        if (event.getEntity() instanceof PlayerEntity && !Objects.equals(event.getEntity().getName().getString(), mc.player.getName().getString())
+        || Opium.FRIEND_MANAGER.isFriend(event.getEntity().getName().getString())) {
+            Random random = new Random();
+            String msg = EZ[random.nextInt(EZ.length - 1)];
+            mc.player.networkHandler.sendChatMessage(msg.replace("<opp>", event.getEntity().getName().getString()));
+        }
     }
 }

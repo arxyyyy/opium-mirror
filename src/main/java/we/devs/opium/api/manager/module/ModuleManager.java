@@ -86,6 +86,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleBurrowESP());
         this.register(new ModuleFullBright());
         this.register(new ModuleNoRender());
+        this.register(new ModuleDeathEffects());
 
         this.modules.sort(Comparator.comparing(Module::getName));
     }
