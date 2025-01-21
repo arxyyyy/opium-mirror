@@ -3,7 +3,7 @@ package we.devs.opium.api.manager.event;
 import we.devs.opium.client.events.*;
 
 public interface EventListener {
-    // write listeners here ** why nigga wtf is wrong with u wtf is this ew niggaaaaa -cpv
+    // write listeners here
     default void onChatSend(EventChatSend event) {
     }
 

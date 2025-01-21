@@ -12,13 +12,13 @@ import java.util.Random;
 @RegisterModule(name = "AutoEZ", description = "Gives out Messages to the Chat on a Player Kill.", category = Module.Category.MISCELLANEOUS)
 public class ModuleAutoEZ extends Module {
     private final String[] EZ = new String[] {
-            "<opp> dumped on by 0piumh4ck.cc lel pooron!",
-            "<opp> DESTROYED by 0piumh4ck.cc LOL!!!",
-            "EZZZ <opp> pooron owned by 0piumh4ck.cc!",
-            "0piumh4ck.cc owns you <opp>!",
-            "EZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ <opp> -0piumh4ck.cc",
-            "LOL <opp> DUMB DOG DIES TO 0piumh4ck.cc LOL!! EZ!!!",
-            "<opp> sent to the death screen by 0piumh4ck.cc lel"
+            "<player> dumped on by 0piumh4ck.cc lel pooron!",
+            "<player> DESTROYED by 0piumh4ck.cc LOL!!!",
+            "EZZZ <player> pooron owned by 0piumh4ck.cc!",
+            "0piumh4ck.cc owns you <player>!",
+            "EZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ <target> -0piumh4ck.cc",
+            "LOL <player> DUMB DOG DIES TO 0piumh4ck.cc LOL!! EZ!!!",
+            "<player> sent to the death screen by 0piumh4ck.cc lel"
     };
 
     @Override
@@ -27,10 +27,10 @@ public class ModuleAutoEZ extends Module {
             return;
         }
         if (event.getEntity() instanceof PlayerEntity && !Objects.equals(event.getEntity().getName().getString(), mc.player.getName().getString())
-        || Opium.FRIEND_MANAGER.isFriend(event.getEntity().getName().getString())) {
+        || !Opium.FRIEND_MANAGER.isFriend(event.getEntity().getName().getString())) {
             Random random = new Random();
             String msg = EZ[random.nextInt(EZ.length - 1)];
-            mc.player.networkHandler.sendChatMessage(msg.replace("<opp>", event.getEntity().getName().getString()));
+            mc.player.networkHandler.sendChatMessage(msg.replace("<player>", event.getEntity().getName().getString()));
         }
     }
 }
