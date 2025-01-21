@@ -1,8 +1,6 @@
 package we.devs.opium.client.modules.player;
 
-import com.google.common.eventbus.Subscribe;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.BlockBreakingInfo;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -13,6 +11,7 @@ import we.devs.opium.api.manager.module.RegisterModule;
 import we.devs.opium.api.utilities.BlockUtils;
 import we.devs.opium.api.utilities.InventoryUtils;
 import we.devs.opium.api.utilities.Renderer3d;
+import we.devs.opium.client.events.DamageBlockEvent;
 import we.devs.opium.client.events.EventRender3D;
 import we.devs.opium.client.values.impl.*;
 
@@ -56,17 +55,18 @@ public class ModulePacketMine extends Module {
         status = 2;
     }
 
-    @Subscribe
-    public void onStartBlockBreaking(BlockBreakingInfo event) {
+    @Override
+    public void onDamageBlock(DamageBlockEvent event) {
         if (mc.world == null) return;
         BlockState blockState = mc.world.getBlockState(event.getPos());
         if (blockState.getHardness(mc.world, event.getPos()) >= 0) {
-            if (event.getStage() >= 1) {
-                blockPos = event.getPos();
-                status = 1;
-                int slot = InventoryUtils.findBestTool(blockState, true);
-                doMine(blockPos, blockState, slot, status);
+            blockPos = event.getPos();
+            status = 1;
+            int slot = InventoryUtils.findBestTool(blockState, true);
+            if (slot == -1) {
+                return;
             }
+            doMine(blockPos, blockState, slot, status);
         } else {
             status = 0;
         }
@@ -105,7 +105,7 @@ public class ModulePacketMine extends Module {
         if (progress >= 1) {
             Renderer3d.renderEdged(event.getMatrices(), finishedFill.getValue(), finishedOutline.getValue(), Vec3d.of(blockPos), new Vec3d(1, 1, 1));
         } else {
-            double renderSize = switch (((ModuleAntiCrawl.Easing) easing.getValue())) {
+            double renderSize = switch (((ModulePacketMine.Easing) easing.getValue())) {
                 case None -> MathHelper.clamp(progress, 0, 1);
                 case EaseOutCircular -> easeOutCirc(MathHelper.clamp(progress, 0, 1));
             };

@@ -8,6 +8,7 @@
     "ChatHudMixin",
     "ClientConnectionMixin",
     "ClientPlayerEntityMixin",
+    "ClientPlayerInteractionManagerMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityRendererMixin",
     "GameMenuScreenMixin",

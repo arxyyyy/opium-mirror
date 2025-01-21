@@ -42,4 +42,7 @@ public interface EventListener {
 
     default void onDeath(DeathEvent event) {
     }
+
+    default void onDamageBlock(DamageBlockEvent event) {
+    }
 }
