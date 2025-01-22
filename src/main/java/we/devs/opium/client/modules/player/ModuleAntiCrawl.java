@@ -140,7 +140,7 @@ public class ModuleAntiCrawl extends Module {
                 case None -> MathHelper.clamp(progress, 0, 1);
                 case EaseOutCircular -> easeOutCirc(MathHelper.clamp(progress, 0, 1));
             };
-            ModulePacketMine.renderProg(event, renderSize, blockPos, miningFill, miningOutline, fill, outline);
+            ModulePacketMine.renderProgress(event, renderSize, blockPos, miningFill, miningOutline, fill, outline);
         }
     }
 

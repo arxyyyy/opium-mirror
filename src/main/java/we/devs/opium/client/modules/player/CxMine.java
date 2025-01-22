@@ -146,14 +146,15 @@ public class CxMine extends Module {
     }
 
     private void placeCrystal(int slot, BlockPos pos, int lastSlot) {
-        assert mc.interactionManager != null;
         if (slot == 40) {
             if (rotate.getValue()) RotationsUtil.rotateToBlockPos(pos, rotateC.getValue());
+            assert mc.interactionManager != null;
             mc.interactionManager.interactBlock(mc.player, Hand.OFF_HAND, new BlockHitResult(
                     new Vec3d(pos.getX() + 0.1, pos.getY() + 0.1, pos.getZ() + 0.1), direction, pos, true));
         } else {
             InventoryUtils.switchSlot(slot, silent.getValue());
             if (rotate.getValue()) RotationsUtil.rotateToBlockPos(pos, rotateC.getValue());
+            assert mc.interactionManager != null;
             mc.interactionManager.interactBlock(mc.player, Hand.MAIN_HAND, new BlockHitResult(
                     new Vec3d(pos.getX() + 0.1, pos.getY() + 0.1, pos.getZ() + 0.1), direction, pos, true));
             InventoryUtils.switchSlot(lastSlot, silent.getValue());
