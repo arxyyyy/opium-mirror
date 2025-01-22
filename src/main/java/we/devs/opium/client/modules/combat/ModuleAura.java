@@ -18,7 +18,7 @@ import we.devs.opium.client.values.impl.ValueNumber;
 public class ModuleAura extends Module {
     ValueNumber range = new ValueNumber("Range", "Range", "Range", 5.0f, 1.0f, 6.0f);
     ValueEnum weapon = new ValueEnum("Weapon", "Weapon", "Weapon", Weapon.Require);
-    ValueBoolean rotate = new ValueBoolean("Rotate", "Rotate", "Rotate", true);
+    ValueBoolean rotate = new ValueBoolean("Rotate", "Rotate", "Will rotate you to the pos", true);
     PlayerEntity target;
 
     @Override
@@ -65,5 +65,11 @@ public class ModuleAura extends Module {
     enum Weapon {
         Require,
         Swap
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        target = null;
     }
 }

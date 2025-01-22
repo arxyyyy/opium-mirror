@@ -78,7 +78,7 @@ public class ModuleManager implements IMinecraft, EventListener {
         this.register(new ModuleMultiTask());
         this.register(new ModuleElytraSwap());
         this.register(new ModuleFastPlace());
-//        this.register(new CxMine());
+        this.register(new CxMine());
         this.register(new ModulePacketMine());
 
         //Visuals
@@ -178,5 +178,9 @@ public class ModuleManager implements IMinecraft, EventListener {
     @Override
     public void onLogout(EventLogout event) {
         this.modules.stream().filter(Module::isToggled).forEach(Module::onLogout);
+    }
+
+    public Module getModule(String name) {
+        return this.modules.stream().filter(module -> module.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 }

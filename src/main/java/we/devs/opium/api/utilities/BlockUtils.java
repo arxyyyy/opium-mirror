@@ -85,6 +85,24 @@ public class BlockUtils implements IMinecraft {
         return true;
     }
 
+    public static boolean surroundPlaceableCheck(BlockPos position, boolean entityCheck, boolean sideCheck) {
+        if (!mc.world.getBlockState(position).getBlock().canReplace(mc.world.getBlockState(position), new ItemPlacementContext(mc.player, Hand.MAIN_HAND, mc.player.getStackInHand(Hand.MAIN_HAND), new BlockHitResult(Vec3d.of(position), Direction.UP, position, false)))) {
+            return false;
+        }
+        if (entityCheck) {
+            for (Entity entity : mc.world.getEntitiesByClass(Entity.class, new Box(position), Entity::isAlive)) {
+                if (entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof EndCrystalEntity) continue;
+                return false;
+            }
+        }
+        if (sideCheck) {
+            return getPlaceableSide(position) != null;
+        }
+        return true;
+    }
+
+
+
     public static Direction getPlaceableSide(BlockPos position) {
         for (Direction side : Direction.values()) {
             if (!mc.world.getBlockState(position.offset(side)).blocksMovement() || mc.world.getBlockState(position.offset(side)).isLiquid()) continue;
@@ -129,7 +147,7 @@ public class BlockUtils implements IMinecraft {
         float hardness = state.getHardness(null, null);
         if (hardness == -1) return 0;
         else {
-            return getBlockBreakingSpeed(slot, state) / hardness / (!state.isToolRequired() || mc.player.getInventory().main.get(slot).isSuitableFor(state) ? 30 : 100);
+            return getBlockBreakingSpeed(slot, state) / hardness / (!state.isToolRequired() || Objects.requireNonNull(mc.player).getInventory().main.get(slot).isSuitableFor(state) ? 30 : 100);
         }
     }
 
@@ -137,6 +155,7 @@ public class BlockUtils implements IMinecraft {
      * @see net.minecraft.entity.player.PlayerEntity#getBlockBreakingSpeed(BlockState)
      */
     private static double getBlockBreakingSpeed(int slot, BlockState block) {
+        assert mc.player != null;
         double speed = mc.player.getInventory().main.get(slot).getMiningSpeedMultiplier(block);
 
         if (speed > 1) {

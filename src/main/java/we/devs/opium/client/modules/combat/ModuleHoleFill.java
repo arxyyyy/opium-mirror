@@ -36,6 +36,8 @@ public class ModuleHoleFill extends Module {
     ValueNumber nearRange = new ValueNumber("NearIgnoreRange", "Near Range", "Range to ignore the holes near you.", Float.valueOf(3.0f), Float.valueOf(1.0f), Float.valueOf(5.0f));
     ValueBoolean onlyIfSafe = new ValueBoolean("OnlyIfSafe", "Only If Safe", "Only holefills when you are safe.", false);
     ValueBoolean doubles = new ValueBoolean("DoubleHoles", "Double Holes", "Also fills double holes.", true);
+    ValueBoolean rotate = new ValueBoolean("Rotate", "Rotate", "Will rotate you to the pos", true);
+    ValueBoolean rotateC = new ValueBoolean("Rotate Client Side", "Rotate Client Side", "Will move your camera to the pos", false);
     ValueNumber delay = new ValueNumber("Delay", "Delay", "Delay to fill holes.", 100, 0, 200);
     ValueCategory renderCategory = new ValueCategory("Render", "Render category.");
     ValueBoolean render = new ValueBoolean("FillRender", "Render", "Render the holes you are filling.", this.renderCategory, true);
@@ -74,6 +76,7 @@ public class ModuleHoleFill extends Module {
                 if (!this.cooldown.hasTimeElapsed(this.delay.getValue().intValue())) continue;
                 this.currentHole = pos;
                 InventoryUtils.switchSlot(slot, this.autoSwitch.getValue().equals(InventoryUtils.SwitchModes.Silent));
+                if (rotate.getValue()) RotationsUtil.rotateToBlockPos(pos, rotateC.getValue());
                 BlockUtils.placeBlock(event, pos, Hand.MAIN_HAND);
                 if (!this.autoSwitch.getValue().equals(InventoryUtils.SwitchModes.Strict)) {
                     InventoryUtils.switchSlot(lastSlot, this.autoSwitch.getValue().equals(InventoryUtils.SwitchModes.Silent));

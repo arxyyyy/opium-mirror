@@ -27,6 +27,7 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import we.devs.opium.api.manager.miscellaneous.FontManager;
+import we.devs.opium.client.modules.player.CxMine;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
@@ -38,7 +39,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Timer;
 
-import static we.devs.opium.api.utilities.IMinecraft.mc;
 
 public class Opium implements ModInitializer {
 
@@ -61,6 +61,7 @@ public class Opium implements ModInitializer {
     public static ConfigManager CONFIG_MANAGER;
     public static FontManager FONT_MANAGER;
     public static final Timer TIMER = new Timer("Timer", true);
+    public static MinecraftClient mc;
     boolean iconSet = false;
 
     public static final boolean NO_TELEMETRY = System.getenv("NO_TELEMETRY") != null;
@@ -79,15 +80,17 @@ public class Opium implements ModInitializer {
         long startTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has started!");
 
-        /*if (!HWIDValidator.isHWIDValid()) {
+        mc = MinecraftClient.getInstance();
+
+        if (!HWIDValidator.isHWIDValid()) {
             LOGGER.error("Authentication Denied: HWID not found.");
-            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
+            //sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
             showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
             return;
         } else {
             LOGGER.info("Authentication Success: HWID validated.");
-            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
-        }*/
+            //sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+        }
 
         EVENT_MANAGER = new EventManager();
         COMMAND_MANAGER = new CommandManager();

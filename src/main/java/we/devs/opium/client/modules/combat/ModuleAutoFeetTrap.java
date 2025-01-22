@@ -1,6 +1,11 @@
 package we.devs.opium.client.modules.combat;
 
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.EndCrystalEntity;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
+import net.minecraft.util.math.Box;
 import we.devs.opium.Opium;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
@@ -31,7 +36,9 @@ public class ModuleAutoFeetTrap extends Module {
     private final ValueBoolean ignoreCrystals = new ValueBoolean("IgnoreCrystals", "Ignore Crystals", "Ignores crystals when checking if there are any entities in the block that needs to be placed.", false);
     private final ValueBoolean stepDisable = new ValueBoolean("StepDisable", "Step Disable", "Disable if step enabled.", true);
     private final ValueBoolean jumpDisable = new ValueBoolean("JumpDisable", "Jump Disable", "Disable if player jumps.", true);
-    private final ValueBoolean rotate = new ValueBoolean("Rotate", "Packet Rotate", "Rotates to the block after placement.", false);
+    private final ValueBoolean rotate = new ValueBoolean("Rotate", "Packet Rotate", "Rotates to the block after placement.", true);
+    private final ValueBoolean rotateC = new ValueBoolean("RotateC", "Rotate Client Side", "Rotates to the block after placement.", false);
+    private final ValueNumber attackSpeed = new ValueNumber("AttackSpeed", "Attack Speed", "At What Speed To Attack The Crystals", 1, 1, 20);
     private int placements;
     private BlockPos startPosition;
 
@@ -44,7 +51,7 @@ public class ModuleAutoFeetTrap extends Module {
     public void onEnable() {
         super.onEnable();
         if (mc.player == null || mc.world == null) {
-            this.disable(false);
+            this.disable(true);
             return;
         }
         this.startPosition = new BlockPos((int) Math.round(mc.player.getX()), (int) Math.round(mc.player.getY()), (int) Math.round(mc.player.getZ()));
@@ -87,7 +94,11 @@ public class ModuleAutoFeetTrap extends Module {
     }
 
     public void placeBlock(EventMotion event, BlockPos position) {
-        if (BlockUtils.isPositionPlaceable(position, true, true, this.ignoreCrystals.getValue()) && this.placements < this.blocks.getValue().intValue()) {
+        if (BlockUtils.surroundPlaceableCheck(position, true, true) && this.placements < this.blocks.getValue().intValue()) {
+            assert mc.player != null;
+            // Attack blocking crystals before placing the block
+            attackBlockingCrystals(position);
+
             boolean found = false;
             for (Block fade : fades) {
                 if(fade.pos.equals(position)) {
@@ -96,14 +107,17 @@ public class ModuleAutoFeetTrap extends Module {
                 }
             }
             if(!found) fades.add(new Block(position));
-            BlockUtils.placeBlock(event, position, Hand.MAIN_HAND);
+
             if (rotate.getValue()){
-                RotationUtils.rotate(event, RotationUtils.getRotationsTo(position.toCenterPos()));
+                // RotationUtils.rotate(event, RotationUtils.getRotationsTo(position.toCenterPos()));
+                RotationsUtil.rotateToBlockPos(position, rotateC.getValue());
             }
+            BlockUtils.placeBlock(event, position, Hand.MAIN_HAND);
 
             ++this.placements;
         }
     }
+
 
     public List<BlockPos> getUnsafeBlocks() {
         ArrayList<BlockPos> positions = new ArrayList<>();
@@ -191,6 +205,49 @@ public class ModuleAutoFeetTrap extends Module {
         }
         return decimal >= 0.7 ? 1 : 0;
     }
+
+    private void attackBlockingCrystals(BlockPos position) {
+        assert mc.world != null;
+        for (Entity entity : mc.world.getEntities()) {
+            if (entity instanceof EndCrystalEntity) {
+                // Check if the crystal is within range of the block position
+                assert mc.player != null;
+                if (isBlocking(entity, position)) {
+                    attackCrystal(entity);
+                    return; // Attack only one crystal at a time (you can modify this to attack all nearby crystals)
+                }
+            }
+        }
+    }
+
+    private boolean isBlocking(Entity crystal, BlockPos pos) {
+        // Check if the crystal is blocking the position
+        // This is a simple check: you can improve it based on your needs (e.g., checking bounding box, distance, etc.)
+        return crystal.getBoundingBox().intersects(new Box(pos));
+    }
+
+    private long lastAttack = 0;
+
+    private void attackCrystal(Entity crystal) {
+        try {
+            if (System.currentTimeMillis() - lastAttack >= 1000 / attackSpeed.getValue().floatValue()) {
+                assert mc.player != null;
+                sendPacket(PlayerInteractEntityC2SPacket.attack(crystal, mc.player.isSneaking()));
+                if (rotate.getValue()) RotationsUtil.rotateToBlockPos(crystal.getBlockPos(), rotateC.getValue());
+                lastAttack = System.currentTimeMillis();
+            }
+        } catch (Exception e) {
+            Opium.LOGGER.error("[Surround] Error while attacking crystal", e);
+        }
+    }
+
+    private void sendPacket(PlayerInteractEntityC2SPacket packet) {
+        ClientPlayNetworkHandler networkHandler = mc.getNetworkHandler();
+        if (networkHandler != null) {
+            networkHandler.sendPacket(packet);
+        }
+    }
+
 
     ArrayList<Block> fades = new ArrayList<>();
     @Override
