@@ -76,7 +76,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         float yaw = event.getRotationYaw();
         float pitch = event.getRotationPitch();
         boolean onGround = event.isOnGround();
-        if (event.isCanceled()) {
+        if (!event.isCanceled()) {
             ci.cancel();
             sendSprintingPacket();
             boolean sneak = isSneaking();

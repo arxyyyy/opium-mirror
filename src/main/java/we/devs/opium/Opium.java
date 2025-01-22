@@ -19,6 +19,7 @@ import we.devs.opium.api.manager.module.ModuleManager;
 import we.devs.opium.api.utilities.HWIDValidator;
 import we.devs.opium.api.utilities.TPSUtils;
 import we.devs.opium.api.utilities.dump.AntiDump;
+import we.devs.opium.asm.ducks.ISession;
 import we.devs.opium.client.events.EventTick;
 import we.devs.opium.client.gui.click.ClickGuiScreen;
 import we.devs.opium.client.gui.config.ConfigManagerScreen;
@@ -156,6 +157,8 @@ public class Opium implements ModInitializer {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             onPlayDisconnect(null, MinecraftClient.getInstance());
         }));
+
+//        ((ISession) mc.getSession()).opium$setUsername("OpiumH4ck_cc");
     }
 
     private void setWindowIcon() {

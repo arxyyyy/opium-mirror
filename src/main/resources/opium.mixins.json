@@ -24,6 +24,7 @@
     "MixinSplashScreen",
     "MusicTickerMixin",
     "PlayerListHudMixin",
+    "SessionMixin",
     "SimpleOptionMixin",
     "TitleScreenMixin",
     "TitleScreenSplashMixin",
