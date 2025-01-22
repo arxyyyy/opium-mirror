@@ -24,6 +24,7 @@ import java.util.Set;
 public class ModulePacketMine extends Module {
     private final ValueBoolean strictSwitch = new ValueBoolean("StrictSwitch", "Strict Switch", "Switches to Pickaxe at the end of the mining process.", false);
     private final ValueNumber breakSpeed = new ValueNumber("BreakSpeed", "Break Speed", "The Amount of Progress needs to be made to mine the Block", 1.0, 0.5, 1.0);
+    private final ValueNumber retries = new ValueNumber("Retries", "Retries", "The Amount of Times It Should Retry Mining after a failed attempt before going to the next block", 3, 1, 30);
     private final ValueNumber switchDelay = new ValueNumber("SwitchDelay", "Switch Delay", "Delay between switching back", 1.0, 0.1, 30);
     private final ValueBoolean rotate = new ValueBoolean("Rotate", "Rotate", "Will rotate you to the pos", true);
     private final ValueBoolean rotateC = new ValueBoolean("RotateClientSide", "Rotate Client Side", "Will move your camera to the pos", false);
@@ -155,7 +156,7 @@ public class ModulePacketMine extends Module {
             }
             // Reset progress and proceed to next block
             mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK, pos, Direction.UP));
-        } else if (retryCount >= 3) {
+        } else if (retryCount >= retries.getValue().intValue()) {
             // Skip block after 3 failed attempts
             Opium.LOGGER.warn("[PacketMine] Skipping block after 3 retries: {}", pos);
             currentBlock = null;
