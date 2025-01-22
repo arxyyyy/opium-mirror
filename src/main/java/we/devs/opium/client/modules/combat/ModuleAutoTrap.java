@@ -26,6 +26,8 @@ public class ModuleAutoTrap extends Module {
     ValueNumber targetRange = new ValueNumber("TargetRange", "Target Range", "The max range to an enemy Player", 5.0f, 0.0f, 6.0f);
     ValueNumber placeRange = new ValueNumber("PlaceRange", "Place Range", "The range for placing.", 5.0, 0.0, 6.0);
     ValueNumber delay = new ValueNumber("Delay", "Delay", "max lvl delay", 50L, 0L, 1000L);
+    ValueBoolean rotate = new ValueBoolean("Rotate", "Rotate", "Will rotate you to the pos", true);
+    ValueBoolean rotateC = new ValueBoolean("Rotate Client Side", "Rotate Client Side", "Will move your camera to the pos", false);
     ValueBoolean render = new ValueBoolean("Render", "Render", "Render.", true);
     ValueColor color = new ValueColor("Color", "Color", "", new Color(255, 0, 213, 120));
     BlockPos[] OFFSETS = new BlockPos[] {
@@ -65,7 +67,7 @@ public class ModuleAutoTrap extends Module {
             if (mc.player.getEyePos().distanceTo(newPos.toCenterPos()) > placeRange.getValue().doubleValue()) {
                 continue;
             }
-            RotationUtils.rotate(event, RotationUtils.getRotationsTo(newPos.toCenterPos()));
+            if (rotate.getValue()) RotationsUtil.rotateToBlockPos(newPos, rotateC.getValue());
             BlockUtils.placeBlock(event, newPos, Hand.MAIN_HAND);
             renderPos.add(newPos);
 

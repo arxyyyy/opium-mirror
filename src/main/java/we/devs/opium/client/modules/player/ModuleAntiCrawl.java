@@ -140,14 +140,7 @@ public class ModuleAntiCrawl extends Module {
                 case None -> MathHelper.clamp(progress, 0, 1);
                 case EaseOutCircular -> easeOutCirc(MathHelper.clamp(progress, 0, 1));
             };
-            double renderProg = 0.5 - (renderSize) / 2;
-
-            Vec3d init = Vec3d.of(blockPos).add(renderProg, renderProg, renderProg);
-            Vec3d size = new Vec3d(renderSize, renderSize, renderSize);
-            Renderer3d.renderEdged(event.getMatrices(), miningFill.getValue(), miningOutline.getValue(), init, size);
-            if(fill.getValue() && outline.getValue()) Renderer3d.renderEdged(event.getMatrices(), miningFill.getValue(), miningOutline.getValue(), init, size);
-            else if(fill.getValue()) Renderer3d.renderFilled(event.getMatrices(), miningFill.getValue(), init, size);
-            else if(outline.getValue()) Renderer3d.renderOutline(event.getMatrices(), miningOutline.getValue(), init, size);
+            ModulePacketMine.renderProgress(event, renderSize, blockPos, miningFill, miningOutline, fill, outline);
         }
     }
 

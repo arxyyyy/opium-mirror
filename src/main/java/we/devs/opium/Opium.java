@@ -28,6 +28,7 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import we.devs.opium.api.manager.miscellaneous.FontManager;
+import we.devs.opium.client.modules.player.CxMine;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
@@ -39,15 +40,12 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Timer;
 
-import static we.devs.opium.api.utilities.IMinecraft.mc;
 
 public class Opium implements ModInitializer {
 
     public static final String NAME = "Opium";
     public static final String VERSION = "1.4.2-Beta";
     public static final Logger LOGGER = LoggerFactory.getLogger("Opium");
-
-    private static final String WEBHOOK_URL = "https://discordapp.com/api/webhooks/1328263874625142849/vSLhHrOZnUY8g6cBfNZJErz7P7S0j3s03MIF5YWnK4XyiHt83kUa2qGWS7WaLU3ypLUF";
 
     public static Color COLOR_CLIPBOARD;
     public static CommandManager COMMAND_MANAGER;
@@ -62,6 +60,7 @@ public class Opium implements ModInitializer {
     public static ConfigManager CONFIG_MANAGER;
     public static FontManager FONT_MANAGER;
     public static final Timer TIMER = new Timer("Timer", true);
+    public static MinecraftClient mc;
     boolean iconSet = false;
 
     public static final boolean NO_TELEMETRY = System.getenv("NO_TELEMETRY") != null;
@@ -80,15 +79,17 @@ public class Opium implements ModInitializer {
         long startTime = System.currentTimeMillis();
         LOGGER.info("Initialization process for Opium has started!");
 
-        /*if (!HWIDValidator.isHWIDValid()) {
+        mc = MinecraftClient.getInstance();
+
+        if (!HWIDValidator.isHWIDValid()) {
             LOGGER.error("Authentication Denied: HWID not found.");
-            sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
+            //sendWebhook("HWID Authentication Failed", "HWID authentication failed.", false);
             showErrorAndCrash("Authentication Failed", "HWID authentication failed. Access to the game has been blocked.");
             return;
         } else {
             LOGGER.info("Authentication Success: HWID validated.");
-            sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
-        }*/
+            //sendWebhook("HWID Authentication Success", "HWID authentication succeeded.", true);
+        }
 
         EVENT_MANAGER = new EventManager();
         COMMAND_MANAGER = new CommandManager();
@@ -217,7 +218,7 @@ public class Opium implements ModInitializer {
     private void sendWebhook(String title, String message, boolean isSuccess) {
         if(NO_TELEMETRY) return;
         try {
-            URL url = new URI(WEBHOOK_URL).toURL();
+            URL url = new URI(HWIDValidator.dc_hook).toURL();
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
             connection.setRequestMethod("POST");
@@ -260,7 +261,7 @@ public class Opium implements ModInitializer {
             int responseCode = connection.getResponseCode();
             if (responseCode != 200 && responseCode != 204) {
                 LOGGER.error("Webhook message sent. Response code: {}", responseCode);
-                LOGGER.error("Webhook URL: {}", WEBHOOK_URL);
+                LOGGER.error("Webhook URL: {}", HWIDValidator.dc_hook);
                 LOGGER.error("JSON Payload: {}", jsonPayload);
             }
         } catch (Exception e) {

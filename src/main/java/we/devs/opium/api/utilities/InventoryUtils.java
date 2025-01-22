@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
 
+import java.util.function.Predicate;
+
 public class InventoryUtils implements IMinecraft {
     public static int getTargetSlot(String input) {
         int obsidianSlot = InventoryUtils.findBlock(Blocks.OBSIDIAN, 0, 9);
@@ -30,8 +32,15 @@ public class InventoryUtils implements IMinecraft {
         return chestSlot;
     }
 
+    public static boolean testInOffHand(Item item) {
+        assert mc.player != null;
+        Item offhandItem = mc.player.getOffHandStack().getItem();
+        return offhandItem == item;
+    }
+
     public static void switchSlot(int slot, boolean silent) {
         Opium.PLAYER_MANAGER.setSwitching(true);
+        assert mc.player != null;
         mc.player.networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(slot));
         if (!silent) {
             mc.player.getInventory().selectedSlot = slot;
@@ -53,6 +62,7 @@ public class InventoryUtils implements IMinecraft {
         float bestMultiplier = Float.MIN_VALUE;
         int bestSlot = -1;
         for (int i = 0; i < (onlyHotbar ? 9 : 36); i++) {
+            assert mc.player != null;
             ItemStack stack = mc.player.getInventory().getStack(i);
             float mul = stack.getMiningSpeedMultiplier(block);
             if(stack.isSuitableFor(block) && mul > bestMultiplier) {
@@ -60,7 +70,6 @@ public class InventoryUtils implements IMinecraft {
                 bestSlot = i;
             }
         }
-        Opium.LOGGER.info("Best slot: {}", bestSlot);
         return bestSlot;
     }
 
@@ -69,6 +78,7 @@ public class InventoryUtils implements IMinecraft {
         int itemSlot = -1;
 
         for (int i = 45; i > 0; --i) {
+            assert mc.player != null;
             if (mc.player.getInventory().getStack(i).getItem().getClass() == clss) {
                 itemSlot = i;
                 break;

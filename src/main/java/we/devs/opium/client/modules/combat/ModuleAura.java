@@ -5,10 +5,7 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.util.Hand;
 import we.devs.opium.api.manager.module.Module;
 import we.devs.opium.api.manager.module.RegisterModule;
-import we.devs.opium.api.utilities.InventoryUtils;
-import we.devs.opium.api.utilities.RotationUtils;
-import we.devs.opium.api.utilities.TPSUtils;
-import we.devs.opium.api.utilities.TargetUtils;
+import we.devs.opium.api.utilities.*;
 import we.devs.opium.client.events.EventMotion;
 import we.devs.opium.client.values.impl.ValueBoolean;
 import we.devs.opium.client.values.impl.ValueEnum;
@@ -18,7 +15,7 @@ import we.devs.opium.client.values.impl.ValueNumber;
 public class ModuleAura extends Module {
     ValueNumber range = new ValueNumber("Range", "Range", "Range", 5.0f, 1.0f, 6.0f);
     ValueEnum weapon = new ValueEnum("Weapon", "Weapon", "Weapon", Weapon.Require);
-    ValueBoolean rotate = new ValueBoolean("Rotate", "Rotate", "Rotate", true);
+    ValueBoolean rotate = new ValueBoolean("Rotate", "Rotate", "Will rotate you to the pos", true);
     PlayerEntity target;
 
     @Override
@@ -57,6 +54,7 @@ public class ModuleAura extends Module {
 
         float factor = 20.0f - TPSUtils.getTickRate();
         if (mc.player.getAttackCooldownProgress(factor) >= 1.0f) {
+            if (rotate.getValue()) RotationsUtil.rotateToBlockPos(target.getBlockPos(), false);
             mc.interactionManager.attackEntity(mc.player, target);
             mc.player.swingHand(Hand.MAIN_HAND);
         }
@@ -65,5 +63,11 @@ public class ModuleAura extends Module {
     enum Weapon {
         Require,
         Swap
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        target = null;
     }
 }
